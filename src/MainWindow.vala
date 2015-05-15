@@ -109,14 +109,18 @@ class MainWindow : Gtk.Window{
 		toolbar = new Gtk.Toolbar ();
 		toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
 		toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
+		
+		this.set_position(Gtk.WindowPosition.CENTER);
+		this.set_size_request (500, 250);
+		
 		//toolbar.set_size_request(-1,48);
 		vbox_main.add(toolbar);
 
 		//btn_backup
-		btn_backup = new Gtk.ToolButton.from_stock ("gtk-save");
+		btn_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
 		btn_backup.is_important = true;
-		btn_backup.label = _("Backup");
 		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
+		btn_backup.icon_widget = get_shared_icon("backup","backup.svg",24);
         toolbar.add(btn_backup);
 
         btn_backup.clicked.connect (btn_backup_clicked);
@@ -148,21 +152,23 @@ class MainWindow : Gtk.Window{
 
         btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
 
-        //btn_settings
-		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
-		btn_settings.is_important = true;
-		btn_settings.label = _("Settings");
-		btn_settings.set_tooltip_text (_("Settings"));
-        toolbar.add(btn_settings);
-
-        btn_settings.clicked.connect (btn_settings_clicked);
-        
         //separator
 		var separator = new Gtk.SeparatorToolItem();
 		separator.set_draw (false);
 		separator.set_expand (true);
 		toolbar.add (separator);
+		
+		//btn_settings
+        btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
+		btn_settings.is_important = true;
+		btn_settings.set_tooltip_text (_("Settings"));
+		btn_settings.icon_widget = get_shared_icon("settings","settings.svg",24);
+        toolbar.add(btn_settings);
 
+        btn_settings.clicked.connect (btn_settings_clicked);
+
+/*
+ * 
 		//btn_clone
 		btn_clone = new Gtk.ToolButton.from_stock ("gtk-copy");
 		btn_clone.is_important = false;
@@ -217,6 +223,8 @@ class MainWindow : Gtk.Window{
         toolbar.add(btn_about);
 
         btn_about.clicked.connect (btn_about_clicked);
+
+*/
 
 		//backup device ------------------------------------------------
 		

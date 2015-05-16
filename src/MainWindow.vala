@@ -91,7 +91,7 @@ class MainWindow : Gtk.Window{
 	private Device snapshot_device_original;
 
 	public MainWindow () {
-		this.title = AppName + " v" + AppVersion; // + " by " + AppAuthor + " (" + "teejeetech.blogspot.in" + ")";
+		this.title = AppName;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
         this.set_default_size (700, 500);

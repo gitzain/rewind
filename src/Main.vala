@@ -37,11 +37,11 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public Main App;
-public const string AppName = "Timeshift RSYNC";
-public const string AppShortName = "timeshift";
-public const string AppVersion = "1.7.2";
-public const string AppAuthor = "Tony George";
-public const string AppAuthorEmail = "teejee2008@gmail.com";
+public const string AppName = "System Restore";
+public const string AppShortName = "system-restore";
+public const string AppVersion = "0.1.7.2";
+public const string AppAuthor = "Zain Khan";
+public const string AppAuthorEmail = "emailzainkhan@gmail.com";
 
 const string GETTEXT_PACKAGE = "";
 const string LOCALE_DIR = "/usr/share/locale";

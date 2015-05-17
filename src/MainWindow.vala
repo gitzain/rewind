@@ -51,6 +51,8 @@ class MainWindow : Gtk.Window{
 	private ToolButton btn_view_app_logs;
 	private ToolButton btn_about;
     private ToolButton btn_donate;
+
+    private HeaderBar headerbar;
     
 	//backup device
 	private Box hbox_device;
@@ -103,33 +105,44 @@ class MainWindow : Gtk.Window{
         vbox_main.margin = 0;
         add (vbox_main);
         
-        //toolbar ---------------------------------------------------
-        
-        //toolbar
-		toolbar = new Gtk.Toolbar ();
-		toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
-		toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
-		
 		this.set_position(Gtk.WindowPosition.CENTER);
 		this.set_size_request (500, 250);
+
+        //toolbar ---------------------------------------------------
+        
+  //       //toolbar
+		// toolbar = new Gtk.Toolbar ();
+		// toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
+		// toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
 		
-		//toolbar.set_size_request(-1,48);
-		vbox_main.add(toolbar);
+		// //toolbar.set_size_request(-1,48);
+		// vbox_main.add(toolbar);
+
+
+        //headerbar ---------------------------------------------------
+        
+        //headerbar
+		headerbar = new Gtk.HeaderBar();
+		headerbar.set_title(AppName);
+		headerbar.set_show_close_button (true);
+		this.set_titlebar(headerbar);
+
 
 		//btn_backup
 		btn_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
 		btn_backup.is_important = true;
 		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
 		btn_backup.icon_widget = get_shared_icon("backup","backup.svg",24);
-        toolbar.add(btn_backup);
+
+		headerbar.add(btn_backup);
 
         btn_backup.clicked.connect (btn_backup_clicked);
 
-		//btn_restore
-		btn_restore = new Gtk.ToolButton.from_stock ("gtk-apply");
+/*		//btn_restore
+		btn_restore = new Gtk.ToolButton.from_stock ("gtk-missing-image");
 		btn_restore.is_important = true;
-		btn_restore.label = _("Restore");
 		btn_restore.set_tooltip_text (_("Restore Snapshot"));
+		btn_restore.icon_widget = get_shared_icon("backup","backup.svg",24);
         toolbar.add(btn_restore);
 
 		btn_restore.clicked.connect (btn_restore_clicked);
@@ -150,20 +163,20 @@ class MainWindow : Gtk.Window{
 		btn_delete_snapshot.set_tooltip_text (_("Delete Snapshot"));
         toolbar.add(btn_delete_snapshot);
 
-        btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
+        btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);*/
 
         //separator
 		var separator = new Gtk.SeparatorToolItem();
 		separator.set_draw (false);
 		separator.set_expand (true);
-		toolbar.add (separator);
+		headerbar.add(separator);
 		
 		//btn_settings
         btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
 		btn_settings.is_important = true;
 		btn_settings.set_tooltip_text (_("Settings"));
 		btn_settings.icon_widget = get_shared_icon("settings","settings.svg",24);
-        toolbar.add(btn_settings);
+		headerbar.pack_end(btn_settings);
 
         btn_settings.clicked.connect (btn_settings_clicked);
 

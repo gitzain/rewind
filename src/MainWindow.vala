@@ -22,7 +22,6 @@
  */
  
 using Gtk;
-using Gee;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
@@ -38,8 +37,8 @@ class MainWindow : Gtk.Window{
 	
 	private Box vbox_main;
 	
-	//snapshots
-	private Toolbar toolbar;
+	//headerbar
+    private HeaderBar headerbar;
 	private ToolButton btn_backup;
 	private ToolButton btn_restore;
 	private ToolButton btn_delete_snapshot;
@@ -52,8 +51,9 @@ class MainWindow : Gtk.Window{
 	private ToolButton btn_about;
     private ToolButton btn_donate;
 
-    private HeaderBar headerbar;
-    
+    //sidebar. working here
+    private Granite.Widgets.SourceList sidebar = new Granite.Widgets.SourceList();
+
 	//backup device
 	private Box hbox_device;
 	private Label lbl_backup_device;
@@ -108,16 +108,6 @@ class MainWindow : Gtk.Window{
 		this.set_position(Gtk.WindowPosition.CENTER);
 		this.set_size_request (500, 250);
 
-        //toolbar ---------------------------------------------------
-        
-  //       //toolbar
-		// toolbar = new Gtk.Toolbar ();
-		// toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
-		// toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
-		
-		// //toolbar.set_size_request(-1,48);
-		// vbox_main.add(toolbar);
-
 
         //headerbar ---------------------------------------------------
         
@@ -166,10 +156,10 @@ class MainWindow : Gtk.Window{
         btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);*/
 
         //separator
-		var separator = new Gtk.SeparatorToolItem();
-		separator.set_draw (false);
-		separator.set_expand (true);
-		headerbar.add(separator);
+		//var separator = new Gtk.SeparatorToolItem();
+		//separator.set_draw (false);
+		//separator.set_expand (true);
+		//headerbar.add(separator);
 		
 		//btn_settings
         btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
@@ -1384,7 +1374,7 @@ class MainWindow : Gtk.Window{
 	}
 	
 	private void update_ui(bool enable){
-		toolbar.sensitive = enable;
+		headerbar.sensitive = enable;
 		hbox_device.sensitive = enable;
 		sw_backups.sensitive = enable;
 		show_statusbar_icons(enable);

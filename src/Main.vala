@@ -603,9 +603,10 @@ public class Main : GLib.Object{
 	    }
 
 		//sort the list
-		CompareFunc<AppExcludeEntry> entry_compare = (a, b) => {
+		CompareDataFunc<AppExcludeEntry> entry_compare = (a, b) => {
 			return strcmp(a.relpath,b.relpath);
 		};
+
 		exclude_list_apps.sort(entry_compare);
 	}
 	
@@ -4104,7 +4105,8 @@ public class Main : GLib.Object{
 				info = enumerator.next_file ();
 			}
 			
-			list.sort(strcmp);
+			// need to fix this
+			//list.sort(strcmp);
 			
 			if (list.size > 500){
 				for(int k=0; k<100; k++){

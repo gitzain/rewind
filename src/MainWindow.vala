@@ -33,7 +33,7 @@ using TeeJee.Multimedia;
 using TeeJee.System;
 using TeeJee.Misc;
 
-class MainWindow : Gtk.Window{
+class MainWindow : Gtk.Window {
 	
 	private Box vbox_main;
 	
@@ -92,7 +92,11 @@ class MainWindow : Gtk.Window{
 	//other
 	private Device snapshot_device_original;
 
-	public MainWindow () {
+private InfoBar bar;
+
+
+	public MainWindow () 
+	{
 		this.title = AppName;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
@@ -108,7 +112,6 @@ class MainWindow : Gtk.Window{
 		this.set_position(Gtk.WindowPosition.CENTER);
 		this.set_size_request (500, 250);
 
-
         //headerbar ---------------------------------------------------
         
         //headerbar
@@ -116,6 +119,28 @@ class MainWindow : Gtk.Window{
 		headerbar.set_title(AppName);
 		headerbar.set_show_close_button (true);
 		this.set_titlebar(headerbar);
+
+
+
+//infobar
+bar = new InfoBar();
+bar.set_message_type(Gtk.MessageType.WARNING);
+
+
+// Buttons:
+bar.add_button ("Yes", 1);
+bar.add_button ("No", 2);
+
+
+
+vbox_main.add(bar);
+
+// Content:
+Gtk.Container content = bar.get_content_area ();
+content.add (new Gtk.Label ("Scheduled snapshots disabled"));
+
+
+
 
 
 		//btn_backup
@@ -1475,6 +1500,11 @@ class MainWindow : Gtk.Window{
 		
 		//status - scheduled snapshots -----------
 		
+// Content:
+Gtk.Container content = bar.get_content_area ();
+content.add (new Gtk.Label ("woooot wooooot"));
+
+
 		if (App.live_system()){
 			img_status_scheduled.file = img_dot_green;
 			lbl_status_scheduled.label = _("Running from Live CD/USB");

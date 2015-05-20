@@ -34,7 +34,9 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 class MainWindow : Gtk.Window {
-	
+
+	private Paned paned;
+	private Box mainBox;
 	private Box vbox_main;
 	
 	//headerbar
@@ -100,15 +102,60 @@ private InfoBar bar;
 		this.title = AppName;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (700, 500);
+        this.set_default_size (800, 600);
 		this.delete_event.connect(on_delete_event);
 		this.icon = get_app_icon(16);
 		
+		//mainbox for the window
+        mainBox = new Box (Orientation.VERTICAL, 0);
+        mainBox.margin = 0;
+
+        this.add(mainBox);
+
+
+
+
+//infobar
+bar = new InfoBar();
+bar.set_message_type(Gtk.MessageType.WARNING);
+// Buttons:
+bar.add_button ("Yes", 1);
+bar.add_button ("No", 2);
+mainBox.pack_start(bar, false, false, 0);
+// Content:
+Gtk.Container content = bar.get_content_area ();
+content.add (new Gtk.Label ("Scheduled snapshots disabled"));
+
+
+
+
+
+
+
 	    //vboxMain
         vbox_main = new Box (Orientation.VERTICAL, 0);
         vbox_main.margin = 0;
-        add (vbox_main);
+
+
+		// The Pane:
+		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
+		// The ScrolledWindow:
+		Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+		this.add (scrolled);
+		// The ScrolledWindow content:
+		Gtk.TextView view = new Gtk.TextView ();
+		scrolled.add (view);
+        // add content to the the panes:
+		pane.add1 (scrolled);
+		pane.add2 (vbox_main);
+
+mainBox.pack_start(pane, false, true, 0);
         
+		
+
+
+
+
 		this.set_position(Gtk.WindowPosition.CENTER);
 		this.set_size_request (500, 250);
 
@@ -119,28 +166,6 @@ private InfoBar bar;
 		headerbar.set_title(AppName);
 		headerbar.set_show_close_button (true);
 		this.set_titlebar(headerbar);
-
-
-
-//infobar
-bar = new InfoBar();
-bar.set_message_type(Gtk.MessageType.WARNING);
-
-
-// Buttons:
-bar.add_button ("Yes", 1);
-bar.add_button ("No", 2);
-
-
-
-vbox_main.add(bar);
-
-// Content:
-Gtk.Container content = bar.get_content_area ();
-content.add (new Gtk.Label ("Scheduled snapshots disabled"));
-
-
-
 
 
 		//btn_backup
@@ -262,6 +287,7 @@ content.add (new Gtk.Label ("Scheduled snapshots disabled"));
         hbox_device.margin_left = 6;
         hbox_device.margin_right = 6;
         vbox_main.add (hbox_device);
+        // scrolled.add (hbox_device);
 
         //lbl_backup_device
 		lbl_backup_device = new Gtk.Label(_("Backup Device"));

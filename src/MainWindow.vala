@@ -94,6 +94,8 @@ class MainWindow : Gtk.Window {
 	//other
 	private Device snapshot_device_original;
 
+	private Box contextButtons;
+
 private InfoBar bar;
 
 
@@ -105,15 +107,35 @@ private InfoBar bar;
         this.set_default_size (800, 600);
 		this.delete_event.connect(on_delete_event);
 		this.icon = get_app_icon(16);
+		this.set_position(Gtk.WindowPosition.CENTER);
+		this.set_size_request (500, 250);
 		
+        //headerbar
+		headerbar = new Gtk.HeaderBar();
+		headerbar.set_title(AppName);
+		headerbar.set_show_close_button (true);
+		this.set_titlebar(headerbar);
+
+		//btn_backup
+		btn_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
+		btn_backup.is_important = true;
+		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
+		btn_backup.icon_widget = get_shared_icon("backup","backup.svg",24);
+		headerbar.add(btn_backup);
+        btn_backup.clicked.connect (btn_backup_clicked);
+
+		//btn_settings
+        btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
+		btn_settings.is_important = true;
+		btn_settings.set_tooltip_text (_("Settings"));
+		btn_settings.icon_widget = get_shared_icon("settings","settings.svg",24);
+		headerbar.pack_end(btn_settings);
+        btn_settings.clicked.connect (btn_settings_clicked);
+
 		//mainbox for the window
         mainBox = new Box (Orientation.VERTICAL, 0);
         mainBox.margin = 0;
-
         this.add(mainBox);
-
-
-
 
 //infobar
 bar = new InfoBar();
@@ -126,57 +148,47 @@ mainBox.pack_start(bar, false, false, 0);
 Gtk.Container content = bar.get_content_area ();
 content.add (new Gtk.Label ("Scheduled snapshots disabled"));
 
-
-
-
-
-
-
 	    //vboxMain
         vbox_main = new Box (Orientation.VERTICAL, 0);
         vbox_main.margin = 0;
 
-
 		// The Pane:
 		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
-		// The ScrolledWindow:
 		Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
-		this.add (scrolled);
-		// The ScrolledWindow content:
 		Gtk.TextView view = new Gtk.TextView ();
 		scrolled.add (view);
-        // add content to the the panes:
 		pane.add1 (scrolled);
 		pane.add2 (vbox_main);
-
-mainBox.pack_start(pane, false, true, 0);
+		pane.set_position(150);
+		mainBox.pack_start(pane, false, true, 0);
         
-		
+	
+contextButtons = new Box (Orientation.HORIZONTAL, 0);
+
+Button btnDelete = new Button.with_label ("Delete");
+btnDelete.get_style_context().add_class("destructive-action"); // Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION
+contextButtons.pack_start(btnDelete, false, false, 12);
+
+Button btnBrowse = new Button.with_label ("Browse");
+contextButtons.pack_end(btnBrowse, false, false, 12);
+
+Button btnRestore = new Button.with_label ("Restore");
+contextButtons.pack_end(btnRestore, false, false, 0);
+
+
+
+vbox_main.pack_end(contextButtons, false, true, 12);
 
 
 
 
-		this.set_position(Gtk.WindowPosition.CENTER);
-		this.set_size_request (500, 250);
+
+
 
         //headerbar ---------------------------------------------------
         
-        //headerbar
-		headerbar = new Gtk.HeaderBar();
-		headerbar.set_title(AppName);
-		headerbar.set_show_close_button (true);
-		this.set_titlebar(headerbar);
 
 
-		//btn_backup
-		btn_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_backup.is_important = true;
-		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
-		btn_backup.icon_widget = get_shared_icon("backup","backup.svg",24);
-
-		headerbar.add(btn_backup);
-
-        btn_backup.clicked.connect (btn_backup_clicked);
 
 /*		//btn_restore
 		btn_restore = new Gtk.ToolButton.from_stock ("gtk-missing-image");
@@ -211,14 +223,7 @@ mainBox.pack_start(pane, false, true, 0);
 		//separator.set_expand (true);
 		//headerbar.add(separator);
 		
-		//btn_settings
-        btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_settings.is_important = true;
-		btn_settings.set_tooltip_text (_("Settings"));
-		btn_settings.icon_widget = get_shared_icon("settings","settings.svg",24);
-		headerbar.pack_end(btn_settings);
 
-        btn_settings.clicked.connect (btn_settings_clicked);
 
 /*
  * 
@@ -279,6 +284,7 @@ mainBox.pack_start(pane, false, true, 0);
 
 */
 
+
 		//backup device ------------------------------------------------
 		
 		//hbox_device
@@ -286,7 +292,7 @@ mainBox.pack_start(pane, false, true, 0);
         hbox_device.margin_top = 6;
         hbox_device.margin_left = 6;
         hbox_device.margin_right = 6;
-        vbox_main.add (hbox_device);
+        // vbox_main.add (hbox_device);
         // scrolled.add (hbox_device);
 
         //lbl_backup_device
@@ -350,10 +356,10 @@ mainBox.pack_start(pane, false, true, 0);
 		sw_backups.set_shadow_type (ShadowType.ETCHED_IN);
 		sw_backups.add (tv_backups);
 		sw_backups.expand = true;
-		sw_backups.margin_left = 6;
-		sw_backups.margin_right = 6;
-		sw_backups.margin_top = 6;
-		sw_backups.margin_bottom = 6;
+		// sw_backups.margin_left = 6;
+		// sw_backups.margin_right = 6;
+		// sw_backups.margin_top = 6;
+		// sw_backups.margin_bottom = 6;
 		vbox_main.add(sw_backups);
 
         //col_date
@@ -483,7 +489,7 @@ mainBox.pack_start(pane, false, true, 0);
         hbox_statusbar.margin_bottom = 1;
         hbox_statusbar.margin_left = 6;
         hbox_statusbar.margin_right = 12;
-        vbox_main.add (hbox_statusbar);
+        //vbox_main.add (hbox_statusbar);
 
 		//img_status_spinner
 		img_status_spinner = new Gtk.Image();
@@ -1525,10 +1531,6 @@ mainBox.pack_start(pane, false, true, 0);
 		// statusbar icons ---------------------------------------------------------
 		
 		//status - scheduled snapshots -----------
-		
-// Content:
-Gtk.Container content = bar.get_content_area ();
-content.add (new Gtk.Label ("woooot wooooot"));
 
 
 		if (App.live_system()){

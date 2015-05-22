@@ -98,6 +98,7 @@ class MainWindow : Gtk.Window {
 
 private InfoBar bar;
 
+private Gtk.PlacesSidebar places;
 
 	public MainWindow () 
 	{
@@ -140,10 +141,11 @@ private InfoBar bar;
 //infobar
 bar = new InfoBar();
 bar.set_message_type(Gtk.MessageType.WARNING);
+bar.set_show_close_button(true);
 // Buttons:
 bar.add_button ("Yes", 1);
 bar.add_button ("No", 2);
-mainBox.pack_start(bar, false, false, 0);
+//mainBox.pack_start(bar, false, false, 0);
 // Content:
 Gtk.Container content = bar.get_content_area ();
 content.add (new Gtk.Label ("Scheduled snapshots disabled"));
@@ -154,10 +156,11 @@ content.add (new Gtk.Label ("Scheduled snapshots disabled"));
 
 		// The Pane:
 		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
-		Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
-		Gtk.TextView view = new Gtk.TextView ();
-		scrolled.add (view);
-		pane.add1 (scrolled);
+
+places = new Gtk.PlacesSidebar();
+
+
+		pane.add1 (places);
 		pane.add2 (vbox_main);
 		pane.set_position(150);
 		mainBox.pack_start(pane, false, true, 0);

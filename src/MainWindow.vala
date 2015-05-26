@@ -857,21 +857,22 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 
 	// This method gets a list of all the partitions and populates the sidebar 
 	private void refresh_cmb_backup_device(){
-		boom();
-		ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
+		// boom();
+		// ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
-		TreeIter iter;
+		// TreeIter iter;
 
-		int index = -1;
-		int index_snapshot_device = -1;
-		int index_root_device = -1;
+		// int index = -1;
+		// int index_snapshot_device = -1;
+		// int index_root_device = -1;
 
-		foreach(Device pi in App.partition_list) {
+		foreach(Device pi in App.partition_list) 
+		{
 			
 			if (!pi.has_linux_filesystem()) { continue; }
 
-			store.append(out iter);
-			store.set (iter, 0, pi);
+			// store.append(out iter);
+			// store.set (iter, 0, pi);
 			
 			//set icon ----------------
 			
@@ -886,30 +887,32 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 				pix_selected = pix_device;
 			}
 			
-			store.set (iter, 1, pix_selected, -1);
+sb.addItem(pi.full_name_with_alias);
+
+			//store.set (iter, 1, pix_selected, -1);
 			
 			//get device index ----------
 			
-			index++;
-			if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
-				index_root_device = index;
-			}
-			if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
-				index_snapshot_device = index;
-			}
+			// index++;
+			// if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
+			// 	index_root_device = index;
+			// }
+			// if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
+			// 	index_snapshot_device = index;
+			// }
 		}
 		
-		cmb_backup_device.set_model (store);
+		//cmb_backup_device.set_model (store);
 		
-		if (index_snapshot_device > -1){
-			cmb_backup_device.active = index_snapshot_device;
-		}
-		else if (index_root_device > -1){
-			cmb_backup_device.active = index_root_device;
-		}
-		else {
-			cmb_backup_device.active = -1;
-		}
+		// if (index_snapshot_device > -1){
+		// 	cmb_backup_device.active = index_snapshot_device;
+		// }
+		// else if (index_root_device > -1){
+		// 	cmb_backup_device.active = index_root_device;
+		// }
+		// else {
+		// 	cmb_backup_device.active = -1;
+		// }
 	}
 	
 	private void cmb_backup_device_changed(){

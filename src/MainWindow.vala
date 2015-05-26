@@ -1,7 +1,7 @@
 /*
  * MainWindow.vala
  * 
- * Copyright 2013 Tony George <teejee@tony-pc>
+ * Copyright 2015 Zain Khan <emailzainkhan@gmail.com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
  */
  
 using Gtk;
+using Gee;
 
 using TeeJee.Logging;
 using TeeJee.FileSystem;
@@ -98,6 +99,8 @@ class MainWindow : Gtk.Window {
 
 private InfoBar bar;
 
+private SideBar sb;
+
 private Gtk.PlacesSidebar places;
 
 	public MainWindow () 
@@ -157,10 +160,13 @@ content.add (new Gtk.Label ("Scheduled snapshots disabled"));
 		// The Pane:
 		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
 
-places = new Gtk.PlacesSidebar();
+//places = new Gtk.PlacesSidebar();
+
+sb = new SideBar();
+sb.item_selected.connect(cmb_backup_device_changed);
 
 
-		pane.add1 (places);
+		pane.add1 (sb);
 		pane.add2 (vbox_main);
 		pane.set_position(150);
 		mainBox.pack_start(pane, false, true, 0);
@@ -295,7 +301,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
         hbox_device.margin_top = 6;
         hbox_device.margin_left = 6;
         hbox_device.margin_right = 6;
-        // vbox_main.add (hbox_device);
+        vbox_main.add (hbox_device);
         // scrolled.add (hbox_device);
 
         //lbl_backup_device
@@ -309,14 +315,14 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		cmb_backup_device.set_tooltip_markup(_("Snapshots will be saved in path <b>/timeshift</b> on selected device"));
 		hbox_device.add(cmb_backup_device);
 		
-		CellRendererText cell_backup_dev_margin = new CellRendererText ();
-		cell_backup_dev_margin.text = "";
-		cmb_backup_device.pack_start (cell_backup_dev_margin, false);
+		// CellRendererText cell_backup_dev_margin = new CellRendererText ();
+		// cell_backup_dev_margin.text = "";
+		// cmb_backup_device.pack_start (cell_backup_dev_margin, false);
 		
-		CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
-		cell_backup_dev_icon.xpad = 1;
-		cmb_backup_device.pack_start (cell_backup_dev_icon, false);
-		cmb_backup_device.set_attributes(cell_backup_dev_icon, "pixbuf", 1);
+		// CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
+		// cell_backup_dev_icon.xpad = 1;
+		// cmb_backup_device.pack_start (cell_backup_dev_icon, false);
+		// cmb_backup_device.set_attributes(cell_backup_dev_icon, "pixbuf", 1);
 		
 		CellRendererText cell_backup_device = new CellRendererText();
         cmb_backup_device.pack_start( cell_backup_device, false );
@@ -325,15 +331,15 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		cmb_backup_device.changed.connect(cmb_backup_device_changed);
 		
 		//btn_refresh_backup_device_list
-		btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
-		btn_refresh_backup_device_list.set_size_request(50,-1);
-		btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
-		btn_refresh_backup_device_list.clicked.connect(()=>{ 
-			App.update_partition_list();
-			refresh_cmb_backup_device(); 
-			refresh_tv_backups();
-		});
-		hbox_device.add(btn_refresh_backup_device_list);
+		// btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
+		// btn_refresh_backup_device_list.set_size_request(50,-1);
+		// btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
+		// btn_refresh_backup_device_list.clicked.connect(()=>{ 
+		// 	App.update_partition_list();
+		// 	refresh_cmb_backup_device(); 
+		// 	refresh_tv_backups();
+		// });
+		// hbox_device.add(btn_refresh_backup_device_list);
 		
 		//lbl_backup_device_warning
 		lbl_backup_device_warning = new Gtk.Label("");
@@ -566,6 +572,27 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		
 		refresh_cmb_backup_device();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
+    }
+
+    private void boom()
+    {
+				string msg = "it works.";
+
+				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, msg);
+				dialog.set_title(_("Disable Scheduled Snapshots"));
+				dialog.set_default_size (300, -1);
+				dialog.set_transient_for(this);
+				dialog.set_modal(true);
+				int response = dialog.run();
+				dialog.destroy();
+				
+				if (response == Gtk.ResponseType.OK){
+
+				}
+				else{
+
+				}
+
     }
 
 	private bool init_backup_device(){
@@ -828,7 +855,9 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		tv_backups.columns_autosize ();
 	}
 
+	// This method gets a list of all the partitions and populates the sidebar 
 	private void refresh_cmb_backup_device(){
+		boom();
 		ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
 
 		TreeIter iter;
@@ -884,11 +913,10 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 	}
 	
 	private void cmb_backup_device_changed(){
-		ComboBox combo = cmb_backup_device;
-		if (combo.model == null) { return; }
+		SideBar sidey = sb;
 		
 		string txt;
-		if (combo.active < 0) { 
+		if (sidey.selected != null) { 
 			txt = "<b>" + _("WARNING:") + "</b>\n";
 			txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
 			txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
@@ -898,13 +926,13 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		}
 		
 		//get new device reference
-		TreeIter iter;
-		Device pi;
-		combo.get_active_iter (out iter);
-		TreeModel model = (TreeModel) combo.model;
-		model.get(iter, 0, out pi);
+		// TreeIter iter;
+		// Device pi;
+		// sidey.get_active_iter (out iter);
+		// TreeModel model = (TreeModel) sidey.model;
+		// model.get(iter, 0, out pi);
 		
-		change_backup_device(pi);
+		// change_backup_device(pi);
 	}
 	
 	private void change_backup_device(Device pi){

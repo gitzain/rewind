@@ -23,56 +23,36 @@
 
 using Gtk; 
 using Gee;
-using TeeJee.GtkHelper;
+
+public class SideBar : Granite.Widgets.SourceList 
+{
 
 
-
-public class SideBar : Granite.Widgets.SourceList {
-
-    public SideBarExpandableItem genre_list_item;
-    public Granite.Widgets.SourceList.Item all_stations_item;
-
-    private HashMap <int,Granite.Widgets.SourceList.Item> genre_list_items;
-
-    public SideBar () {
-        build_interface ();
-    }
-
-    private void build_interface () {
-        set_properties ();
-        create_items ();
-        append_items ();
-    }
-
-    private void set_properties () {
+    public SideBar () 
+    {
+        // Set properties
         width_request = 150;
     }
 
-    private void create_items () {
-        genre_list_items = new HashMap <int,Granite.Widgets.SourceList.Item> ();
-
-        genre_list_item = new SideBarExpandableItem ("Backup To:");
-        genre_list_item.expanded = true;
-
-        Granite.Widgets.SourceList.Item item = new Granite.Widgets.SourceList.Item ("Test");
+    public void addItem(string name)
+    {
+        // Create the new item based on the parameters
+        Granite.Widgets.SourceList.Item item = new Granite.Widgets.SourceList.Item (name);
         item.badge = "10GB";
         string path = "/usr/share/timeshift/images/%s.%s";
         item.icon =  new GLib.FileIcon (GLib.File.new_for_path (path.printf ("disk", "png")));
 
-        genre_list_item.add (item);
-        genre_list_items[1] = item;
-
+        // Add the item to the root node 
+        root.add (item);
     }
 
-    private void append_items () {
-        root.add (all_stations_item);
-        root.add (genre_list_item);
+    public void addExpandableItem(string name, bool expanded)
+    {
+        // Create the new expandable item based on the parameters
+        SideBarExpandableItem newExpandableItem = new SideBarExpandableItem(name);
+        newExpandableItem.expanded = expanded;
+
+        // Add the new expandable item to the root node 
+        root.add (newExpandableItem);
     }
-
-
-
-
-
-
-
 }

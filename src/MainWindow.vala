@@ -887,8 +887,12 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 				pix_selected = pix_device;
 			}
 			
-sb.addItem(pi.full_name_with_alias);
 
+SideBarExpandableItem newExpandableItem = new SideBarExpandableItem(name);
+Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item (name);
+
+sb.add_item(pi.label, "disk", "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB"));
+change_backup_device(pi);
 			//store.set (iter, 1, pix_selected, -1);
 			
 			//get device index ----------

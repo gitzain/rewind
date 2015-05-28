@@ -26,27 +26,39 @@ using Gee;
 
 public class SideBar : Granite.Widgets.SourceList 
 {
-
-
     public SideBar () 
     {
         // Set properties
         width_request = 150;
     }
 
-    public void addItem(string name)
+    public void create_and_add_item(string name, string icon, string badgeText)
     {
         // Create the new item based on the parameters
-        Granite.Widgets.SourceList.Item item = new Granite.Widgets.SourceList.Item (name);
-        item.badge = "10GB";
-        string path = "/usr/share/timeshift/images/%s.%s";
-        item.icon =  new GLib.FileIcon (GLib.File.new_for_path (path.printf ("disk", "png")));
+        Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item (name);
 
+        if (icon != null)
+        {
+            string path = "/usr/share/timeshift/images/%s.%s";
+            newItem.icon =  new GLib.FileIcon (GLib.File.new_for_path (path.printf (icon, "png")));
+        }
+
+        if (badgeText != null)
+        {
+            newItem.badge = badgeText;
+        }
+        
         // Add the item to the root node 
-        root.add (item);
+        root.add (newItem);
     }
 
-    public void addExpandableItem(string name, bool expanded)
+    public void add_expandable_item(SideBarExpandableItem newExpandableItem)
+    {
+        // Add the new expandable item to the root node 
+        root.add (newExpandableItem);
+    }
+
+    public void create_and_add_expandable_item(string name, bool expanded)
     {
         // Create the new expandable item based on the parameters
         SideBarExpandableItem newExpandableItem = new SideBarExpandableItem(name);

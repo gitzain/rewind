@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2015-05-27 01:48+0100\n"
+"POT-Creation-Date: 2015-05-28 01:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,10 +225,6 @@ msgstr ""
 msgid "Boot snapshots are enabled"
 msgstr ""
 
-#: Sidebar.vala:613
-msgid "Browse the contents of the network"
-msgstr ""
-
 #: RestoreWindow.vala:1147
 msgid ""
 "By default, any item that was included/excluded at the time of taking the "
@@ -383,10 +379,6 @@ msgstr ""
 msgid "Device for Restoring Snapshot"
 msgstr ""
 
-#: Sidebar.vala:447
-msgid "Devices"
-msgstr ""
-
 #: SystemRestore.vala:339
 msgid "Devices with Linux file systems"
 msgstr ""
@@ -468,10 +460,6 @@ msgstr ""
 msgid "Donations"
 msgstr ""
 
-#: Sidebar.vala:1260
-msgid "Empty _Trash"
-msgstr ""
-
 #: SettingsWindow.vala:159
 msgid "Enable"
 msgstr ""
@@ -510,10 +498,6 @@ msgstr ""
 #: SystemRestore.vala:2145 SystemRestore.vala:3048
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
-msgstr ""
-
-#: Sidebar.vala:606
-msgid "Entire Network"
 msgstr ""
 
 #: MainWindow.vala:1272 RestoreWindow.vala:1385 SystemRestore.vala:221
@@ -644,10 +628,6 @@ msgstr ""
 msgid "File Pattern"
 msgstr ""
 
-#: Sidebar.vala:457
-msgid "File System"
-msgstr ""
-
 #: ExcludeMessageWindow.vala:82
 msgid "Files matching the following patterns will be excluded"
 msgstr ""
@@ -709,10 +689,6 @@ msgstr ""
 
 #: SystemRestore.vala:658
 msgid "Hide rsync output"
-msgstr ""
-
-#: Sidebar.vala:407
-msgid "Home"
 msgstr ""
 
 #: ExcludeMessageWindow.vala:122
@@ -916,21 +892,12 @@ msgstr ""
 msgid "Mount"
 msgstr ""
 
-#: Sidebar.vala:494 Sidebar.vala:683
-#, c-format
-msgid "Mount and open %s"
-msgstr ""
-
 #: MainWindow.vala:1141
 msgid "Multiple Snapshots Selected"
 msgstr ""
 
 #: SystemRestore.vala:818
 msgid "Name"
-msgstr ""
-
-#: Sidebar.vala:571
-msgid "Network"
 msgstr ""
 
 #: MainWindow.vala:1032 MainWindow.vala:1137
@@ -983,36 +950,8 @@ msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
 
-#: Sidebar.vala:1202
-msgid "Open"
-msgstr ""
-
-#: Sidebar.vala:1210
-msgid "Open in New _Tab"
-msgstr ""
-
-#: Sidebar.vala:1216
-msgid "Open in New _Window"
-msgstr ""
-
-#: Sidebar.vala:441
-msgid "Open the Trash"
-msgstr ""
-
-#: Sidebar.vala:464
-msgid "Open the contents of the FileSystem"
-msgstr ""
-
-#: Sidebar.vala:414
-msgid "Open your personal folder"
-msgstr ""
-
 #: SystemRestore.vala:631
 msgid "Options"
-msgstr ""
-
-#: Sidebar.vala:390
-msgid "Personal"
 msgstr ""
 
 #: SystemRestore.vala:218
@@ -1102,7 +1041,7 @@ msgstr ""
 msgid "Rebooting system..."
 msgstr ""
 
-#: RestoreWindow.vala:406 SettingsWindow.vala:285 Sidebar.vala:1224
+#: RestoreWindow.vala:406 SettingsWindow.vala:285
 msgid "Remove"
 msgstr ""
 
@@ -1137,10 +1076,6 @@ msgstr ""
 
 #: SystemRestore.vala:1870
 msgid "Removing un-tagged snapshots..."
-msgstr ""
-
-#: Sidebar.vala:1232
-msgid "Rename"
 msgstr ""
 
 #: RestoreWindow.vala:432 SettingsWindow.vala:311
@@ -1502,10 +1437,6 @@ msgstr ""
 msgid "Translators"
 msgstr ""
 
-#: Sidebar.vala:434
-msgid "Trash"
-msgstr ""
-
 #: RestoreWindow.vala:200 RestoreWindow.vala:857 SystemRestore.vala:856
 #, c-format
 msgid "Type"
@@ -1514,11 +1445,6 @@ msgstr ""
 #: RestoreWindow.vala:856
 #, c-format
 msgid "UUID"
-msgstr ""
-
-#: Sidebar.vala:1132
-#, c-format
-msgid "Unable to start %s"
 msgstr ""
 
 #: SystemRestore.vala:1542
@@ -1609,33 +1535,9 @@ msgstr ""
 msgid "Wrong Passphrase"
 msgstr ""
 
-#: Sidebar.vala:395
-msgid "Your common places and bookmarks"
-msgstr ""
-
-#: Sidebar.vala:452
-msgid "Your local partitions and devices"
-msgstr ""
-
-#: Sidebar.vala:576
-msgid "Your network places"
-msgstr ""
-
 #: SystemRestore.vala:2264
 #, c-format
 msgid "[a = Abort, d = Default (%s), r = Root device]"
-msgstr ""
-
-#: Sidebar.vala:1253
-msgid "_Eject"
-msgstr ""
-
-#: Sidebar.vala:1241
-msgid "_Mount"
-msgstr ""
-
-#: Sidebar.vala:1247
-msgid "_Unmount"
 msgstr ""
 
 #: MainWindow.vala:1604

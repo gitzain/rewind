@@ -124,7 +124,7 @@ private Gtk.PlacesSidebar places;
 		btn_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
 		btn_backup.is_important = true;
 		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
-		btn_backup.icon_widget = get_shared_icon("backup","backup.svg",24);
+		btn_backup.icon_widget = get_shared_icon("document-new","document-new.svg",24);
 		headerbar.add(btn_backup);
         btn_backup.clicked.connect (btn_backup_clicked);
 
@@ -163,7 +163,7 @@ content.add (new Gtk.Label ("Scheduled snapshots disabled"));
 //places = new Gtk.PlacesSidebar();
 
 sb = new SideBar();
-sb.item_selected.connect(cmb_backup_device_changed);
+sb.item_selected.connect(sb_backup_device_changed);
 
 
 		pane.add1 (sb);
@@ -177,13 +177,15 @@ contextButtons = new Box (Orientation.HORIZONTAL, 0);
 Button btnDelete = new Button.with_label ("Delete");
 btnDelete.get_style_context().add_class("destructive-action"); // Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION
 contextButtons.pack_start(btnDelete, false, false, 12);
+//btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
 
 Button btnBrowse = new Button.with_label ("Browse");
 contextButtons.pack_end(btnBrowse, false, false, 12);
+//btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
 
 Button btnRestore = new Button.with_label ("Restore");
 contextButtons.pack_end(btnRestore, false, false, 0);
-
+//btn_restore.clicked.connect (btn_restore_clicked);
 
 
 vbox_main.pack_end(contextButtons, false, true, 12);
@@ -196,46 +198,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 
         //headerbar ---------------------------------------------------
         
-
-
-
-/*		//btn_restore
-		btn_restore = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_restore.is_important = true;
-		btn_restore.set_tooltip_text (_("Restore Snapshot"));
-		btn_restore.icon_widget = get_shared_icon("backup","backup.svg",24);
-        toolbar.add(btn_restore);
-
-		btn_restore.clicked.connect (btn_restore_clicked);
-		
-	    //btn_browse_snapshot
-		btn_browse_snapshot = new Gtk.ToolButton.from_stock ("gtk-directory");
-		btn_browse_snapshot.is_important = true;
-		btn_browse_snapshot.label = _("Browse");
-		btn_browse_snapshot.set_tooltip_text (_("Browse Snapshot"));
-        toolbar.add(btn_browse_snapshot);
-
-        btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
-        
-		//btn_delete_snapshot
-		btn_delete_snapshot = new Gtk.ToolButton.from_stock ("gtk-delete");
-		btn_delete_snapshot.is_important = true;
-		btn_delete_snapshot.label = _("Delete");
-		btn_delete_snapshot.set_tooltip_text (_("Delete Snapshot"));
-        toolbar.add(btn_delete_snapshot);
-
-        btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);*/
-
-        //separator
-		//var separator = new Gtk.SeparatorToolItem();
-		//separator.set_draw (false);
-		//separator.set_expand (true);
-		//headerbar.add(separator);
-		
-
-
 /*
- * 
 		//btn_clone
 		btn_clone = new Gtk.ToolButton.from_stock ("gtk-copy");
 		btn_clone.is_important = false;
@@ -315,14 +278,14 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		cmb_backup_device.set_tooltip_markup(_("Snapshots will be saved in path <b>/timeshift</b> on selected device"));
 		hbox_device.add(cmb_backup_device);
 		
-		// CellRendererText cell_backup_dev_margin = new CellRendererText ();
-		// cell_backup_dev_margin.text = "";
-		// cmb_backup_device.pack_start (cell_backup_dev_margin, false);
+		CellRendererText cell_backup_dev_margin = new CellRendererText ();
+		cell_backup_dev_margin.text = "";
+		cmb_backup_device.pack_start (cell_backup_dev_margin, false);
 		
-		// CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
-		// cell_backup_dev_icon.xpad = 1;
-		// cmb_backup_device.pack_start (cell_backup_dev_icon, false);
-		// cmb_backup_device.set_attributes(cell_backup_dev_icon, "pixbuf", 1);
+		CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
+		cell_backup_dev_icon.xpad = 1;
+		cmb_backup_device.pack_start (cell_backup_dev_icon, false);
+		cmb_backup_device.set_attributes(cell_backup_dev_icon, "pixbuf", 1);
 		
 		CellRendererText cell_backup_device = new CellRendererText();
         cmb_backup_device.pack_start( cell_backup_device, false );
@@ -331,15 +294,16 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		cmb_backup_device.changed.connect(cmb_backup_device_changed);
 		
 		//btn_refresh_backup_device_list
-		// btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
-		// btn_refresh_backup_device_list.set_size_request(50,-1);
-		// btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
-		// btn_refresh_backup_device_list.clicked.connect(()=>{ 
-		// 	App.update_partition_list();
-		// 	refresh_cmb_backup_device(); 
-		// 	refresh_tv_backups();
-		// });
-		// hbox_device.add(btn_refresh_backup_device_list);
+		btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
+		btn_refresh_backup_device_list.set_size_request(50,-1);
+		btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
+		btn_refresh_backup_device_list.clicked.connect(()=>{ 
+			App.update_partition_list();
+			refresh_cmb_backup_device();
+			refresh_sb_backup_device(); 
+			refresh_tv_backups();
+		});
+		hbox_device.add(btn_refresh_backup_device_list);
 		
 		//lbl_backup_device_warning
 		lbl_backup_device_warning = new Gtk.Label("");
@@ -498,7 +462,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
         hbox_statusbar.margin_bottom = 1;
         hbox_statusbar.margin_left = 6;
         hbox_statusbar.margin_right = 12;
-        //vbox_main.add (hbox_statusbar);
+        vbox_main.add (hbox_statusbar);
 
 		//img_status_spinner
 		img_status_spinner = new Gtk.Image();
@@ -571,6 +535,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		}
 		
 		refresh_cmb_backup_device();
+		refresh_sb_backup_device();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
     }
 
@@ -613,7 +578,8 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 			statusbar_message(_("Estimating system size..."));
 		}
 		
-		//refresh_cmb_backup_device();
+		refresh_cmb_backup_device();
+		refresh_sb_backup_device();
 		refresh_tv_backups();
 		update_statusbar();
 		update_ui(true);
@@ -855,92 +821,143 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		tv_backups.columns_autosize ();
 	}
 
-	// This method gets a list of all the partitions and populates the sidebar 
 	private void refresh_cmb_backup_device(){
-		// boom();
-		// ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
+ 		ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
+ 
+ 		TreeIter iter;
+ 
+ 		int index = -1;
+ 		int index_snapshot_device = -1;
+ 		int index_root_device = -1;
+ 
+ 		foreach(Device pi in App.partition_list) {
+ 			
+ 			if (!pi.has_linux_filesystem()) { continue; }
+ 
+ 			store.append(out iter);
+ 			store.set (iter, 0, pi);
+ 			
+ 			//set icon ----------------
+ 			
+ 			Gdk.Pixbuf pix_selected = null;
+ 			Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
+ 			Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.svg",16).pixbuf;
+ 			
+ 			if (pi.type == "luks"){
+ 				pix_selected = pix_locked;
+ 			}
+ 			else{
+ 				pix_selected = pix_device;
+ 			}
+ 			
+ 			store.set (iter, 1, pix_selected, -1);
+ 			
+ 			//get device index ----------
+ 			
+ 			index++;
+ 			if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
+ 				index_root_device = index;
+ 			}
+ 			if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
+ 				index_snapshot_device = index;
+ 			}
+ 		}
+ 		
+ 		cmb_backup_device.set_model (store);
+ 		
+ 		if (index_snapshot_device > -1){
+ 			cmb_backup_device.active = index_snapshot_device;
+ 		}
+ 		else if (index_root_device > -1){
+ 			cmb_backup_device.active = index_root_device;
+ 		}
+ 		else {
+ 			cmb_backup_device.active = -1;
+ 		}
+ 	}
 
-		// TreeIter iter;
+	// This method gets a list of all the partitions and populates the sidebar 
+	private void refresh_sb_backup_device()
+	{
+		sb.delete_all_items();
+		SideBarExpandableItem newExpandableItem = new SideBarExpandableItem("Backup To:");
+		newExpandableItem.expanded = true;
 
-		// int index = -1;
-		// int index_snapshot_device = -1;
-		// int index_root_device = -1;
+		Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item ("Test");
+		newExpandableItem.add(newItem);
+
+
+		sb.add_expandable_item(newExpandableItem);
+
+
 
 		foreach(Device pi in App.partition_list) 
 		{
-			
-			if (!pi.has_linux_filesystem()) { continue; }
 
-			// store.append(out iter);
-			// store.set (iter, 0, pi);
-			
-			//set icon ----------------
-			
-			Gdk.Pixbuf pix_selected = null;
-			Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
-			Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.svg",16).pixbuf;
-			
-			if (pi.type == "luks"){
-				pix_selected = pix_locked;
-			}
-			else{
-				pix_selected = pix_device;
-			}
-			
-
-SideBarExpandableItem newExpandableItem = new SideBarExpandableItem(name);
-Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item (name);
-
-sb.add_item(pi.label, "disk", "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB"));
-change_backup_device(pi);
-			//store.set (iter, 1, pix_selected, -1);
-			
-			//get device index ----------
-			
-			// index++;
-			// if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
-			// 	index_root_device = index;
-			// }
-			// if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
-			// 	index_snapshot_device = index;
-			// }
 		}
+
 		
-		//cmb_backup_device.set_model (store);
-		
-		// if (index_snapshot_device > -1){
-		// 	cmb_backup_device.active = index_snapshot_device;
-		// }
-		// else if (index_root_device > -1){
-		// 	cmb_backup_device.active = index_root_device;
-		// }
-		// else {
-		// 	cmb_backup_device.active = -1;
-		// }
+		//sb.create_and_add_item(pi.label, "disk", "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB"));
+		//change_backup_device(pi);
+
+
+		//Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item (pi.label);
+		//string path = "/usr/share/timeshift/images/%s.%s";
+		//newItem.icon =  new GLib.FileIcon (GLib.File.new_for_path (path.printf ("disk", "png")));
+		//newExpandableItem.add(newItem);
+		//sb.add_expandable_item(newExpandableItem);
+
+	}
+
+	private void cmb_backup_device_changed(){
+ 		ComboBox combo = cmb_backup_device;
+ 		if (combo.model == null) { return; }
+ 		
+ 		string txt;
+ 		if (combo.active < 0) { 
+ 			txt = "<b>" + _("WARNING:") + "</b>\n";
+ 			txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
+ 			txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
+ 			lbl_backup_device_warning.label = txt;
+ 			App.snapshot_device = null;
+ 			return; 
+ 		}
+ 		
+ 		//get new device reference
+ 		TreeIter iter;
+ 		Device pi;
+ 		combo.get_active_iter (out iter);
+ 		TreeModel model = (TreeModel) combo.model;
+ 		model.get(iter, 0, out pi);
+ 		
+ 		change_backup_device(pi);
+	}
+
+	private void sb_backup_device_changed(){
+ 		// ComboBox combo = cmb_backup_device;
+ 		// if (combo.model == null) { return; }
+ 		
+ 		// string txt;
+ 		// if (sb.selected == null) { 
+ 		// 	txt = "<b>" + _("WARNING:") + "</b>\n";
+ 		// 	txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
+ 		// 	txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
+ 		// 	// set infobar text here
+ 		 	boom();
+ 		// 	App.snapshot_device = null;
+ 		// 	return; 
+ 		// }
+ 		
+ 		// //get new device reference
+ 		// TreeIter iter;
+ 		// Device pi;
+ 		// combo.get_active_iter (out iter);
+ 		// TreeModel model = (TreeModel) combo.model;
+ 		// model.get(iter, 0, out pi);
+ 		
+ 		// change_backup_device(pi);
 	}
 	
-	private void cmb_backup_device_changed(){
-		SideBar sidey = sb;
-		
-		string txt;
-		if (sidey.selected != null) { 
-			txt = "<b>" + _("WARNING:") + "</b>\n";
-			txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
-			txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-			lbl_backup_device_warning.label = txt;
-			App.snapshot_device = null;
-			return; 
-		}
-		
-		//get new device reference
-		// TreeIter iter;
-		// Device pi;
-		// sidey.get_active_iter (out iter);
-		// TreeModel model = (TreeModel) sidey.model;
-		// model.get(iter, 0, out pi);
-		
-		// change_backup_device(pi);
-	}
 	
 	private void change_backup_device(Device pi){
 		//return if device has not changed

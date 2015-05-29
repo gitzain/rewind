@@ -67,4 +67,9 @@ public class SideBar : Granite.Widgets.SourceList
         // Add the new expandable item to the root node 
         root.add (newExpandableItem);
     }
+
+    public void delete_all_items()
+    {
+        root = new Granite.Widgets.SourceList.ExpandableItem();
+    }
 }

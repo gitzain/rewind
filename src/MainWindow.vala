@@ -157,10 +157,10 @@ content.add (new Gtk.Label ("Scheduled snapshots disabled"));
 		// The Pane:
 		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
 
-//places = new Gtk.PlacesSidebar();
 
 sidebar = new SideBar();
-sidebar.item_selected.connect(sidebar_backup_device_changed);
+sidebar.item_selected.connect(sidebar_updated);
+
 
 
 		pane.add1 (sidebar);
@@ -287,8 +287,6 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		CellRendererText cell_backup_device = new CellRendererText();
         cmb_backup_device.pack_start( cell_backup_device, false );
         cmb_backup_device.set_cell_data_func (cell_backup_device, cell_backup_device_render);
-
-		cmb_backup_device.changed.connect(cmb_backup_device_changed);
 		
 		//btn_refresh_backup_device_list
 		btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
@@ -296,8 +294,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
 		btn_refresh_backup_device_list.clicked.connect(()=>{ 
 			App.update_partition_list();
-			refresh_cmb_backup_device();
-			refresh_sidebar_backup_device(); 
+			sidebar.refresh_items(); 
 			refresh_tv_backups();
 		});
 		hbox_device.add(btn_refresh_backup_device_list);
@@ -531,8 +528,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 			btn_view_app_logs.sensitive = false;
 		}
 		
-		refresh_cmb_backup_device();
-		refresh_sidebar_backup_device();
+		sidebar.refresh_items();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
     }
 
@@ -557,6 +553,11 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 
     }
 
+    private void sidebar_updated()
+    {
+    	init_backup_device();
+    }
+
 	private bool init_backup_device(){
 		
 		/* updates statusbar messages and snapshot list after backup device is changed */
@@ -575,10 +576,12 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 			statusbar_message(_("Estimating system size..."));
 		}
 		
-		refresh_cmb_backup_device();
-		refresh_sidebar_backup_device();
+		sidebar.refresh_items(); 
+
 		refresh_tv_backups();
+
 		update_statusbar();
+
 		update_ui(true);
 
 		return false;
@@ -818,139 +821,6 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		tv_backups.columns_autosize ();
 	}
 
-	private void refresh_cmb_backup_device(){
- 		ListStore store = new ListStore(2, typeof(Device), typeof(Gdk.Pixbuf));
- 
- 		TreeIter iter;
- 
- 		int index = -1;
- 		int index_snapshot_device = -1;
- 		int index_root_device = -1;
- 
- 		foreach(Device pi in App.partition_list) {
- 			
- 			if (!pi.has_linux_filesystem()) { continue; }
- 
- 			store.append(out iter);
- 			store.set (iter, 0, pi);
- 			
- 			//set icon ----------------
- 			
- 			Gdk.Pixbuf pix_selected = null;
- 			Gdk.Pixbuf pix_device = get_shared_icon("disk","disk.png",16).pixbuf;
- 			Gdk.Pixbuf pix_locked = get_shared_icon("locked","locked.svg",16).pixbuf;
- 			
- 			if (pi.type == "luks"){
- 				pix_selected = pix_locked;
- 			}
- 			else{
- 				pix_selected = pix_device;
- 			}
- 			
- 			store.set (iter, 1, pix_selected, -1);
- 			
- 			//get device index ----------
- 			
- 			index++;
- 			if ((App.root_device != null) && (pi.uuid == App.root_device.uuid)){
- 				index_root_device = index;
- 			}
- 			if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){
- 				index_snapshot_device = index;
- 			}
- 		}
- 		
- 		cmb_backup_device.set_model (store);
- 		
- 		if (index_snapshot_device > -1){
- 			cmb_backup_device.active = index_snapshot_device;
- 		}
- 		else if (index_root_device > -1){
- 			cmb_backup_device.active = index_root_device;
- 		}
- 		else {
- 			cmb_backup_device.active = -1;
- 		}
- 	}
-
-	// This method gets a list of all the partitions and populates the sidebar 
-	private void refresh_sidebar_backup_device()
-	{
-		sidebar.refresh_items();
-	}
-
-	private void cmb_backup_device_changed(){
- 		ComboBox combo = cmb_backup_device;
- 		if (combo.model == null) { return; }
- 		
- 		string txt;
- 		if (combo.active < 0) { 
- 			txt = "<b>" + _("WARNING:") + "</b>\n";
- 			txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
- 			txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
- 			lbl_backup_device_warning.label = txt;
- 			App.snapshot_device = null;
- 			return; 
- 		}
- 		
- 		//get new device reference
- 		TreeIter iter;
- 		Device pi;
- 		combo.get_active_iter (out iter);
- 		TreeModel model = (TreeModel) combo.model;
- 		model.get(iter, 0, out pi);
- 		
- 		change_backup_device(pi);
-	}
-
-	private void sidebar_backup_device_changed(){
-		if (sidebar.selected.name == null) { return; }
- 		
- 		// string txt;
- 		// if (sidebar.selected == null) { 
- 		// 	txt = "<b>" + _("WARNING:") + "</b>\n";
- 		// 	txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
- 		// 	txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
- 		// 	// set infobar text here
- 		// 	App.snapshot_device = null;
- 		// 	return; 
- 		// }
-
-        foreach(Device pi in App.partition_list) 
-        {
-        	if (pi.name == sidebar.selected.name)
-        	{
-        		change_backup_device(pi);
-        		return;
-        	}
-        }
-	}
-	
-	
-	private void change_backup_device(Device pi){
-		//return if device has not changed
-		if ((App.snapshot_device != null) && (pi.uuid == App.snapshot_device.uuid)){ return; }
-
-		gtk_set_busy(true, this);
-		
-		Device previous_device = App.snapshot_device;
-		App.snapshot_device = pi;
-		
-		//try mounting the device
-		if (App.mount_backup_device(this)){
-			App.update_partition_list();
-			gtk_set_busy(false, this);
-			timer_backup_device_init = Timeout.add(100, init_backup_device);
-		}
-		else{
-			gtk_set_busy(false, this);
-			App.snapshot_device = previous_device;
-			refresh_cmb_backup_device();
-			refresh_sidebar_backup_device();
-			return;
-		}
-	}
-
 	private void btn_backup_clicked(){
 		
 		//check root device --------------
@@ -999,7 +869,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		//update UI -------------------
 		
 		App.update_partition_list();
-		refresh_cmb_backup_device();
+		sidebar.refresh_items();
 		refresh_tv_backups();
 		update_statusbar();
 		
@@ -1092,7 +962,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		//update UI -------------------
 		
 		App.update_partition_list();
-		refresh_cmb_backup_device();
+		sidebar.refresh_items();
 		refresh_tv_backups();
 		update_statusbar();
 

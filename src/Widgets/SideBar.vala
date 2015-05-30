@@ -24,15 +24,35 @@
 using Gtk; 
 using Gee;
 
+using TeeJee.Devices;
+
 public class SideBar : Granite.Widgets.SourceList 
 {
+    SideBarExpandableItem newExpandableItem;
+
+
     public SideBar () 
     {
         // Set properties
         width_request = 150;
+        refresh_items();
+        root.add(newExpandableItem);
     }
 
-    public void create_and_add_item(string name, string icon, string badgeText)
+    public void refresh_items()
+    {
+        newExpandableItem = new SideBarExpandableItem("Backup To:");
+        newExpandableItem.expanded = true;
+        Granite.Widgets.SourceList.Item newItem;
+
+        foreach(Device pi in App.partition_list) 
+        {
+            newItem = create_item(pi.name, "disk", "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB"));
+            newExpandableItem.add(newItem);
+        }
+    }
+
+    private Granite.Widgets.SourceList.Item create_item(string name, string icon, string badgeText)
     {
         // Create the new item based on the parameters
         Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item (name);
@@ -48,28 +68,6 @@ public class SideBar : Granite.Widgets.SourceList
             newItem.badge = badgeText;
         }
         
-        // Add the item to the root node 
-        root.add (newItem);
-    }
-
-    public void add_expandable_item(SideBarExpandableItem newExpandableItem)
-    {
-        // Add the new expandable item to the root node 
-        root.add (newExpandableItem);
-    }
-
-    public void create_and_add_expandable_item(string name, bool expanded)
-    {
-        // Create the new expandable item based on the parameters
-        SideBarExpandableItem newExpandableItem = new SideBarExpandableItem(name);
-        newExpandableItem.expanded = expanded;
-
-        // Add the new expandable item to the root node 
-        root.add (newExpandableItem);
-    }
-
-    public void delete_all_items()
-    {
-        root = new Granite.Widgets.SourceList.ExpandableItem();
+        return newItem;
     }
 }

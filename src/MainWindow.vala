@@ -54,9 +54,6 @@ class MainWindow : Gtk.Window {
 	private ToolButton btn_about;
     private ToolButton btn_donate;
 
-    //sidebar. working here
-    private Granite.Widgets.SourceList sidebar = new Granite.Widgets.SourceList();
-
 	//backup device
 	private Box hbox_device;
 	private Label lbl_backup_device;
@@ -99,7 +96,7 @@ class MainWindow : Gtk.Window {
 
 private InfoBar bar;
 
-private SideBar sb;
+private SideBar sidebar;
 
 private Gtk.PlacesSidebar places;
 
@@ -162,11 +159,11 @@ content.add (new Gtk.Label ("Scheduled snapshots disabled"));
 
 //places = new Gtk.PlacesSidebar();
 
-sb = new SideBar();
-sb.item_selected.connect(sb_backup_device_changed);
+sidebar = new SideBar();
+sidebar.item_selected.connect(sidebar_backup_device_changed);
 
 
-		pane.add1 (sb);
+		pane.add1 (sidebar);
 		pane.add2 (vbox_main);
 		pane.set_position(150);
 		mainBox.pack_start(pane, false, true, 0);
@@ -300,7 +297,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		btn_refresh_backup_device_list.clicked.connect(()=>{ 
 			App.update_partition_list();
 			refresh_cmb_backup_device();
-			refresh_sb_backup_device(); 
+			refresh_sidebar_backup_device(); 
 			refresh_tv_backups();
 		});
 		hbox_device.add(btn_refresh_backup_device_list);
@@ -535,7 +532,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		}
 		
 		refresh_cmb_backup_device();
-		refresh_sb_backup_device();
+		refresh_sidebar_backup_device();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
     }
 
@@ -579,7 +576,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		}
 		
 		refresh_cmb_backup_device();
-		refresh_sb_backup_device();
+		refresh_sidebar_backup_device();
 		refresh_tv_backups();
 		update_statusbar();
 		update_ui(true);
@@ -877,36 +874,9 @@ vbox_main.pack_end(contextButtons, false, true, 12);
  	}
 
 	// This method gets a list of all the partitions and populates the sidebar 
-	private void refresh_sb_backup_device()
+	private void refresh_sidebar_backup_device()
 	{
-		sb.delete_all_items();
-		SideBarExpandableItem newExpandableItem = new SideBarExpandableItem("Backup To:");
-		newExpandableItem.expanded = true;
-
-		Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item ("Test");
-		newExpandableItem.add(newItem);
-
-
-		sb.add_expandable_item(newExpandableItem);
-
-
-
-		foreach(Device pi in App.partition_list) 
-		{
-
-		}
-
-		
-		//sb.create_and_add_item(pi.label, "disk", "%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB"));
-		//change_backup_device(pi);
-
-
-		//Granite.Widgets.SourceList.Item newItem = new Granite.Widgets.SourceList.Item (pi.label);
-		//string path = "/usr/share/timeshift/images/%s.%s";
-		//newItem.icon =  new GLib.FileIcon (GLib.File.new_for_path (path.printf ("disk", "png")));
-		//newExpandableItem.add(newItem);
-		//sb.add_expandable_item(newExpandableItem);
-
+		sidebar.refresh_items();
 	}
 
 	private void cmb_backup_device_changed(){
@@ -933,29 +903,27 @@ vbox_main.pack_end(contextButtons, false, true, 12);
  		change_backup_device(pi);
 	}
 
-	private void sb_backup_device_changed(){
- 		// ComboBox combo = cmb_backup_device;
- 		// if (combo.model == null) { return; }
+	private void sidebar_backup_device_changed(){
+		if (sidebar.selected.name == null) { return; }
  		
  		// string txt;
- 		// if (sb.selected == null) { 
+ 		// if (sidebar.selected == null) { 
  		// 	txt = "<b>" + _("WARNING:") + "</b>\n";
  		// 	txt += "Ø " + _("Please select a device for saving snapshots.") + "\n";
  		// 	txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
  		// 	// set infobar text here
- 		 	boom();
  		// 	App.snapshot_device = null;
  		// 	return; 
  		// }
- 		
- 		// //get new device reference
- 		// TreeIter iter;
- 		// Device pi;
- 		// combo.get_active_iter (out iter);
- 		// TreeModel model = (TreeModel) combo.model;
- 		// model.get(iter, 0, out pi);
- 		
- 		// change_backup_device(pi);
+
+        foreach(Device pi in App.partition_list) 
+        {
+        	if (pi.name == sidebar.selected.name)
+        	{
+        		change_backup_device(pi);
+        		return;
+        	}
+        }
 	}
 	
 	
@@ -978,6 +946,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 			gtk_set_busy(false, this);
 			App.snapshot_device = previous_device;
 			refresh_cmb_backup_device();
+			refresh_sidebar_backup_device();
 			return;
 		}
 	}

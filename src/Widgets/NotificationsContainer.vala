@@ -1,5 +1,5 @@
 /*
- * NotificationBar.vala
+ * NotificationsContainer.vala
  * 
  * Copyright 2015 Zain Khan <emailzainkhan@gmail.com>
  * 
@@ -28,33 +28,34 @@ using TeeJee.Devices;
 
 using TeeJee.GtkHelper;
 
-public class NotificationBar : InfoBar
+public class NotificationsContainer : Gtk.Box
 {
-    Gtk.Label currentNotification;
+    private Gtk.Revealer revealer;
+    private NotificationBar notification1;
+    private NotificationBar notification2;
+    private NotificationBar notification3;
 
-    public NotificationBar(string text)
+    public NotificationsContainer()
     {
-        set_message_type(Gtk.MessageType.WARNING);
-        set_show_close_button(true);
+        orientation = Orientation.VERTICAL;
 
-        add_button ("Yes", 1);
-        add_button ("No", 2);
 
-        currentNotification = new Gtk.Label (text);
+        notification1 = new NotificationBar("1");
+        notification1.change_notification_type(Gtk.MessageType.WARNING);
+        add(notification1);
 
-        Gtk.Container content = get_content_area();
-        content.add (currentNotification);
-    }
+        notification2 = new NotificationBar("2");
+        notification2.change_notification_type(Gtk.MessageType.INFO);
+        add(notification2);
 
-    public void change_notification(string text, Gtk.MessageType message_type)
-    {
-        currentNotification.label = text;
-        set_message_type(message_type);
-    }
+        revealer = new Gtk.Revealer();
+        revealer.transition_type = RevealerTransitionType.CROSSFADE;
+        revealer.set_transition_duration(5000);
+        revealer.set_reveal_child(true);
+        revealer.add(notification3);
+        add(revealer);
 
-    public void change_notification_type(Gtk.MessageType message_type)
-    {
-        set_message_type(message_type);
+
     }
 
 }

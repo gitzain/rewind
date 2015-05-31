@@ -45,6 +45,7 @@ class MainWindow : Gtk.Window {
 
     //infobar
     private NotificationBar infobar_scheduled_snapshots;
+    private NotificationsContainer notification_container;
 
     //
 	private Paned paned;
@@ -119,6 +120,9 @@ class MainWindow : Gtk.Window {
 		//infobar ----------------------------------------------------
 		infobar_scheduled_snapshots = new NotificationBar("Default");
 		box_main.pack_start(infobar_scheduled_snapshots, false, false, 0);
+
+		notification_container = new NotificationsContainer();
+		box_main.pack_start(notification_container, false, false, 0);
 
 		//sidebar ----------------------------------------------------
 		sidebar = new SideBar();

@@ -43,6 +43,10 @@ public class HeaderBar : Gtk.HeaderBar
 
     public HeaderBar()
     {
+        //set properties
+        set_title(AppName);
+        set_show_close_button (true);
+
         //btn_settings
         btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
         btn_settings.is_important = true;

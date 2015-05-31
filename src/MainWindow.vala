@@ -36,24 +36,21 @@ using TeeJee.Misc;
 
 class MainWindow : Gtk.Window {
 
-	private Paned paned;
-	private Box mainBox;
-	private Box vbox_main;
-	
 	//headerbar
     private HeaderBar headerbar;
 	private ToolButton btn_backup;
 
-
-	private ToolButton btn_clone;
-
+    //
+	private Box box_main;
 
     //infobar
-    private InfoBar bar;
+    private NotificationBar infobar_scheduled_snapshots;
 
-    //sidebar
-    private SideBar sidebar;
-	
+    //
+	private Paned paned;
+	private SideBar sidebar;
+	private Box box_snapshots;
+
 	//snapshots
 	private ScrolledWindow sw_backups;
 	private TreeView tv_backups;
@@ -102,10 +99,8 @@ class MainWindow : Gtk.Window {
 		this.set_position(Gtk.WindowPosition.CENTER);
 		this.set_size_request (500, 250);
 		
-        //headerbar
+        //headerbar ---------------------------------------------------
 		headerbar = new HeaderBar();
-		headerbar.set_title(AppName);
-		headerbar.set_show_close_button (true);
 		this.set_titlebar(headerbar);
 
 		//btn_backup
@@ -116,78 +111,28 @@ class MainWindow : Gtk.Window {
 		headerbar.add(btn_backup);
         btn_backup.clicked.connect (btn_backup_clicked);
 
-		//mainbox for the window
-        mainBox = new Box (Orientation.VERTICAL, 0);
-        mainBox.margin = 0;
-        this.add(mainBox);
+		//main container under headerbar------------------------------
+        box_main = new Box (Orientation.VERTICAL, 0);
+        box_main.margin = 0;
+        this.add(box_main);
 
-//infobar
-bar = new InfoBar();
-bar.set_message_type(Gtk.MessageType.WARNING);
-bar.set_show_close_button(true);
-// Buttons:
-bar.add_button ("Yes", 1);
-bar.add_button ("No", 2);
-//mainBox.pack_start(bar, false, false, 0);
-// Content:
-Gtk.Container content = bar.get_content_area ();
-content.add (new Gtk.Label ("Scheduled snapshots disabled"));
+		//infobar ----------------------------------------------------
+		infobar_scheduled_snapshots = new NotificationBar("Default");
+		box_main.pack_start(infobar_scheduled_snapshots, false, false, 0);
 
-	    //vboxMain
-        vbox_main = new Box (Orientation.VERTICAL, 0);
-        vbox_main.margin = 0;
+		//sidebar ----------------------------------------------------
+		sidebar = new SideBar();
+		sidebar.item_selected.connect(sidebar_updated);
 
-		// The Pane:
-		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
+	    //snapshot list ----------------------------------------------------
+        box_snapshots = new Box (Orientation.VERTICAL, 0);
+        box_snapshots.margin = 0;
 
-
-sidebar = new SideBar();
-sidebar.item_selected.connect(sidebar_updated);
-
-
-
-		pane.add1 (sidebar);
-		pane.add2 (vbox_main);
-		pane.set_position(150);
-		mainBox.pack_start(pane, false, true, 0);
-        
-	
-
-
-
-
-
-
-
-
-        //headerbar ---------------------------------------------------
-        
-
-		//btn_clone
-		btn_clone = new Gtk.ToolButton.from_stock ("gtk-copy");
-		btn_clone.is_important = false;
-		btn_clone.label = _("Clone");
-		btn_clone.set_tooltip_text (_("Clone the current system on another device"));
-        headerbar.add(btn_clone);
-        btn_clone.clicked.connect (btn_clone_clicked);
-       
-
-
-		//snapshot list ----------------------------------------------
-		
-        //tv_backups
-		tv_backups = new TreeView();
+        tv_backups = new TreeView();
 		tv_backups.get_selection().mode = SelectionMode.MULTIPLE;
 		tv_backups.headers_clickable = true;
 		tv_backups.has_tooltip = true;
 		tv_backups.set_rules_hint (true);
-
-
-
-
-
-
-
 
 		contextButtons = new Box (Orientation.HORIZONTAL, 0);
 
@@ -209,11 +154,8 @@ sidebar.item_selected.connect(sidebar_updated);
 		contextButtons.pack_end(btnSnapshopLog, false, false, 12);
 		btnSnapshopLog.clicked.connect (btn_view_snapshot_log_clicked);
 
-		vbox_main.pack_end(contextButtons, false, true, 12);
+		box_snapshots.pack_end(contextButtons, false, true, 12);
 
-
-
-		
 		//sw_backups
 		sw_backups = new ScrolledWindow(null, null);
 		sw_backups.set_shadow_type (ShadowType.ETCHED_IN);
@@ -223,7 +165,7 @@ sidebar.item_selected.connect(sidebar_updated);
 		// sw_backups.margin_right = 6;
 		// sw_backups.margin_top = 6;
 		// sw_backups.margin_bottom = 6;
-		vbox_main.add(sw_backups);
+		box_snapshots.add(sw_backups);
 
         //col_date
 		col_date = new TreeViewColumn();
@@ -314,7 +256,7 @@ sidebar.item_selected.connect(sidebar_updated);
 		cell_desc.editable = true;
 		
 		cell_desc.edited.connect (cell_desc_edited);
-		
+
 		//tooltips
 		tv_backups.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
 			TreeModel model;
@@ -352,7 +294,7 @@ sidebar.item_selected.connect(sidebar_updated);
         hbox_statusbar.margin_bottom = 1;
         hbox_statusbar.margin_left = 6;
         hbox_statusbar.margin_right = 12;
-        vbox_main.add (hbox_statusbar);
+        box_snapshots.add (hbox_statusbar);
 
 		//img_status_spinner
 		img_status_spinner = new Gtk.Image();
@@ -414,12 +356,19 @@ sidebar.item_selected.connect(sidebar_updated);
 		img_status_progress.file = App.share_folder + "/timeshift/images/progress.gif";
 		img_status_progress.no_show_all = true;
         hbox_statusbar.add(img_status_progress);
+
+		//Create a 2 section pane and add the sidebar and snapshot list above------------------------------
+		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
+		pane.add1 (sidebar);
+		pane.add2 (box_snapshots);
+		pane.set_position(150);
+		box_main.pack_start(pane, false, true, 0);
+        
         
         snapshot_device_original = App.snapshot_device;
         
         if (App.live_system()){
 			btn_backup.sensitive = false;
-			btn_clone.sensitive = false;
 		}
 		
 		sidebar.refresh_items();
@@ -868,11 +817,6 @@ sidebar.item_selected.connect(sidebar_updated);
 		restore();
 	}
 	
-	private void btn_clone_clicked(){
-		App.mirror_system = true;
-		restore();
-	}
-	
 	private void restore(){
 		TreeIter iter;
 		TreeSelection sel;
@@ -1240,13 +1184,13 @@ sidebar.item_selected.connect(sidebar_updated);
 		}
 		else{
 			if (App.is_scheduled){
-				img_status_scheduled.file = img_dot_green;
-				lbl_status_scheduled.label = _("Scheduled snapshots") + " " + _("Enabled");
-				lbl_status_scheduled.set_tooltip_text(_("System snapshots will be taken at regular intervals"));
+				//img_status_scheduled.file = img_dot_green;
+				infobar_scheduled_snapshots.change_notification("Scheduled snapshots enabled. System snapshots will be taken at regular intervals.", Gtk.MessageType.INFO);
+				//lbl_status_scheduled.set_tooltip_text(_("System snapshots will be taken at regular intervals"));
 			}else{
-				img_status_scheduled.file = img_dot_red;
-				lbl_status_scheduled.label = _("Scheduled snapshots") + " " + _("Disabled");
-				lbl_status_scheduled.set_tooltip_text("");
+				//img_status_scheduled.file = img_dot_red;
+				infobar_scheduled_snapshots.change_notification("Scheduled snapshots disabled.", Gtk.MessageType.ERROR);
+				//lbl_status_scheduled.set_tooltip_text("");
 			}
 		}
 

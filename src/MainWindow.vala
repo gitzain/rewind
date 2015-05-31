@@ -43,23 +43,16 @@ class MainWindow : Gtk.Window {
 	//headerbar
     private HeaderBar headerbar;
 	private ToolButton btn_backup;
-	private ToolButton btn_restore;
-	private ToolButton btn_delete_snapshot;
-	private ToolButton btn_browse_snapshot;
-	private ToolButton btn_settings;
-	private ToolButton btn_clone;
-	private ToolButton btn_refresh_snapshots;
-	private ToolButton btn_view_snapshot_log;
-	private ToolButton btn_view_app_logs;
-	private ToolButton btn_about;
-    private ToolButton btn_donate;
 
-	//backup device
-	private Box hbox_device;
-	private Label lbl_backup_device;
-	private ComboBox cmb_backup_device;
-	private Button btn_refresh_backup_device_list;
-	private Label lbl_backup_device_warning;
+
+	private ToolButton btn_clone;
+
+
+    //infobar
+    private InfoBar bar;
+
+    //sidebar
+    private SideBar sidebar;
 	
 	//snapshots
 	private ScrolledWindow sw_backups;
@@ -70,6 +63,12 @@ class MainWindow : Gtk.Window {
     private TreeViewColumn col_desc;
 	private int tv_backups_sort_column_index = 0;
 	private bool tv_backups_sort_column_desc = true;
+	private Box contextButtons;
+
+	private ToolButton btn_restore;
+	private ToolButton btn_delete_snapshot;
+	private ToolButton btn_browse_snapshot;
+	private ToolButton btn_view_snapshot_log;
 	
 	//statusbar
 	private Box hbox_statusbar;
@@ -92,14 +91,6 @@ class MainWindow : Gtk.Window {
 	//other
 	private Device snapshot_device_original;
 
-	private Box contextButtons;
-
-private InfoBar bar;
-
-private SideBar sidebar;
-
-private Gtk.PlacesSidebar places;
-
 	public MainWindow () 
 	{
 		this.title = AppName;
@@ -112,7 +103,7 @@ private Gtk.PlacesSidebar places;
 		this.set_size_request (500, 250);
 		
         //headerbar
-		headerbar = new Gtk.HeaderBar();
+		headerbar = new HeaderBar();
 		headerbar.set_title(AppName);
 		headerbar.set_show_close_button (true);
 		this.set_titlebar(headerbar);
@@ -124,14 +115,6 @@ private Gtk.PlacesSidebar places;
 		btn_backup.icon_widget = get_shared_icon("document-new","document-new.svg",24);
 		headerbar.add(btn_backup);
         btn_backup.clicked.connect (btn_backup_clicked);
-
-		//btn_settings
-        btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_settings.is_important = true;
-		btn_settings.set_tooltip_text (_("Settings"));
-		btn_settings.icon_widget = get_shared_icon("settings","settings.svg",24);
-		headerbar.pack_end(btn_settings);
-        btn_settings.clicked.connect (btn_settings_clicked);
 
 		//mainbox for the window
         mainBox = new Box (Orientation.VERTICAL, 0);
@@ -169,23 +152,7 @@ sidebar.item_selected.connect(sidebar_updated);
 		mainBox.pack_start(pane, false, true, 0);
         
 	
-contextButtons = new Box (Orientation.HORIZONTAL, 0);
 
-Button btnDelete = new Button.with_label ("Delete");
-btnDelete.get_style_context().add_class("destructive-action"); // Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION
-contextButtons.pack_start(btnDelete, false, false, 12);
-//btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
-
-Button btnBrowse = new Button.with_label ("Browse");
-contextButtons.pack_end(btnBrowse, false, false, 12);
-//btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
-
-Button btnRestore = new Button.with_label ("Restore");
-contextButtons.pack_end(btnRestore, false, false, 0);
-//btn_restore.clicked.connect (btn_restore_clicked);
-
-
-vbox_main.pack_end(contextButtons, false, true, 12);
 
 
 
@@ -195,119 +162,16 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 
         //headerbar ---------------------------------------------------
         
-/*
+
 		//btn_clone
 		btn_clone = new Gtk.ToolButton.from_stock ("gtk-copy");
 		btn_clone.is_important = false;
 		btn_clone.label = _("Clone");
 		btn_clone.set_tooltip_text (_("Clone the current system on another device"));
-        toolbar.add(btn_clone);
-
+        headerbar.add(btn_clone);
         btn_clone.clicked.connect (btn_clone_clicked);
-        
-        //btn_refresh_snapshots
-        btn_refresh_snapshots = new Gtk.ToolButton.from_stock ("gtk-refresh");
-		btn_refresh_snapshots.label = _("Refresh");
-		btn_refresh_snapshots.set_tooltip_text (_("Refresh Snapshot List"));
-        toolbar.add(btn_refresh_snapshots);
+       
 
-        btn_refresh_snapshots.clicked.connect (() => {
-			if (!check_backup_device_online()) { return; }
-			App.update_snapshot_list();
-			refresh_tv_backups();
-		});
-
-		//btn_view_snapshot_log
-        btn_view_snapshot_log = new Gtk.ToolButton.from_stock ("gtk-file");
-		btn_view_snapshot_log.label = _("Log");
-		btn_view_snapshot_log.set_tooltip_text (_("View rsync log for selected snapshot"));
-        toolbar.add(btn_view_snapshot_log);
-
-        btn_view_snapshot_log.clicked.connect (btn_view_snapshot_log_clicked);
-		
-		//btn_view_app_logs
-        btn_view_app_logs = new Gtk.ToolButton.from_stock ("gtk-file");
-		btn_view_app_logs.label = _("TimeShift Logs");
-		btn_view_app_logs.set_tooltip_text (_("View TimeShift Logs"));
-        toolbar.add(btn_view_app_logs);
-
-        btn_view_app_logs.clicked.connect (btn_view_app_logs_clicked);
-        
-		//btn_donate
-        btn_donate = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_donate.label = _("Donate");
-		btn_donate.set_tooltip_text (_("Donate"));
-		btn_donate.icon_widget = get_shared_icon("donate","donate.svg",24);
-        toolbar.add(btn_donate);
-		
-		btn_donate.clicked.connect(btn_donate_clicked);
-
-		//btn_about
-        btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
-		btn_about.label = _("About");
-		btn_about.set_tooltip_text (_("Application Info"));
-		btn_about.icon_widget = get_shared_icon("","help-info.svg",24);
-        toolbar.add(btn_about);
-
-        btn_about.clicked.connect (btn_about_clicked);
-
-*/
-
-
-		//backup device ------------------------------------------------
-		
-		//hbox_device
-		hbox_device = new Box (Orientation.HORIZONTAL, 6);
-        hbox_device.margin_top = 6;
-        hbox_device.margin_left = 6;
-        hbox_device.margin_right = 6;
-        vbox_main.add (hbox_device);
-        // scrolled.add (hbox_device);
-
-        //lbl_backup_device
-		lbl_backup_device = new Gtk.Label(_("Backup Device"));
-		lbl_backup_device.xalign = (float) 0.0;
-		hbox_device.add(lbl_backup_device);
-		
-		//cmb_backup_device
-		cmb_backup_device = new ComboBox ();
-		cmb_backup_device.hexpand = true;
-		cmb_backup_device.set_tooltip_markup(_("Snapshots will be saved in path <b>/timeshift</b> on selected device"));
-		hbox_device.add(cmb_backup_device);
-		
-		CellRendererText cell_backup_dev_margin = new CellRendererText ();
-		cell_backup_dev_margin.text = "";
-		cmb_backup_device.pack_start (cell_backup_dev_margin, false);
-		
-		CellRendererPixbuf cell_backup_dev_icon = new CellRendererPixbuf ();
-		cell_backup_dev_icon.xpad = 1;
-		cmb_backup_device.pack_start (cell_backup_dev_icon, false);
-		cmb_backup_device.set_attributes(cell_backup_dev_icon, "pixbuf", 1);
-		
-		CellRendererText cell_backup_device = new CellRendererText();
-        cmb_backup_device.pack_start( cell_backup_device, false );
-        cmb_backup_device.set_cell_data_func (cell_backup_device, cell_backup_device_render);
-		
-		//btn_refresh_backup_device_list
-		btn_refresh_backup_device_list = new Gtk.Button.with_label (" " + _("Refresh") + " ");
-		btn_refresh_backup_device_list.set_size_request(50,-1);
-		btn_refresh_backup_device_list.set_tooltip_text(_("Refresh Devices"));
-		btn_refresh_backup_device_list.clicked.connect(()=>{ 
-			App.update_partition_list();
-			sidebar.refresh_items(); 
-			refresh_tv_backups();
-		});
-		hbox_device.add(btn_refresh_backup_device_list);
-		
-		//lbl_backup_device_warning
-		lbl_backup_device_warning = new Gtk.Label("");
-		lbl_backup_device_warning.set_use_markup(true);
-		lbl_backup_device_warning.xalign = (float) 0.0;
-		lbl_backup_device_warning.no_show_all = true;
-		lbl_backup_device_warning.margin_left = 6;
-		lbl_backup_device_warning.margin_top = 6;
-		lbl_backup_device_warning.margin_bottom = 6;
-		vbox_main.add(lbl_backup_device_warning);
 
 		//snapshot list ----------------------------------------------
 		
@@ -317,6 +181,38 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		tv_backups.headers_clickable = true;
 		tv_backups.has_tooltip = true;
 		tv_backups.set_rules_hint (true);
+
+
+
+
+
+
+
+
+		contextButtons = new Box (Orientation.HORIZONTAL, 0);
+
+		Button btnDelete = new Button.with_label ("Delete");
+		btnDelete.get_style_context().add_class("destructive-action"); // Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION
+		contextButtons.pack_start(btnDelete, false, false, 12);
+		//btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
+
+		Button btnBrowse = new Button.with_label ("Browse");
+		contextButtons.pack_end(btnBrowse, false, false, 12);
+		//btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
+
+		Button btnRestore = new Button.with_label ("Restore");
+		contextButtons.pack_end(btnRestore, false, false, 0);
+		//btn_restore.clicked.connect (btn_restore_clicked);
+
+		Button btnSnapshopLog = new Button.with_label ("View Snapshot Log");
+		btnSnapshopLog.set_tooltip_text (_("View rsync log for selected snapshot"));
+		contextButtons.pack_end(btnSnapshopLog, false, false, 12);
+		btnSnapshopLog.clicked.connect (btn_view_snapshot_log_clicked);
+
+		vbox_main.pack_end(contextButtons, false, true, 12);
+
+
+
 		
 		//sw_backups
 		sw_backups = new ScrolledWindow(null, null);
@@ -524,8 +420,6 @@ vbox_main.pack_end(contextButtons, false, true, 12);
         if (App.live_system()){
 			btn_backup.sensitive = false;
 			btn_clone.sensitive = false;
-			btn_settings.sensitive = false;
-			btn_view_app_logs.sensitive = false;
 		}
 		
 		sidebar.refresh_items();
@@ -555,7 +449,7 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 
     private void sidebar_updated()
     {
-    	init_backup_device();
+    	timer_backup_device_init = Timeout.add(100, init_backup_device);
     }
 
 	private bool init_backup_device(){
@@ -1140,20 +1034,6 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 		
 		update_ui(true);
 	}
-
-	private void btn_settings_clicked(){
-		var dialog = new SettingsWindow();
-		dialog.set_transient_for (this);
-		dialog.response.connect ((response_id) => {
-			if (response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT) {
-				dialog.hide_on_delete ();
-			}
-		});
-		
-		dialog.show_all();
-		dialog.run();
-		update_statusbar();
-	}
 	
 	private void btn_browse_snapshot_clicked(){
 		
@@ -1189,79 +1069,6 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 			iterExists = store.iter_next (ref iter);
 		}
 	}
-
-	private void btn_view_snapshot_log_clicked(){
-		TreeSelection sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0){
-			gtk_messagebox(_("Select Snapshot"),_("Please select a snapshot to view the log!"),null,false);
-			return;
-		}
-		
-		TreeIter iter;
-		ListStore store = (ListStore)tv_backups.model;
-		
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists) { 
-			if (sel.iter_is_selected (iter)){
-				TimeShiftBackup bak;
-				store.get (iter, 0, out bak);
-
-				exo_open_textfile(bak.path + "/rsync-log");
-				return;
-			}
-			iterExists = store.iter_next (ref iter);
-		}
-	}
-	
-	private void btn_view_app_logs_clicked(){
-		exo_open_folder(App.log_dir);
-	}
-
-	public void btn_donate_clicked(){
-		var dialog = new DonationWindow();
-		dialog.set_transient_for(this);
-		dialog.show_all();
-		dialog.run();
-		dialog.destroy();
-	}
-	
-	private void btn_about_clicked (){
-		var dialog = new AboutWindow();
-		dialog.set_transient_for (this);
-
-		dialog.authors = { 
-			"Tony George:teejeetech@gmail.com" 
-		};
-		
-		dialog.translators = {
-			"Debaru, Nikos, alienus (French):launchpad.net/~lp-l10n-fr",
-			"tomberry88 (Italian):launchpad.net/~tomberry",
-			"박정규(Jung-Kyu Park) (Korean):bagjunggyu@gmail.com"
-		}; 
-		
-		dialog.third_party = {
-			"Timeshift is powered by the following tools and components. Please visit the links for more information.",
-			"rsync by Andrew Tridgell, Wayne Davison, and others.:http://rsync.samba.org/"
-		}; 
-		
-		dialog.documenters = null; 
-		dialog.artists = null;
-		dialog.donations = null;
-
-		dialog.program_name = AppName;
-		dialog.comments = _("A System Restore Utility for Linux");
-		dialog.copyright = "Copyright © 2014 Tony George (%s)".printf(AppAuthorEmail);
-		dialog.version = AppVersion;
-		dialog.logo = get_app_icon(128);
-
-		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
-		dialog.website = "http://teejeetech.in";
-		dialog.website_label = "http://teejeetech.blogspot.in";
-
-		dialog.initialize();
-		dialog.show_all();
-	}
-
 
 	private void show_statusbar_icons(bool visible){
 		img_status_dot.visible = false;
@@ -1326,7 +1133,6 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 	
 	private void update_ui(bool enable){
 		headerbar.sensitive = enable;
-		hbox_device.sensitive = enable;
 		sw_backups.sensitive = enable;
 		show_statusbar_icons(enable);
 		gtk_set_busy(!enable, this);
@@ -1385,15 +1191,15 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 					txt = _("Backup device is not mounted!");;
 				}
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				lbl_backup_device_warning.label = txt;
-				lbl_backup_device_warning.visible = true;
+				//lbl_backup_device_warning.label = txt;
+				//lbl_backup_device_warning.visible = true;
 				break;
 				
 			case 1:
 				txt = _("Backup device does not have enough space!");
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				lbl_backup_device_warning.label = txt;
-				lbl_backup_device_warning.visible = true;
+				//lbl_backup_device_warning.label = txt;
+				//lbl_backup_device_warning.visible = true;
 				break;
 				
 			case 2:
@@ -1401,13 +1207,13 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 				txt = _("Backup device does not have enough space!") + " ";
 				txt += _("First snapshot needs") + " %.1f GB".printf(required/1024.0);
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				lbl_backup_device_warning.label = txt;
-				lbl_backup_device_warning.visible = true;
+				//lbl_backup_device_warning.label = txt;
+				//lbl_backup_device_warning.visible = true;
 				break;
 			 
 			default:
-				lbl_backup_device_warning.label = "";
-				lbl_backup_device_warning.visible = false;
+				//lbl_backup_device_warning.label = "";
+				//lbl_backup_device_warning.visible = false;
 				break;
 		}
 		
@@ -1478,5 +1284,28 @@ vbox_main.pack_end(contextButtons, false, true, 12);
 			lbl_status_latest.visible = false;
 		}
 	}
+
+	private void btn_view_snapshot_log_clicked(){
+        TreeSelection sel = tv_backups.get_selection ();
+        if (sel.count_selected_rows() == 0){
+            gtk_messagebox(_("Select Snapshot"),_("Please select a snapshot to view the log!"),null,false);
+            return;
+        }
+        
+        TreeIter iter;
+        ListStore store = (ListStore)tv_backups.model;
+        
+        bool iterExists = store.get_iter_first (out iter);
+        while (iterExists) { 
+            if (sel.iter_is_selected (iter)){
+                TimeShiftBackup bak;
+                store.get (iter, 0, out bak);
+
+                exo_open_textfile(bak.path + "/rsync-log");
+                return;
+            }
+            iterExists = store.iter_next (ref iter);
+        }
+    }
 	
 }

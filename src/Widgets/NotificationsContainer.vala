@@ -28,34 +28,51 @@ using TeeJee.Devices;
 
 using TeeJee.GtkHelper;
 
-public class NotificationsContainer : Gtk.Box
+public class NotificationsContainer : Gtk.Overlay
 {
-    private Gtk.Revealer revealer;
-    private NotificationBar notification1;
-    private NotificationBar notification2;
-    private NotificationBar notification3;
+    private InfoBar infobar_scheduled_snapshots;
+    private InfoBar infobar_last_snapshot;
 
     public NotificationsContainer()
     {
-        orientation = Orientation.VERTICAL;
 
+    }
 
-        notification1 = new NotificationBar("1");
-        notification1.change_notification_type(Gtk.MessageType.WARNING);
-        add(notification1);
+    public void scheduled_snapshots_notification_on()
+    {
+        infobar_scheduled_snapshots = new InfoBar();
+        infobar_scheduled_snapshots.show();
+        infobar_scheduled_snapshots.add_button ("Fix", 1);
+        infobar_scheduled_snapshots.add_button ("Ignore", 2);
+        infobar_scheduled_snapshots.set_message_type(Gtk.MessageType.WARNING);
+        Gtk.Label infobar_scheduled_snapshots_text = new Gtk.Label("Scheduled snapshots disabled.");
+        infobar_scheduled_snapshots_text.show();
+        infobar_scheduled_snapshots.get_content_area().add(infobar_scheduled_snapshots_text);
+        add(infobar_scheduled_snapshots);
+        infobar_scheduled_snapshots.show();
+    }
 
-        notification2 = new NotificationBar("2");
-        notification2.change_notification_type(Gtk.MessageType.INFO);
-        add(notification2);
+    public void scheduled_snapshots_notification_off()
+    {
+        remove(infobar_scheduled_snapshots);   
+    }
 
-        revealer = new Gtk.Revealer();
-        revealer.transition_type = RevealerTransitionType.CROSSFADE;
-        revealer.set_transition_duration(5000);
-        revealer.set_reveal_child(true);
-        revealer.add(notification3);
-        add(revealer);
+    public void last_snapshot_notification_on(string days_old)
+    {
+        infobar_last_snapshot = new InfoBar();
+        infobar_last_snapshot.show();
+        infobar_last_snapshot.add_button ("Take Snapshot Now", 1);
+        infobar_last_snapshot.add_button ("Ignore", 2);
+        infobar_last_snapshot.set_message_type(Gtk.MessageType.QUESTION);
+        Gtk.Label infobar_last_snapshot_text = new Gtk.Label("Last snapshot is" + days_old + "days old.");
+        infobar_last_snapshot_text.show();
+        infobar_last_snapshot.get_content_area().add(infobar_last_snapshot_text);
+        add_overlay(infobar_last_snapshot);
+    }
 
-
+    public void last_snapshot_notification_off()
+    {
+        remove(infobar_last_snapshot);   
     }
 
 }

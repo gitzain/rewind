@@ -44,7 +44,6 @@ class MainWindow : Gtk.Window {
 	private Box box_main;
 
     //infobar
-    private NotificationBar infobar_scheduled_snapshots;
     private NotificationsContainer notification_container;
 
     //
@@ -74,9 +73,7 @@ class MainWindow : Gtk.Window {
 	private Gtk.Image img_status_dot;
 	private Label lbl_status;
 	private Label lbl_status_scheduled;
-	private Gtk.Image img_status_scheduled;
 	private Label lbl_status_latest;
-	private Gtk.Image img_status_latest;
 	private Label lbl_status_device;
 	private Gtk.Image img_status_device;
 	private Gtk.Image img_status_progress;
@@ -118,9 +115,6 @@ class MainWindow : Gtk.Window {
         this.add(box_main);
 
 		//infobar ----------------------------------------------------
-		infobar_scheduled_snapshots = new NotificationBar("Default");
-		box_main.pack_start(infobar_scheduled_snapshots, false, false, 0);
-
 		notification_container = new NotificationsContainer();
 		box_main.pack_start(notification_container, false, false, 0);
 
@@ -327,23 +321,13 @@ class MainWindow : Gtk.Window {
 		lbl_status_device.set_use_markup(true);
 		lbl_status_device.no_show_all = true;
 		hbox_statusbar.add(lbl_status_device);
-		
-        //img_status_scheduled
-		img_status_scheduled = new Gtk.Image();
-		img_status_scheduled.no_show_all = true;
-        hbox_statusbar.add(img_status_scheduled);
         
 		//lbl_status_scheduled
 		lbl_status_scheduled = new Gtk.Label("");
 		lbl_status_scheduled.set_use_markup(true);
 		lbl_status_scheduled.no_show_all = true;
 		hbox_statusbar.add(lbl_status_scheduled);
-				
-        //img_status_latest
-		img_status_latest = new Gtk.Image();
-		img_status_latest.no_show_all = true;
-        hbox_statusbar.add(img_status_latest);
-        
+
         //lbl_status_latest
 		lbl_status_latest = new Gtk.Label("");
 		lbl_status_latest.set_use_markup(true);
@@ -1032,9 +1016,7 @@ class MainWindow : Gtk.Window {
 			//visible = false;
 		//}
 		
-		img_status_scheduled.visible = visible;
 		lbl_status_scheduled.visible = visible;
-		img_status_latest.visible = visible;
 		lbl_status_latest.visible = visible;
 	}
 
@@ -1182,54 +1164,50 @@ class MainWindow : Gtk.Window {
 
 
 		if (App.live_system()){
-			img_status_scheduled.file = img_dot_green;
 			lbl_status_scheduled.label = _("Running from Live CD/USB");
 			lbl_status_scheduled.set_tooltip_text(_("TimeShift is running in a live system"));
 		}
-		else{
-			if (App.is_scheduled){
-				//img_status_scheduled.file = img_dot_green;
-				infobar_scheduled_snapshots.change_notification("Scheduled snapshots enabled. System snapshots will be taken at regular intervals.", Gtk.MessageType.INFO);
-				//lbl_status_scheduled.set_tooltip_text(_("System snapshots will be taken at regular intervals"));
-			}else{
-				//img_status_scheduled.file = img_dot_red;
-				infobar_scheduled_snapshots.change_notification("Scheduled snapshots disabled.", Gtk.MessageType.ERROR);
-				//lbl_status_scheduled.set_tooltip_text("");
+		else
+		{
+			if (!App.is_scheduled)
+			{
+				notification_container.scheduled_snapshots_notification_on();
+			}
+			else 
+			{
+				notification_container.scheduled_snapshots_notification_off();
 			}
 		}
 
 		//status - last snapshot -----------
 		
-		if (status_code >= 0){
+		if (status_code >= 0)
+		{
 			DateTime now = new DateTime.now_local();
 			TimeShiftBackup last_snapshot = App.get_latest_snapshot();
 			DateTime last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
 			
-			if (last_snapshot == null){
-				img_status_latest.file = img_dot_red;
-				lbl_status_latest.label = _("No snapshots on device");
-			}
-			else{
+			if (last_snapshot != null)
+			{
 				float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
 				float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
 				
-				if (days > 1){
-					img_status_latest.file = img_dot_red;
-					lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(days) + _("days old") + "!";
+				if (days > 1)
+				{
+					// last snapshot older than a day so let the user know they should take a snapshot
+					notification_container.last_snapshot_notification_on(" %.0f ".printf(days));
 				}
-				else if (hours > 1){
-					img_status_latest.file = img_dot_green;
-					lbl_status_latest.label = _("Last snapshot is") +  " %.0f ".printf(hours) + _("hours old");
-				}
-				else{
-					img_status_latest.file = img_dot_green;
-					lbl_status_latest.label = _("Last snapshot is less than 1 hour old");
+				else 
+				{
+					// last snapshot is less than a day old so why bug the user
+					notification_container.last_snapshot_notification_off();
 				}
 			}
 		}
-		else{
-			img_status_latest.visible = false;
-			lbl_status_latest.visible = false;
+		else
+		{
+			// not sure why we''re here
+			notification_container.last_snapshot_notification_off();
 		}
 	}
 

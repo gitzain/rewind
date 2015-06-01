@@ -1196,6 +1196,7 @@ class MainWindow : Gtk.Window {
 				{
 					// last snapshot older than a day so let the user know they should take a snapshot
 					notification_container.last_snapshot_notification_on(" %.0f ".printf(days));
+					
 				}
 				else 
 				{

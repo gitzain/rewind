@@ -1192,14 +1192,11 @@ class MainWindow : Gtk.Window {
 				float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
 				float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
 				
-				if (days > 1)
-				{
+				if (days > 1){
 					// last snapshot older than a day so let the user know they should take a snapshot
 					notification_container.last_snapshot_notification_on(" %.0f ".printf(days));
-					
 				}
-				else 
-				{
+				else {
 					// last snapshot is less than a day old so why bug the user
 					notification_container.last_snapshot_notification_off();
 				}

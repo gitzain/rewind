@@ -67,17 +67,6 @@ class MainWindow : Gtk.Window {
 	private ToolButton btn_browse_snapshot;
 	private ToolButton btn_view_snapshot_log;
 	
-	//statusbar
-	private Box hbox_statusbar;
-	private Gtk.Image img_status_spinner;
-	private Gtk.Image img_status_dot;
-	private Label lbl_status;
-	private Label lbl_status_scheduled;
-	private Label lbl_status_latest;
-	private Label lbl_status_device;
-	private Gtk.Image img_status_device;
-	private Gtk.Image img_status_progress;
-	
 	//timers
 	private uint timer_status_message;
 	private uint timer_progress;
@@ -286,64 +275,6 @@ class MainWindow : Gtk.Window {
 
 			return false;
 		});
-		
-		//hbox_statusbar
-		hbox_statusbar = new Box (Orientation.HORIZONTAL, 6);
-        hbox_statusbar.margin_bottom = 1;
-        hbox_statusbar.margin_left = 6;
-        hbox_statusbar.margin_right = 12;
-        box_snapshots.add (hbox_statusbar);
-
-		//img_status_spinner
-		img_status_spinner = new Gtk.Image();
-		img_status_spinner.file = App.share_folder + "/timeshift/images/spinner.gif";
-		img_status_spinner.no_show_all = true;
-        hbox_statusbar.add(img_status_spinner);
-        
-        //img_status_dot
-		img_status_dot = new Gtk.Image();
-		img_status_dot.file = App.share_folder + "/timeshift/images/item-green.gif";
-		img_status_dot.no_show_all = true;
-        hbox_statusbar.add(img_status_dot);
-		
-        //lbl_status
-		lbl_status = new Gtk.Label("");
-		lbl_status.no_show_all = true;
-		hbox_statusbar.add(lbl_status);
-
-        //img_status_device
-		img_status_device = new Gtk.Image();
-		img_status_device.no_show_all = true;
-        hbox_statusbar.add(img_status_device);
-        
-        //lbl_status_device
-		lbl_status_device = new Gtk.Label("");
-		lbl_status_device.set_use_markup(true);
-		lbl_status_device.no_show_all = true;
-		hbox_statusbar.add(lbl_status_device);
-        
-		//lbl_status_scheduled
-		lbl_status_scheduled = new Gtk.Label("");
-		lbl_status_scheduled.set_use_markup(true);
-		lbl_status_scheduled.no_show_all = true;
-		hbox_statusbar.add(lbl_status_scheduled);
-
-        //lbl_status_latest
-		lbl_status_latest = new Gtk.Label("");
-		lbl_status_latest.set_use_markup(true);
-		lbl_status_latest.no_show_all = true;
-		hbox_statusbar.add(lbl_status_latest);
-		
-		//lbl_status_separator
-		Label lbl_status_separator = new Gtk.Label("");
-		hbox_statusbar.hexpand = true;
-		hbox_statusbar.pack_start(lbl_status_separator,true,true,0);
-		
-		//img_status_progress
-		img_status_progress = new Gtk.Image();
-		img_status_progress.file = App.share_folder + "/timeshift/images/progress.gif";
-		img_status_progress.no_show_all = true;
-        hbox_statusbar.add(img_status_progress);
 
 		//Create a 2 section pane and add the sidebar and snapshot list above------------------------------
 		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
@@ -1003,21 +934,14 @@ class MainWindow : Gtk.Window {
 	}
 
 	private void show_statusbar_icons(bool visible){
-		img_status_dot.visible = false;
-		img_status_spinner.visible = !visible;
-		img_status_progress.visible = !visible;
-		lbl_status.visible = !visible;
-		lbl_status.label = "";
-		
-		img_status_device.visible = visible;
-		lbl_status_device.visible = visible;
+		//hide a loading icon on this line
+		// turn off the progress bar here on this line
+		// hide status message on this line
 		
 		//if (App.is_live_system()){
 			//visible = false;
 		//}
 		
-		lbl_status_scheduled.visible = visible;
-		lbl_status_latest.visible = visible;
 	}
 
 	private void statusbar_message (string message){
@@ -1026,7 +950,7 @@ class MainWindow : Gtk.Window {
 			timer_status_message = -1;
 		}
 
-		lbl_status.label = message;
+		// the message coming in here is for the status bar set it on this line
 	}
 	
 	private void statusbar_message_with_timeout (string message, bool success){
@@ -1035,18 +959,11 @@ class MainWindow : Gtk.Window {
 			timer_status_message = -1;
 		}
 
-		lbl_status.label = message;
+		// the message coming in here is for the status bar set it on this line
 		
-		img_status_spinner.visible = false;
-		img_status_progress.visible = false;
-		img_status_dot.visible = true;
+		// trn on the loading icon here on this line
+		// turn on the progress bar here
 		
-		if (success){
-			img_status_dot.file =  App.share_folder + "/timeshift/images/item-green.png";
-		}
-		else{
-			img_status_dot.file =  App.share_folder + "/timeshift/images/item-red.png";
-		}
 		
 		timer_status_message = Timeout.add_seconds (5, statusbar_clear);
 	}
@@ -1056,7 +973,7 @@ class MainWindow : Gtk.Window {
 			Source.remove (timer_status_message);
 			timer_status_message = -1;
 		}
-		lbl_status.label = "";
+		// clear the status message on this line
 		show_statusbar_icons(true);
 		return true;
 	}
@@ -1078,7 +995,7 @@ class MainWindow : Gtk.Window {
 			timer_progress = 0;
 		}
 		
-		lbl_status.label = App.progress_text;
+		// set the message on this line on the status bar from App.progress_text;
 		
 		timer_progress = Timeout.add_seconds(1, update_progress);
 		return true;
@@ -1146,26 +1063,14 @@ class MainWindow : Gtk.Window {
 				//lbl_backup_device_warning.visible = false;
 				break;
 		}
-		
-		if ((status_code == 0)||(status_code == 3)){
-			img_status_device.file = img_dot_green;
-		}
-		else{
-			img_status_device.file = img_dot_red;
-		}
-		lbl_status_device.label = message;
-		
-		img_status_device.visible = (message.strip().length > 0);
-		lbl_status_device.visible = (message.strip().length > 0);
-		
+
 		// statusbar icons ---------------------------------------------------------
 		
 		//status - scheduled snapshots -----------
 
 
 		if (App.live_system()){
-			lbl_status_scheduled.label = _("Running from Live CD/USB");
-			lbl_status_scheduled.set_tooltip_text(_("TimeShift is running in a live system"));
+			notification_container.live_system_notification_on();
 		}
 		else
 		{

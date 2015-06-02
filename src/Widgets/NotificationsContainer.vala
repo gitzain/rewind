@@ -32,6 +32,7 @@ public class NotificationsContainer : Gtk.Overlay
 {
     private InfoBar infobar_scheduled_snapshots;
     private InfoBar infobar_last_snapshot;
+    private InfoBar infobar_live_system;
 
     public NotificationsContainer()
     {
@@ -73,6 +74,18 @@ public class NotificationsContainer : Gtk.Overlay
     public void last_snapshot_notification_off()
     {
         remove(infobar_last_snapshot);   
+    }
+
+    public void live_system_notification_on()
+    {
+        infobar_live_system = new InfoBar();
+        infobar_live_system.show();
+        infobar_live_system.add_button ("Dismiss", 1);
+        infobar_live_system.set_message_type(Gtk.MessageType.QUESTION);
+        Gtk.Label infobar_live_system_text = new Gtk.Label("Running from Live CD/USB. ");
+        infobar_live_system.show();
+        infobar_live_system.get_content_area().add(infobar_live_system_text);
+        add_overlay(infobar_live_system);
     }
 
 }

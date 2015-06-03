@@ -38,8 +38,7 @@ using TeeJee.System;
 
 public class HeaderBar : Gtk.HeaderBar
 {
-    private ToolButton btn_settings;
-    private ToolButton btn_view_app_logs;
+    private Granite.Widgets.AppMenu appmenu;
 
     public HeaderBar()
     {
@@ -47,24 +46,24 @@ public class HeaderBar : Gtk.HeaderBar
         set_title(AppName);
         set_show_close_button (true);
 
-        //btn_settings
-        btn_settings = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-        btn_settings.is_important = true;
-        btn_settings.set_tooltip_text (_("Settings"));
-        btn_settings.icon_widget = get_shared_icon("settings","settings.svg",24);
-        pack_end(btn_settings);
-        btn_settings.clicked.connect (btn_settings_clicked);
-        
-        //btn_view_app_logs
-        btn_view_app_logs = new Gtk.ToolButton.from_stock ("gtk-file");
-        btn_view_app_logs.label = _("TimeShift Logs");
-        btn_view_app_logs.set_tooltip_text (_("View TimeShift Logs"));
-        add(btn_view_app_logs);
-        btn_view_app_logs.clicked.connect (btn_view_app_logs_clicked);
+        //appmenu
+        Gtk.Menu menu = new Gtk.Menu();
+        appmenu = new Granite.Widgets.AppMenu(menu);
+        //view app logs button
+        Gtk.MenuItem menu_item_log = new Gtk.MenuItem.with_label("View App Logs");
+        menu_item_log.activate.connect (btn_view_app_logs_clicked);
+        menu.append(menu_item_log);
+        //seperator
+        Gtk.SeparatorMenuItem seperator = new Gtk.SeparatorMenuItem();
+        menu.append(seperator);
+        //settings button
+        Gtk.MenuItem menu_item_settings = new Gtk.MenuItem.with_label("Settings");
+        menu_item_settings.activate.connect (btn_settings_clicked);
+        menu.append(menu_item_settings);
+        pack_end(appmenu);
 
         if (App.live_system()){
-            btn_settings.sensitive = false;
-            btn_view_app_logs.sensitive = false;
+            appmenu.sensitive = false;
         }
     }
     

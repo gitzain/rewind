@@ -38,6 +38,7 @@ using TeeJee.System;
 
 public class HeaderBar : Gtk.HeaderBar
 {
+    private Gtk.ToolButton btn_scheduled_backup;
     private Granite.Widgets.AppMenu appmenu;
 
     public HeaderBar()
@@ -45,6 +46,14 @@ public class HeaderBar : Gtk.HeaderBar
         //set properties
         set_title(AppName);
         set_show_close_button (true);
+
+        //btn_scheduled_backup
+        btn_scheduled_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
+        btn_scheduled_backup.is_important = true;
+        btn_scheduled_backup.set_tooltip_text (_("Schedule Snapshots"));
+        btn_scheduled_backup.icon_widget = get_shared_icon("office-calendar","office-calendar.svg",24);
+        add(btn_scheduled_backup);
+
 
         //appmenu
         Gtk.Menu menu = new Gtk.Menu();
@@ -61,10 +70,6 @@ public class HeaderBar : Gtk.HeaderBar
         menu_item_settings.activate.connect (btn_settings_clicked);
         menu.append(menu_item_settings);
         pack_end(appmenu);
-
-        if (App.live_system()){
-            appmenu.sensitive = false;
-        }
     }
     
     private void btn_view_app_logs_clicked(){

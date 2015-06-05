@@ -38,7 +38,7 @@ class MainWindow : Gtk.Window {
 
 	//headerbar
     private HeaderBar headerbar;
-	private ToolButton btn_backup;
+	
 
     //
 	private Box box_main;
@@ -89,14 +89,6 @@ class MainWindow : Gtk.Window {
         //headerbar ---------------------------------------------------
 		headerbar = new HeaderBar();
 		this.set_titlebar(headerbar);
-
-		//btn_backup
-		btn_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_backup.is_important = true;
-		btn_backup.set_tooltip_text (_("Take a manual (ondemand) snapshot"));
-		btn_backup.icon_widget = get_shared_icon("document-new","document-new.svg",24);
-		headerbar.add(btn_backup);
-        btn_backup.clicked.connect (btn_backup_clicked);
 
 		//main container under headerbar------------------------------
         box_main = new Box (Orientation.VERTICAL, 0);
@@ -285,10 +277,6 @@ class MainWindow : Gtk.Window {
         
         
         snapshot_device_original = App.snapshot_device;
-        
-        if (App.live_system()){
-			btn_backup.sensitive = false;
-		}
 		
 		sidebar.refresh_items();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
@@ -425,7 +413,7 @@ class MainWindow : Gtk.Window {
 				dialog.destroy();
 				
 				if (response == Gtk.ResponseType.YES){
-					btn_backup_clicked();
+					backup_clicked();
 					this.delete_event.connect(on_delete_event); //reconnect this handler
 					return true; //keep window open
 				}
@@ -583,59 +571,9 @@ class MainWindow : Gtk.Window {
 		tv_backups.columns_autosize ();
 	}
 
-	private void btn_backup_clicked(){
-		
-		//check root device --------------
-		
-		if (App.check_btrfs_root_layout() == false){
-			return;
-		}
-		
-		//check snapshot device -----------
-		
-		string msg;
-		int status_code = App.check_backup_device(out msg);
-		
-		switch(status_code){
-			case -1:
-				check_backup_device_online();
-				return;
-			case 1:
-			case 2:
-				gtk_messagebox(_("Low Disk Space"),_("Backup device does not have enough space"),null, true);
-				update_statusbar();
-				return;
-		}
-
-		//update UI ------------------
-		
-		update_ui(false);
-
-		statusbar_message(_("Taking snapshot..."));
-		
-		update_progress_start();
-		
-		//take snapshot ----------------
-		
-		bool is_success = App.take_snapshot(true,"",this); 
-
-		update_progress_stop();
-		
-		if (is_success){
-			statusbar_message_with_timeout(_("Snapshot saved successfully"), true);
-		}
-		else{
-			statusbar_message_with_timeout(_("Error: Unable to save snapshot"), false);
-		}
-		
-		//update UI -------------------
-		
-		App.update_partition_list();
-		sidebar.refresh_items();
-		refresh_tv_backups();
-		update_statusbar();
-		
-		update_ui(true);
+	private void backup_clicked()
+	{
+		headerbar.btn_backup_clicked();
 	}
 
 	private void btn_delete_snapshot_clicked(){

@@ -114,12 +114,14 @@ public class HeaderBar : Gtk.HeaderBar
         //update_ui(false);
 
         //statusbar_message(_("Taking snapshot..."));
+        show_dialogue("Taking snappy","im doing something");
         
         //update_progress_start();
         
         //take snapshot ----------------
         
-        bool is_success = App.take_snapshot(true,"",get_window_parent()); 
+        bool is_success = true;
+        //App.take_snapshot(true,"",get_window_parent()); 
 
         //update_progress_stop();
         
@@ -162,7 +164,21 @@ public class HeaderBar : Gtk.HeaderBar
     {
         Gtk.Widget toplevel = get_toplevel();
         return (Gtk.Window*) toplevel;
-
     }
-    
+
+    private void show_dialogue(string title, string message)
+    {
+        var dialog = new Gtk.MessageDialog.with_markup(get_window_parent(), Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, message);
+        dialog.set_title(_(title));
+        dialog.set_default_size (300, -1);
+        dialog.set_transient_for(get_window_parent());
+        dialog.set_modal(true);
+        int response = dialog.run();
+        dialog.destroy();
+
+        if (response == Gtk.ResponseType.OK)
+        {}
+        else
+        {}
+    }
 }

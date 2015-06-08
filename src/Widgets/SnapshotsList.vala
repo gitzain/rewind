@@ -21,15 +21,23 @@
  * 
  */
 
-using Gtk; 
+using Gtk;
 using Gee;
 
+using TeeJee.Logging;
+using TeeJee.FileSystem;
 using TeeJee.Devices;
-
+using TeeJee.JSON;
+using TeeJee.ProcessManagement;
 using TeeJee.GtkHelper;
+using TeeJee.Multimedia;
+using TeeJee.System;
+using TeeJee.Misc;
 
-public class SnapshoptsList : Gtk.Box 
+public class SnapshotsList : Gtk.Box 
 {
+	private Box box_snapshots;
+
 	//snapshots
 	private ScrolledWindow sw_backups;
 	private TreeView tv_backups;
@@ -46,7 +54,7 @@ public class SnapshoptsList : Gtk.Box
 	private ToolButton btn_browse_snapshot;
 	private ToolButton btn_view_snapshot_log;
 
-    public SnapshoptsList () 
+    public SnapshotsList () 
     {
     	//snapshot list ----------------------------------------------------
     	box_snapshots = new Box (Orientation.VERTICAL, 0);
@@ -212,9 +220,440 @@ public class SnapshoptsList : Gtk.Box
 
 			return false;
 		});
-
     }
 
-    
+    private void cell_date_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		TimeShiftBackup bak;
+		model.get (iter, 0, out bak, -1);
+		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
+	}
+	
+	private void cell_tags_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		TimeShiftBackup bak;
+		model.get (iter, 0, out bak, -1);
+		(cell as Gtk.CellRendererText).text = bak.taglist_short;
+	}
 
+	private void cell_system_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		TimeShiftBackup bak;
+		model.get (iter, 0, out bak, -1);
+		(cell as Gtk.CellRendererText).text = bak.sys_distro;
+	}
+	
+	private void cell_desc_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		TimeShiftBackup bak;
+		model.get (iter, 0, out bak, -1);
+		(cell as Gtk.CellRendererText).text = bak.description;
+	}
+	
+	private void cell_desc_edited (string path, string new_text) {
+		TimeShiftBackup bak;
+
+		TreeIter iter;
+		ListStore model = (ListStore) tv_backups.model;
+		model.get_iter_from_string (out iter, path);
+		model.get (iter, 0, out bak, -1);
+		bak.description = new_text;
+		bak.update_control_file();
+	}
+
+	private void cell_backup_device_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+		Device info;
+		model.get (iter, 0, out info, -1);
+
+		(cell as Gtk.CellRendererText).markup = info.description_formatted();
+	}
+
+    private void btn_delete_snapshot_clicked(){
+		TreeIter iter;
+		TreeIter iter_delete;
+		TreeSelection sel;
+		bool is_success = true;
+		
+		//check if device is online
+		if (!check_backup_device_online()) { return; }
+		
+		//check selected count ----------------
+		
+		sel = tv_backups.get_selection ();
+		if (sel.count_selected_rows() == 0){ 
+			gtk_messagebox(_("No Snapshots Selected"),_("Please select the snapshots to delete"),null,false);
+			return; 
+		}
+		
+		//update UI ------------------
+		
+		//update_ui(false);
+		
+		//statusbar_message(_("Removing selected snapshots..."));
+		
+		//get list of snapshots to delete --------------------
+
+		var list_of_snapshots_to_delete = new Gee.ArrayList<TimeShiftBackup>();
+		ListStore store = (ListStore) tv_backups.model;
+		
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists && is_success) { 
+			if (sel.iter_is_selected (iter)){
+				TimeShiftBackup bak;
+				store.get (iter, 0, out bak);
+				list_of_snapshots_to_delete.add(bak);
+			}
+			iterExists = store.iter_next (ref iter);
+		}
+		
+		//clear selection ---------------
+		
+		tv_backups.get_selection().unselect_all();
+		
+		//delete snapshots --------------------------
+		
+		foreach(TimeShiftBackup bak in list_of_snapshots_to_delete){
+			
+			//find the iter being deleted
+			iterExists = store.get_iter_first (out iter_delete);
+			while (iterExists) { 
+				TimeShiftBackup bak_current;
+				store.get (iter_delete, 0, out bak_current);
+				if (bak_current.path == bak.path){
+					break;
+				}
+				iterExists = store.iter_next (ref iter_delete);
+			}
+			
+			//select the iter being deleted
+			tv_backups.get_selection().select_iter(iter_delete);
+			
+			//statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
+			
+			is_success = App.delete_snapshot(bak); 
+			
+			if (!is_success){
+				//statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
+				break;
+			}
+			
+			//remove iter from tv_backups
+			store.remove(iter_delete);
+		}
+		
+		App.update_snapshot_list();
+		if (App.snapshot_list.size == 0){
+			//statusbar_message(_("Deleting snapshot") + ": '.sync'...");
+			App.delete_all_snapshots();
+		}
+		
+		if (is_success){
+			//statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
+		}
+		
+		//update UI -------------------
+		
+		App.update_partition_list();
+		//sidebar.refresh_items();
+		refresh_tv_backups();
+		//update_statusbar();
+
+		//update_ui(true);
+	}
+
+    private void btn_browse_snapshot_clicked(){
+		
+		//check if device is online
+		if (!check_backup_device_online()) { 
+			return; 
+		}
+		
+		TreeSelection sel = tv_backups.get_selection ();
+		if (sel.count_selected_rows() == 0){
+			var f = File.new_for_path(App.snapshot_dir);
+			if (f.query_exists()){
+				exo_open_folder(App.snapshot_dir);
+			}
+			else{
+				exo_open_folder(App.mount_point_backup);
+			}
+			return;
+		}
+		
+		TreeIter iter;
+		ListStore store = (ListStore)tv_backups.model;
+		
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists) { 
+			if (sel.iter_is_selected (iter)){
+				TimeShiftBackup bak;
+				store.get (iter, 0, out bak);
+
+				exo_open_folder(bak.path + "/localhost");
+				return;
+			}
+			iterExists = store.iter_next (ref iter);
+		}
+	}
+
+	private void btn_restore_clicked(){
+		App.mirror_system = false;
+		restore();
+	}
+
+	private void restore(){
+		TreeIter iter;
+		TreeSelection sel;
+		
+		if (!App.mirror_system){
+			//check if backup device is online (check #1)
+			if (!check_backup_device_online()) { return; }
+		}
+		
+		if (!App.mirror_system){
+
+			//check if single snapshot is selected -------------
+			
+			sel = tv_backups.get_selection ();
+			if (sel.count_selected_rows() == 0){ 
+				gtk_messagebox(_("No Snapshots Selected"), _("Please select the snapshot to restore"),null,false);
+				return; 
+			}
+			else if (sel.count_selected_rows() > 1){ 
+				gtk_messagebox(_("Multiple Snapshots Selected"), _("Please select a single snapshot"),null,false);
+				return; 
+			}
+			
+			//get selected snapshot ------------------
+			
+			TimeShiftBackup snapshot_to_restore = null;
+			
+			ListStore store = (ListStore) tv_backups.model;
+			sel = tv_backups.get_selection();
+			bool iterExists = store.get_iter_first (out iter);
+			while (iterExists) { 
+				if (sel.iter_is_selected (iter)){
+					store.get (iter, 0, out snapshot_to_restore);
+					break;
+				}
+				iterExists = store.iter_next (ref iter);
+			}
+			
+			App.snapshot_to_restore = snapshot_to_restore;
+			App.restore_target = App.root_device;
+		}
+		else{
+			App.snapshot_to_restore = null;
+			App.restore_target = null;
+		}
+		
+		//show restore window -----------------
+
+		var dialog = new RestoreWindow();
+		dialog.set_transient_for (get_window_parent());
+		dialog.show_all();
+		int response = dialog.run();
+		dialog.destroy();
+		
+		if (response != Gtk.ResponseType.OK){
+			App.unmount_target_device();
+			return; //cancel
+		}
+		
+		if (!App.mirror_system){
+			//check if backup device is online (check #2)
+			if (!check_backup_device_online()) { return; }
+		}
+		
+		//update UI ----------------
+		
+		//update_ui(false);
+		
+		//take a snapshot if current system is being restored -----------------
+		
+		if (!App.live_system() && (App.restore_target.device == App.root_device.device) && (App.restore_target.uuid == App.root_device.uuid)){
+
+			string msg = _("Do you want to take a snapshot of the current system before restoring the selected snapshot?");
+			
+			var dlg = new Gtk.MessageDialog.with_markup(get_window_parent(), Gtk.DialogFlags.MODAL, Gtk.MessageType.QUESTION, Gtk.ButtonsType.YES_NO, msg);
+			dlg.set_title(_("Take Snapshot"));
+			dlg.set_default_size (200, -1);
+			dlg.set_transient_for(get_window_parent());
+			dlg.set_modal(true);
+			response = dlg.run();
+			dlg.destroy();
+
+			if (response == Gtk.ResponseType.YES){
+				//statusbar_message(_("Taking snapshot..."));
+			
+				//update_progress_start();
+				
+				bool is_success = App.take_snapshot(true,"",get_window_parent()); 
+				
+				//update_progress_stop();
+				
+				if (is_success){
+					App.update_snapshot_list();
+					var latest = App.get_latest_snapshot("ondemand");
+					latest.description = _("Before restoring") + " '%s'".printf(App.snapshot_to_restore.name);
+					latest.update_control_file();
+				}
+			}
+		}
+
+		if (!App.mirror_system){
+			//check if backup device is online (check #3)
+			if (!check_backup_device_online()) { return; }
+		}
+		
+		//restore the snapshot --------------------
+
+		if (App.snapshot_to_restore != null){
+			log_msg("Restoring snapshot '%s' to device '%s'".printf(App.snapshot_to_restore.name,App.restore_target.device),true);
+			//statusbar_message(_("Restoring snapshot..."));
+		}
+		else{
+			log_msg("Cloning current system to device '%s'".printf(App.restore_target.device),true);
+			//statusbar_message(_("Cloning system..."));
+		}
+		
+		if (App.reinstall_grub2){
+			log_msg("GRUB will be installed on '%s'".printf(App.grub_device),true);
+		}
+
+		bool is_success = App.restore_snapshot(get_window_parent()); 
+		
+		string msg;
+		if (is_success){
+			if (App.mirror_system){
+				msg = _("System was cloned successfully on target device");
+			}
+			else{
+				msg = _("Snapshot was restored successfully on target device");
+			}
+			//statusbar_message_with_timeout(msg, true);
+			
+			var dlg = new Gtk.MessageDialog.with_markup(get_window_parent(),Gtk.DialogFlags.MODAL, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, msg);
+			dlg.set_title(_("Finished"));
+			dlg.set_modal(true);
+			dlg.set_transient_for(get_window_parent());
+			dlg.run();
+			dlg.destroy();
+		}
+		else{
+			if (App.mirror_system){
+				msg = _("Cloning Failed!");
+			}
+			else{
+				msg = _("Restore Failed!");
+			}
+
+			//statusbar_message_with_timeout(msg, true);
+
+			var dlg = new Gtk.MessageDialog.with_markup(get_window_parent(),Gtk.DialogFlags.MODAL, Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, msg);
+			dlg.set_title(_("Error"));
+			dlg.set_modal(true);
+			dlg.set_transient_for(get_window_parent());
+			dlg.run();
+			dlg.destroy();
+		}
+		
+		//update UI ----------------
+		
+		//update_ui(true);
+	}
+
+	private void btn_view_snapshot_log_clicked(){
+        TreeSelection sel = tv_backups.get_selection ();
+        if (sel.count_selected_rows() == 0){
+            gtk_messagebox(_("Select Snapshot"),_("Please select a snapshot to view the log!"),null,false);
+            return;
+        }
+        
+        TreeIter iter;
+        ListStore store = (ListStore)tv_backups.model;
+        
+        bool iterExists = store.get_iter_first (out iter);
+        while (iterExists) { 
+            if (sel.iter_is_selected (iter)){
+                TimeShiftBackup bak;
+                store.get (iter, 0, out bak);
+
+                exo_open_textfile(bak.path + "/rsync-log");
+                return;
+            }
+            iterExists = store.iter_next (ref iter);
+        }
+    }
+
+    private void refresh_tv_backups(){
+		
+		App.update_snapshot_list();
+		
+		ListStore model = new ListStore(1, typeof(TimeShiftBackup));
+		
+		var list = App.snapshot_list;
+		
+		if (tv_backups_sort_column_index == 0){
+			
+			if (tv_backups_sort_column_desc)
+			{
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return (t1.date.compare(t2.date));
+				});
+			}
+			else{
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return -1 * (t1.date.compare(t2.date));
+				});
+			}
+		}
+		else{
+			if (tv_backups_sort_column_desc)
+			{
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return strcmp(t1.taglist,t2.taglist);
+				});
+			}
+			else{
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return -1 * strcmp(t1.taglist,t2.taglist);
+				});
+			}
+		}
+
+		TreeIter iter;
+		foreach(TimeShiftBackup bak in list) {
+			model.append(out iter);
+			model.set (iter, 0, bak);
+		}
+			
+		tv_backups.set_model (model);
+		tv_backups.columns_autosize ();
+	}
+
+	private Gtk.Window get_window_parent()
+    {
+        Gtk.Widget toplevel = get_toplevel();
+        return (Gtk.Window*) toplevel;
+    }
+
+    private bool check_backup_device_online(){
+		if (!App.backup_device_online()){
+			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
+			//update_statusbar();
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
 }

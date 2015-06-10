@@ -59,6 +59,7 @@ public class SnapshotsList : Gtk.Box
     	//snapshot list ----------------------------------------------------
     	box_snapshots = new Box (Orientation.VERTICAL, 0);
         box_snapshots.margin = 0;
+        add(box_snapshots);
 
         tv_backups = new TreeView();
 		tv_backups.get_selection().mode = SelectionMode.MULTIPLE;

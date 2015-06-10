@@ -583,7 +583,7 @@ public class SnapshotsList : Gtk.Box
         }
     }
 
-    private void refresh_tv_backups(){
+    public void refresh_tv_backups(){
 		
 		App.update_snapshot_list();
 		

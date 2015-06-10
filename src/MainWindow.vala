@@ -154,7 +154,7 @@ class MainWindow : Gtk.Window {
 		
 		sidebar.refresh_items(); 
 
-		//refresh_tv_backups();
+		snapshots_list_widget.refresh_tv_backups();
 
 		update_statusbar();
 

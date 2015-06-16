@@ -23,7 +23,6 @@
  
 using Gtk;
 using Gee;
-
 using TeeJee.Logging;
 using TeeJee.FileSystem;
 using TeeJee.Devices;
@@ -36,23 +35,11 @@ using TeeJee.Misc;
 
 class MainWindow : Gtk.Window {
 
-	//headerbar
     private HeaderBar headerbar;
-	
-
-    //
 	private Box box_main;
-
-    //infobar
     private NotificationsContainer notification_container;
-
-    //
 	private Paned paned;
 	private SideBar sidebar;
-
-	
-
-	//snapshots
 	private SnapshotsList snapshots_list_widget;
 	
 	//timers
@@ -100,33 +87,11 @@ class MainWindow : Gtk.Window {
 		pane.add2(snapshots_list_widget);
 		pane.set_position(150);
 		box_main.pack_start(pane, false, true, 0);
-        
-        
+
         snapshot_device_original = App.snapshot_device;
 		
 		sidebar.refresh_items();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
-    }
-
-    private void boom()
-    {
-				string msg = "it works.";
-
-				var dialog = new Gtk.MessageDialog.with_markup(this, Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, msg);
-				dialog.set_title(_("Disable Scheduled Snapshots"));
-				dialog.set_default_size (300, -1);
-				dialog.set_transient_for(this);
-				dialog.set_modal(true);
-				int response = dialog.run();
-				dialog.destroy();
-				
-				if (response == Gtk.ResponseType.OK){
-
-				}
-				else{
-
-				}
-
     }
 
     private void sidebar_updated()

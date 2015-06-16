@@ -36,39 +36,74 @@ public class NotificationsContainer : Gtk.Overlay
 
     public NotificationsContainer()
     {
-
-    }
-
-    public void scheduled_snapshots_notification_on()
-    {
         infobar_scheduled_snapshots = new InfoBar();
-        infobar_scheduled_snapshots.show();
         infobar_scheduled_snapshots.add_button ("Fix", 1);
         infobar_scheduled_snapshots.add_button ("Ignore", 2);
         infobar_scheduled_snapshots.set_message_type(Gtk.MessageType.WARNING);
         Gtk.Label infobar_scheduled_snapshots_text = new Gtk.Label("Scheduled snapshots disabled.");
         infobar_scheduled_snapshots_text.show();
         infobar_scheduled_snapshots.get_content_area().add(infobar_scheduled_snapshots_text);
+        infobar_scheduled_snapshots.response.connect(infobar_scheduled_snapshots_handler);
         add(infobar_scheduled_snapshots);
+        infobar_scheduled_snapshots.hide();
+
+        infobar_last_snapshot = new InfoBar();
+        infobar_last_snapshot.add_button ("Take Snapshot Now", 1);
+        infobar_last_snapshot.add_button ("Ignore", 2);
+        infobar_last_snapshot.set_message_type(Gtk.MessageType.QUESTION);
+        Gtk.Label infobar_last_snapshot_text = new Gtk.Label("Last snapshot is s few days old.");
+        infobar_last_snapshot_text.show();
+        infobar_last_snapshot.get_content_area().add(infobar_last_snapshot_text);
+        infobar_last_snapshot.response.connect(infobar_last_snapshot_button_handler);
+
+        infobar_live_system = new InfoBar();
+        infobar_live_system.add_button ("Dismiss", 1);
+        infobar_live_system.set_message_type(Gtk.MessageType.QUESTION);
+        Gtk.Label infobar_live_system_text = new Gtk.Label("Running from Live CD/USB. ");
+        infobar_live_system.get_content_area().add(infobar_live_system_text);
+        infobar_live_system.response.connect(infobar_live_system_handler);
+    }
+
+    public void scheduled_snapshots_notification_on()
+    {
         infobar_scheduled_snapshots.show();
+    }
+
+    private void infobar_scheduled_snapshots_handler(int response_id)
+    {
+        switch(response_id)
+        {
+            case 2:
+                scheduled_snapshots_notification_off();
+                break;
+
+            default:
+                return;
+        }
     }
 
     public void scheduled_snapshots_notification_off()
     {
-        remove(infobar_scheduled_snapshots);   
+          infobar_scheduled_snapshots.hide();
     }
 
     public void last_snapshot_notification_on(string days_old)
     {
-        infobar_last_snapshot = new InfoBar();
         infobar_last_snapshot.show();
-        infobar_last_snapshot.add_button ("Take Snapshot Now", 1);
-        infobar_last_snapshot.add_button ("Ignore", 2);
-        infobar_last_snapshot.set_message_type(Gtk.MessageType.QUESTION);
-        Gtk.Label infobar_last_snapshot_text = new Gtk.Label("Last snapshot is" + days_old + "days old.");
-        infobar_last_snapshot_text.show();
-        infobar_last_snapshot.get_content_area().add(infobar_last_snapshot_text);
         add_overlay(infobar_last_snapshot);
+    }
+
+    private void infobar_last_snapshot_button_handler(int response_id)
+    {
+        switch(response_id)
+        {
+            case 2:
+                last_snapshot_notification_off();
+                break;
+
+            default:
+                return;
+        }
     }
 
     public void last_snapshot_notification_off()
@@ -78,14 +113,25 @@ public class NotificationsContainer : Gtk.Overlay
 
     public void live_system_notification_on()
     {
-        infobar_live_system = new InfoBar();
         infobar_live_system.show();
-        infobar_live_system.add_button ("Dismiss", 1);
-        infobar_live_system.set_message_type(Gtk.MessageType.QUESTION);
-        Gtk.Label infobar_live_system_text = new Gtk.Label("Running from Live CD/USB. ");
-        infobar_live_system.show();
-        infobar_live_system.get_content_area().add(infobar_live_system_text);
         add_overlay(infobar_live_system);
     }
 
+    private void infobar_live_system_handler(int response_id)
+    {
+        switch(response_id)
+        {
+            case 1:
+                live_system_notification_off();
+                break;
+
+            default:
+                return;
+        }
+    }
+
+    public void live_system_notification_off()
+    {
+        remove(infobar_live_system);
+    }
 }

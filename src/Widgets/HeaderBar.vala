@@ -62,6 +62,7 @@ public class HeaderBar : Gtk.HeaderBar
         btn_scheduled_backup.set_tooltip_text (_("Schedule Snapshots"));
         btn_scheduled_backup.icon_widget = get_shared_icon("office-calendar","office-calendar.svg",24);
         add(btn_scheduled_backup);
+        btn_scheduled_backup.clicked.connect(btn_settings_clicked);
 
         //appmenu
         Gtk.Menu menu = new Gtk.Menu();
@@ -120,9 +121,9 @@ public class HeaderBar : Gtk.HeaderBar
         
         //take snapshot ----------------
         
-        bool is_success = true;
-        //App.take_snapshot(true,"",get_window_parent()); 
-
+        bool is_success = App.take_snapshot(true,"",get_window_parent()); 
+        // need to pause UI and update the snapshotlist.
+        
         //update_progress_stop();
         
         if (is_success){
@@ -145,6 +146,8 @@ public class HeaderBar : Gtk.HeaderBar
     private void btn_view_app_logs_clicked(){
         exo_open_folder(App.log_dir);
     }
+
+
 
     private void btn_settings_clicked(){
         var dialog = new SettingsWindow();

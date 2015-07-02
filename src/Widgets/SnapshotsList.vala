@@ -47,12 +47,15 @@ public class SnapshotsList : Gtk.Box
     private TreeViewColumn col_desc;
 	private int tv_backups_sort_column_index = 0;
 	private bool tv_backups_sort_column_desc = true;
-	private Box contextButtons;
 
-	private ToolButton btn_restore;
-	private ToolButton btn_delete_snapshot;
-	private ToolButton btn_browse_snapshot;
-	private ToolButton btn_view_snapshot_log;
+	private Box context_buttons;
+	private Gtk.Button btn_restore;
+	private Gtk.Button btn_delete_snapshot;
+	private Gtk.Button btn_browse_snapshot;
+	private Gtk.Button btn_view_snapshot_log;
+
+	private Gtk.Menu context_menu;
+	private Gtk.MenuItem mediaScrollToCurrent;
 
     public SnapshotsList () 
     {
@@ -67,27 +70,65 @@ public class SnapshotsList : Gtk.Box
 		tv_backups.has_tooltip = true;
 		tv_backups.set_rules_hint (true);
 
-		contextButtons = new Box (Orientation.HORIZONTAL, 0);
+		context_buttons = new Box (Orientation.HORIZONTAL, 0);
 
-		Button btnDelete = new Button.with_label ("Delete");
-		btnDelete.get_style_context().add_class("destructive-action"); // Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION
-		contextButtons.pack_start(btnDelete, false, false, 12);
-		//btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
+		btn_delete_snapshot = new Button.with_label ("Delete");
+		btn_delete_snapshot.get_style_context().add_class("destructive-action"); // Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION
+		context_buttons.pack_start(btn_delete_snapshot, false, false, 12);
+		btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
 
-		Button btnBrowse = new Button.with_label ("Browse");
-		contextButtons.pack_end(btnBrowse, false, false, 12);
-		//btn_browse_snapshot.clicked.connect (btn_browse_snapshot_clicked);
+		btn_browse_snapshot = new Button.with_label ("Browse");
+		context_buttons.pack_end(btn_browse_snapshot, false, false, 12);
+		btn_browse_snapshot.clicked.connect(btn_browse_snapshot_clicked);
 
-		Button btnRestore = new Button.with_label ("Restore");
-		contextButtons.pack_end(btnRestore, false, false, 0);
-		//btn_restore.clicked.connect (btn_restore_clicked);
+		btn_restore = new Button.with_label ("Restore");
+		context_buttons.pack_end(btn_restore, false, false, 0);
+		btn_restore.clicked.connect (btn_restore_clicked);
 
-		Button btnSnapshopLog = new Button.with_label ("View Snapshot Log");
-		btnSnapshopLog.set_tooltip_text (_("View rsync log for selected snapshot"));
-		contextButtons.pack_end(btnSnapshopLog, false, false, 12);
-		btnSnapshopLog.clicked.connect (btn_view_snapshot_log_clicked);
+		btn_view_snapshot_log = new Button.with_label ("View Snapshot Log");
+		btn_view_snapshot_log.set_tooltip_text (_("View rsync log for selected snapshot"));
+		context_buttons.pack_end(btn_view_snapshot_log, false, false, 12);
+		btn_view_snapshot_log.clicked.connect(btn_view_snapshot_log_clicked);
 
-		box_snapshots.pack_end(contextButtons, false, true, 12);
+
+box_snapshots.pack_end(context_buttons, false, true, 12);
+
+
+
+tv_backups.get_selection().changed.connect(display_context_buttons);
+
+
+context_menu = new Gtk.Menu();
+context_menu.attach_to_widget (this, null);
+
+
+mediaScrollToCurrent = new Gtk.MenuItem.with_label(_("Scroll to Current Song"));
+context_menu.append(mediaScrollToCurrent);
+
+context_menu.show_all();
+
+tv_backups.button_press_event.connect ((w, event) => {
+				if (event.button == 3) 
+				{
+					//return show_treeview_popup (popup, event);
+
+			        bool pthinfo = tv_backups.get_path_at_pos((int)event.x, (int)event.y, null, null, null, null);
+
+			        if (pthinfo)
+			        {
+			        	// right clicked on a row record
+			        	popup_media_menu();
+			        }
+			        else
+			        {
+			        	//im not on a row
+			        }
+				}
+
+			return false;
+		});
+
+
 
 		//sw_backups
 		sw_backups = new ScrolledWindow(null, null);
@@ -100,59 +141,6 @@ public class SnapshotsList : Gtk.Box
 		// sw_backups.margin_bottom = 6;
 		box_snapshots.add(sw_backups);
 
-        //col_date
-		col_date = new TreeViewColumn();
-		col_date.title = _("Snapshot");
-		col_date.clickable = true;
-		col_date.resizable = true;
-		col_date.spacing = 1;
-		
-		CellRendererPixbuf cell_backup_icon = new CellRendererPixbuf ();
-		cell_backup_icon.stock_id = "gtk-floppy";
-		cell_backup_icon.xpad = 1;
-		col_date.pack_start (cell_backup_icon, false);
-		
-		CellRendererText cell_date = new CellRendererText ();
-		col_date.pack_start (cell_date, false);
-		col_date.set_cell_data_func (cell_date, cell_date_render);
-		
-		tv_backups.append_column(col_date);
-		
-		col_date.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 0){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 0;
-				tv_backups_sort_column_desc = true;
-			}
-			refresh_tv_backups();
-		});
-		
-		//col_system
-		col_system = new TreeViewColumn();
-		col_system.title = _("System");
-		col_system.resizable = true;
-		col_system.clickable = true;
-		col_system.min_width = 150;
-		
-		CellRendererText cell_system = new CellRendererText ();
-		cell_system.ellipsize = Pango.EllipsizeMode.END;
-		col_system.pack_start (cell_system, false);
-		col_system.set_cell_data_func (cell_system, cell_system_render);
-		tv_backups.append_column(col_system);
-		
-		col_system.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 1){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 1;
-				tv_backups_sort_column_desc = false;
-			}
-			refresh_tv_backups();
-		});
-		
 		//col_tags
 		col_tags = new TreeViewColumn();
 		col_tags.title = _("Tags");
@@ -175,23 +163,74 @@ public class SnapshotsList : Gtk.Box
 			}
 			refresh_tv_backups();
 		});
+		
+/* 		//col_system
+		col_system = new TreeViewColumn();
+		col_system.title = _("System");
+		col_system.resizable = true;
+		col_system.clickable = true;
+		col_system.min_width = 150;
+		
+		CellRendererText cell_system = new CellRendererText ();
+		cell_system.ellipsize = Pango.EllipsizeMode.END;
+		col_system.pack_start (cell_system, false);
+		col_system.set_cell_data_func (cell_system, cell_system_render);
+		tv_backups.append_column(col_system);
+		
+		col_system.clicked.connect(() => {
+			if(tv_backups_sort_column_index == 1){
+				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
+			}
+			else{
+				tv_backups_sort_column_index = 1;
+				tv_backups_sort_column_desc = false;
+			}
+			refresh_tv_backups();
+		}); */
 
 		//cell_desc
 		col_desc = new TreeViewColumn();
-		col_desc.title = _("Comments");
+		col_desc.title = _("Label");
 		col_desc.resizable = true;
 		col_desc.clickable = true;
+		col_desc.min_width = 375;
 		CellRendererText cell_desc = new CellRendererText ();
 		cell_desc.ellipsize = Pango.EllipsizeMode.END;
 		col_desc.pack_start (cell_desc, false);
 		col_desc.set_cell_data_func (cell_desc, cell_desc_render);
 		tv_backups.append_column(col_desc);
 		cell_desc.editable = true;
-		
 		cell_desc.edited.connect (cell_desc_edited);
 
+
+        //col_date
+		col_date = new TreeViewColumn();
+		col_date.title = _("Date");
+		col_date.clickable = true;
+		col_date.resizable = true;
+		col_date.spacing = 1;
+		
+		CellRendererText cell_date = new CellRendererText ();
+		col_date.pack_start (cell_date, false);
+		col_date.set_cell_data_func (cell_date, cell_date_render);
+		
+		tv_backups.append_column(col_date);
+		
+		col_date.clicked.connect(() => {
+			if(tv_backups_sort_column_index == 0){
+				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
+			}
+			else{
+				tv_backups_sort_column_index = 0;
+				tv_backups_sort_column_desc = true;
+			}
+			refresh_tv_backups();
+		});
+
+
 		//tooltips
-		tv_backups.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => {
+		tv_backups.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => 
+		{
 			TreeModel model;
 			TreePath path;
 			TreeIter iter;
@@ -223,49 +262,102 @@ public class SnapshotsList : Gtk.Box
 		});
     }
 
-    private void cell_date_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+
+
+
+public void popup_media_menu()
+{
+	context_menu.popup (null, null, null, 3, Gtk.get_current_event_time());
+}
+
+
+
+
+private void test()
+{
+	// The MessageDialog
+		Gtk.MessageDialog msg2 = new Gtk.MessageDialog (get_window_parent(), Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, "should work!");
+			msg2.response.connect ((response_id) => {
+			switch (response_id) {
+				case Gtk.ResponseType.OK:
+					stdout.puts ("Ok\n");
+					break;
+				case Gtk.ResponseType.CANCEL:
+					stdout.puts ("Cancel\n");
+					break;
+				case Gtk.ResponseType.DELETE_EVENT:
+					stdout.puts ("Delete\n");
+					break;
+			}
+
+			msg2.destroy();
+		});
+		msg2.show ();
+
+}
+
+    private void display_context_buttons()
+    {
+    	if (tv_backups.get_selection().count_selected_rows() < 1)
+    	{
+    		context_buttons.hide();
+    	}
+    	else
+    	{
+    		context_buttons.show();
+    	}
+    }
+
+    private void cell_date_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+    {
 		TimeShiftBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
 	}
 	
-	private void cell_tags_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_tags_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
 		TimeShiftBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.taglist_short;
 	}
 
-	private void cell_system_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_system_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
 		TimeShiftBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.sys_distro;
 	}
 	
-	private void cell_desc_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_desc_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
 		TimeShiftBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.description;
 	}
 	
-	private void cell_desc_edited (string path, string new_text) {
+	private void cell_desc_edited (string path, string new_text) 
+	{
 		TimeShiftBackup bak;
 
 		TreeIter iter;
-		ListStore model = (ListStore) tv_backups.model;
+		Gtk.ListStore model = (Gtk.ListStore) tv_backups.model;
 		model.get_iter_from_string (out iter, path);
 		model.get (iter, 0, out bak, -1);
 		bak.description = new_text;
 		bak.update_control_file();
 	}
 
-	private void cell_backup_device_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter){
+	private void cell_backup_device_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
+	{
 		Device info;
 		model.get (iter, 0, out info, -1);
 
 		(cell as Gtk.CellRendererText).markup = info.description_formatted();
 	}
 
-    private void btn_delete_snapshot_clicked(){
+    private void btn_delete_snapshot_clicked()
+    {
 		TreeIter iter;
 		TreeIter iter_delete;
 		TreeSelection sel;
@@ -277,7 +369,8 @@ public class SnapshotsList : Gtk.Box
 		//check selected count ----------------
 		
 		sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0){ 
+		if (sel.count_selected_rows() == 0)
+		{ 
 			gtk_messagebox(_("No Snapshots Selected"),_("Please select the snapshots to delete"),null,false);
 			return; 
 		}
@@ -291,11 +384,13 @@ public class SnapshotsList : Gtk.Box
 		//get list of snapshots to delete --------------------
 
 		var list_of_snapshots_to_delete = new Gee.ArrayList<TimeShiftBackup>();
-		ListStore store = (ListStore) tv_backups.model;
+		Gtk.ListStore store = (Gtk.ListStore) tv_backups.model;
 		
 		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists && is_success) { 
-			if (sel.iter_is_selected (iter)){
+		while (iterExists && is_success) 
+		{ 
+			if (sel.iter_is_selected (iter))
+			{
 				TimeShiftBackup bak;
 				store.get (iter, 0, out bak);
 				list_of_snapshots_to_delete.add(bak);
@@ -309,7 +404,8 @@ public class SnapshotsList : Gtk.Box
 		
 		//delete snapshots --------------------------
 		
-		foreach(TimeShiftBackup bak in list_of_snapshots_to_delete){
+		foreach(TimeShiftBackup bak in list_of_snapshots_to_delete)
+		{
 			
 			//find the iter being deleted
 			iterExists = store.get_iter_first (out iter_delete);
@@ -358,15 +454,18 @@ public class SnapshotsList : Gtk.Box
 		//update_ui(true);
 	}
 
-    private void btn_browse_snapshot_clicked(){
-		
+    private void btn_browse_snapshot_clicked()
+    {
 		//check if device is online
-		if (!check_backup_device_online()) { 
+		if (!check_backup_device_online()) 
+		{ 
 			return; 
 		}
 		
 		TreeSelection sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0){
+
+		if (sel.count_selected_rows() == 0)
+		{
 			var f = File.new_for_path(App.snapshot_dir);
 			if (f.query_exists()){
 				exo_open_folder(App.snapshot_dir);
@@ -378,11 +477,13 @@ public class SnapshotsList : Gtk.Box
 		}
 		
 		TreeIter iter;
-		ListStore store = (ListStore)tv_backups.model;
+		Gtk.ListStore store = (Gtk.ListStore)tv_backups.model;
 		
 		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists) { 
-			if (sel.iter_is_selected (iter)){
+		while (iterExists) 
+		{ 
+			if (sel.iter_is_selected (iter))
+			{
 				TimeShiftBackup bak;
 				store.get (iter, 0, out bak);
 
@@ -393,12 +494,14 @@ public class SnapshotsList : Gtk.Box
 		}
 	}
 
-	private void btn_restore_clicked(){
+	private void btn_restore_clicked()
+	{
 		App.mirror_system = false;
 		restore();
 	}
 
-	private void restore(){
+	private void restore()
+	{
 		TreeIter iter;
 		TreeSelection sel;
 		
@@ -425,7 +528,7 @@ public class SnapshotsList : Gtk.Box
 			
 			TimeShiftBackup snapshot_to_restore = null;
 			
-			ListStore store = (ListStore) tv_backups.model;
+			Gtk.ListStore store = (Gtk.ListStore) tv_backups.model;
 			sel = tv_backups.get_selection();
 			bool iterExists = store.get_iter_first (out iter);
 			while (iterExists) { 
@@ -560,22 +663,25 @@ public class SnapshotsList : Gtk.Box
 		//update_ui(true);
 	}
 
-	private void btn_view_snapshot_log_clicked(){
-        TreeSelection sel = tv_backups.get_selection ();
-        if (sel.count_selected_rows() == 0){
+	private void btn_view_snapshot_log_clicked()
+	{
+        TreeSelection sel = tv_backups.get_selection();
+        if (sel.count_selected_rows() == 0)
+        {
             gtk_messagebox(_("Select Snapshot"),_("Please select a snapshot to view the log!"),null,false);
             return;
         }
         
         TreeIter iter;
-        ListStore store = (ListStore)tv_backups.model;
+        Gtk.ListStore store = (Gtk.ListStore)tv_backups.model;
         
         bool iterExists = store.get_iter_first (out iter);
-        while (iterExists) { 
-            if (sel.iter_is_selected (iter)){
+        while (iterExists) 
+        { 
+            if (sel.iter_is_selected (iter))
+            {
                 TimeShiftBackup bak;
                 store.get (iter, 0, out bak);
-
                 exo_open_textfile(bak.path + "/rsync-log");
                 return;
             }
@@ -583,11 +689,12 @@ public class SnapshotsList : Gtk.Box
         }
     }
 
-    public void refresh_tv_backups(){
+    public void refresh_tv_backups()
+    {
 		
 		App.update_snapshot_list();
 		
-		ListStore model = new ListStore(1, typeof(TimeShiftBackup));
+		Gtk.ListStore model = new Gtk.ListStore(1, typeof(TimeShiftBackup));
 		
 		var list = App.snapshot_list;
 		

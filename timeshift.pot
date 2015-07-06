@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2015-07-06 00:54+0100\n"
+"POT-Creation-Date: 2015-07-07 00:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Backup Level"
 msgstr ""
 
-#: MainWindow.vala:388 MainWindow.vala:396 SystemRestore.vala:1289
+#: MainWindow.vala:389 MainWindow.vala:398 SystemRestore.vala:1289
 #: SystemRestore.vala:3754
 msgid "Backup device does not have enough space!"
 msgstr ""
@@ -183,10 +183,6 @@ msgstr ""
 
 #: RestoreWindow.vala:552 RestoreWindow.vala:553 Utility.vala:2213
 msgid "Cancel"
-msgstr ""
-
-#: MainWindow.vala:120
-msgid "Checking backup device..."
 msgstr ""
 
 #: SystemRestore.vala:1514 SystemRestore.vala:2688
@@ -511,7 +507,7 @@ msgstr ""
 msgid "First Snapshot"
 msgstr ""
 
-#: MainWindow.vala:397 SystemRestore.vala:3763
+#: MainWindow.vala:399 SystemRestore.vala:3763
 msgid "First snapshot needs"
 msgstr ""
 

@@ -25,7 +25,7 @@ using Gtk;
 
 public class StatusBar : Gtk.ActionBar
 {
-	private Gtk.Button icon;
+	//private Gtk.Button icon;
 	private Gtk.Label label;
 
 	public StatusBar()
@@ -37,6 +37,11 @@ public class StatusBar : Gtk.ActionBar
 		//create and add label
 		label = new Gtk.Label("Ready. Take a snapshot or restore one.");
 		add(label);
+	}
+
+	public void set_message(string text)
+	{
+		label.set_label(text);
 	}
 
 }

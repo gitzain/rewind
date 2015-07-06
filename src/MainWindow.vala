@@ -117,10 +117,10 @@ class MainWindow : Gtk.Window {
 		update_ui(false);
 		
 		if (App.live_system()){
-			statusbar_message(_("Checking backup device..."));
+			statusbar.set_message("Checking backup device...");
 		}
 		else{
-			statusbar_message(_("Estimating system size..."));
+			statusbar.set_message(_("Estimating system size..."));
 		}
 		
 		sidebar.refresh_items(); 
@@ -380,6 +380,7 @@ class MainWindow : Gtk.Window {
 					txt = _("Backup device is not mounted!");;
 				}
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
+				statusbar.set_message(txt);
 				//lbl_backup_device_warning.label = txt;
 				//lbl_backup_device_warning.visible = true;
 				break;
@@ -387,6 +388,7 @@ class MainWindow : Gtk.Window {
 			case 1:
 				txt = _("Backup device does not have enough space!");
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
+				statusbar.set_message(txt);
 				//lbl_backup_device_warning.label = txt;
 				//lbl_backup_device_warning.visible = true;
 				break;
@@ -396,11 +398,13 @@ class MainWindow : Gtk.Window {
 				txt = _("Backup device does not have enough space!") + " ";
 				txt += _("First snapshot needs") + " %.1f GB".printf(required/1024.0);
 				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
+				statusbar.set_message(txt);
 				//lbl_backup_device_warning.label = txt;
 				//lbl_backup_device_warning.visible = true;
 				break;
 			 
 			default:
+				statusbar.set_message("");
 				//lbl_backup_device_warning.label = "";
 				//lbl_backup_device_warning.visible = false;
 				break;

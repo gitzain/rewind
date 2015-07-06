@@ -36,11 +36,12 @@ using TeeJee.Misc;
 
 public class SnapshotsList : Gtk.Box 
 {
+	
 	private Box box_snapshots;
 
 	//snapshots
-	private ScrolledWindow sw_backups;
 	private TreeView tv_backups;
+	private ScrolledWindow sw_backups;
     private TreeViewColumn col_date;
     private TreeViewColumn col_tags;
     private TreeViewColumn col_system;
@@ -48,70 +49,29 @@ public class SnapshotsList : Gtk.Box
 	private int tv_backups_sort_column_index = 0;
 	private bool tv_backups_sort_column_desc = true;
 
-	private Box context_buttons;
-	private Gtk.Button btn_restore;
-	private Gtk.Button btn_delete_snapshot;
-	private Gtk.Button btn_browse_snapshot;
-	private Gtk.Button btn_view_snapshot_log;
-
-	private Gtk.Menu context_menu;
-	private Gtk.MenuItem mediaScrollToCurrent;
+	// right click menu
+	private Gtk.Menu right_click_menu;
+	private Gtk.MenuItem right_click_menu_item_restore;
+	private Gtk.MenuItem right_click_menu_item_browse;
+	private Gtk.MenuItem right_click_menu_item_log;
+	private Gtk.MenuItem right_click_menu_item_delete;
 
     public SnapshotsList () 
     {
-    	//snapshot list ----------------------------------------------------
+    	// snapshot list
     	box_snapshots = new Box (Orientation.VERTICAL, 0);
         box_snapshots.margin = 0;
         add(box_snapshots);
 
+        // treeview
         tv_backups = new TreeView();
 		tv_backups.get_selection().mode = SelectionMode.MULTIPLE;
 		tv_backups.headers_clickable = true;
 		tv_backups.has_tooltip = true;
 		tv_backups.set_rules_hint (true);
-
-		context_buttons = new Box (Orientation.HORIZONTAL, 0);
-
-		btn_delete_snapshot = new Button.with_label ("Delete");
-		btn_delete_snapshot.get_style_context().add_class("destructive-action"); // Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION
-		context_buttons.pack_start(btn_delete_snapshot, false, false, 12);
-		btn_delete_snapshot.clicked.connect (btn_delete_snapshot_clicked);
-
-		btn_browse_snapshot = new Button.with_label ("Browse");
-		context_buttons.pack_end(btn_browse_snapshot, false, false, 12);
-		btn_browse_snapshot.clicked.connect(btn_browse_snapshot_clicked);
-
-		btn_restore = new Button.with_label ("Restore");
-		context_buttons.pack_end(btn_restore, false, false, 0);
-		btn_restore.clicked.connect (btn_restore_clicked);
-
-		btn_view_snapshot_log = new Button.with_label ("View Snapshot Log");
-		btn_view_snapshot_log.set_tooltip_text (_("View rsync log for selected snapshot"));
-		context_buttons.pack_end(btn_view_snapshot_log, false, false, 12);
-		btn_view_snapshot_log.clicked.connect(btn_view_snapshot_log_clicked);
-
-
-box_snapshots.pack_end(context_buttons, false, true, 12);
-
-
-
-tv_backups.get_selection().changed.connect(display_context_buttons);
-
-
-context_menu = new Gtk.Menu();
-context_menu.attach_to_widget (this, null);
-
-
-mediaScrollToCurrent = new Gtk.MenuItem.with_label(_("Scroll to Current Song"));
-context_menu.append(mediaScrollToCurrent);
-
-context_menu.show_all();
-
-tv_backups.button_press_event.connect ((w, event) => {
-				if (event.button == 3) 
+		tv_backups.button_press_event.connect((w, event) => {
+			if (event.button == 3) 
 				{
-					//return show_treeview_popup (popup, event);
-
 			        bool pthinfo = tv_backups.get_path_at_pos((int)event.x, (int)event.y, null, null, null, null);
 
 			        if (pthinfo)
@@ -128,108 +88,8 @@ tv_backups.button_press_event.connect ((w, event) => {
 			return false;
 		});
 
-
-
-		//sw_backups
-		sw_backups = new ScrolledWindow(null, null);
-		sw_backups.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_backups.add (tv_backups);
-		sw_backups.expand = true;
-		// sw_backups.margin_left = 6;
-		// sw_backups.margin_right = 6;
-		// sw_backups.margin_top = 6;
-		// sw_backups.margin_bottom = 6;
-		box_snapshots.add(sw_backups);
-
-		//col_tags
-		col_tags = new TreeViewColumn();
-		col_tags.title = _("Tags");
-		col_tags.resizable = true;
-		//col_tags.min_width = 80;
-		col_tags.clickable = true;
-		CellRendererText cell_tags = new CellRendererText ();
-		cell_tags.ellipsize = Pango.EllipsizeMode.END;
-		col_tags.pack_start (cell_tags, false);
-		col_tags.set_cell_data_func (cell_tags, cell_tags_render);
-		tv_backups.append_column(col_tags);
-		
-		col_tags.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 2){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 2;
-				tv_backups_sort_column_desc = false;
-			}
-			refresh_tv_backups();
-		});
-		
-/* 		//col_system
-		col_system = new TreeViewColumn();
-		col_system.title = _("System");
-		col_system.resizable = true;
-		col_system.clickable = true;
-		col_system.min_width = 150;
-		
-		CellRendererText cell_system = new CellRendererText ();
-		cell_system.ellipsize = Pango.EllipsizeMode.END;
-		col_system.pack_start (cell_system, false);
-		col_system.set_cell_data_func (cell_system, cell_system_render);
-		tv_backups.append_column(col_system);
-		
-		col_system.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 1){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 1;
-				tv_backups_sort_column_desc = false;
-			}
-			refresh_tv_backups();
-		}); */
-
-		//cell_desc
-		col_desc = new TreeViewColumn();
-		col_desc.title = _("Label");
-		col_desc.resizable = true;
-		col_desc.clickable = true;
-		col_desc.min_width = 375;
-		CellRendererText cell_desc = new CellRendererText ();
-		cell_desc.ellipsize = Pango.EllipsizeMode.END;
-		col_desc.pack_start (cell_desc, false);
-		col_desc.set_cell_data_func (cell_desc, cell_desc_render);
-		tv_backups.append_column(col_desc);
-		cell_desc.editable = true;
-		cell_desc.edited.connect (cell_desc_edited);
-
-
-        //col_date
-		col_date = new TreeViewColumn();
-		col_date.title = _("Date");
-		col_date.clickable = true;
-		col_date.resizable = true;
-		col_date.spacing = 1;
-		
-		CellRendererText cell_date = new CellRendererText ();
-		col_date.pack_start (cell_date, false);
-		col_date.set_cell_data_func (cell_date, cell_date_render);
-		
-		tv_backups.append_column(col_date);
-		
-		col_date.clicked.connect(() => {
-			if(tv_backups_sort_column_index == 0){
-				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
-			}
-			else{
-				tv_backups_sort_column_index = 0;
-				tv_backups_sort_column_desc = true;
-			}
-			refresh_tv_backups();
-		});
-
-
 		//tooltips
-		tv_backups.query_tooltip.connect ((x, y, keyboard_tooltip, tooltip) => 
+		tv_backups.query_tooltip.connect((x, y, keyboard_tooltip, tooltip) => 
 		{
 			TreeModel model;
 			TreePath path;
@@ -244,7 +104,7 @@ tv_backups.button_press_event.connect ((w, event) => {
 						return true;
 					}
 					else if (col == col_desc){
-						tooltip.set_markup(_("<b>Comments</b> (double-click to edit)"));
+						tooltip.set_markup(_("<b>Label</b> (double-click to edit)"));
 						return true;
 					}
 					else if (col == col_system){
@@ -260,52 +120,120 @@ tv_backups.button_press_event.connect ((w, event) => {
 
 			return false;
 		});
-    }
 
-
-
-
-public void popup_media_menu()
-{
-	context_menu.popup (null, null, null, 3, Gtk.get_current_event_time());
-}
-
-
-
-
-private void test()
-{
-	// The MessageDialog
-		Gtk.MessageDialog msg2 = new Gtk.MessageDialog (get_window_parent(), Gtk.DialogFlags.MODAL, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK_CANCEL, "should work!");
-			msg2.response.connect ((response_id) => {
-			switch (response_id) {
-				case Gtk.ResponseType.OK:
-					stdout.puts ("Ok\n");
-					break;
-				case Gtk.ResponseType.CANCEL:
-					stdout.puts ("Cancel\n");
-					break;
-				case Gtk.ResponseType.DELETE_EVENT:
-					stdout.puts ("Delete\n");
-					break;
+		// sw_backups
+		sw_backups = new ScrolledWindow(null, null);
+		sw_backups.set_shadow_type (ShadowType.ETCHED_IN);
+		sw_backups.add(tv_backups);
+		sw_backups.expand = true;
+		box_snapshots.add(sw_backups);
+		
+/* 		
+		// system column
+		col_system = new TreeViewColumn();
+		col_system.title = _("System");
+		col_system.resizable = true;
+		col_system.clickable = true;
+		col_system.min_width = 150;
+		CellRendererText cell_system = new CellRendererText ();
+		cell_system.ellipsize = Pango.EllipsizeMode.END;
+		col_system.pack_start (cell_system, false);
+		col_system.set_cell_data_func (cell_system, cell_system_render);
+		tv_backups.append_column(col_system);
+		col_system.clicked.connect(() => {
+			if(tv_backups_sort_column_index == 1){
+				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
 			}
+			else{
+				tv_backups_sort_column_index = 1;
+				tv_backups_sort_column_desc = false;
+			}
+			refresh_tv_backups();
+		}); 
+*/
 
-			msg2.destroy();
+        // date column
+		col_date = new TreeViewColumn();
+		col_date.title = _("Date");
+		col_date.clickable = true;
+		col_date.resizable = true;
+		col_date.spacing = 1;
+		CellRendererText cell_date = new CellRendererText();
+		col_date.pack_start (cell_date, false);
+		col_date.set_cell_data_func (cell_date, cell_date_render);
+		tv_backups.append_column(col_date);
+		col_date.clicked.connect(() => {
+			if(tv_backups_sort_column_index == 0){
+				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
+			}
+			else{
+				tv_backups_sort_column_index = 0;
+				tv_backups_sort_column_desc = true;
+			}
+			refresh_tv_backups();
 		});
-		msg2.show ();
 
-}
+/* 		// tags column 
+		col_tags = new TreeViewColumn();
+		col_tags.title = _("Tags");
+		col_tags.resizable = true;
+		//col_tags.min_width = 80;
+		col_tags.clickable = true;
+		CellRendererText cell_tags = new CellRendererText ();
+		cell_tags.ellipsize = Pango.EllipsizeMode.END;
+		col_tags.pack_start (cell_tags, false);
+		col_tags.set_cell_data_func (cell_tags, cell_tags_render);
+		tv_backups.append_column(col_tags);
+		col_tags.clicked.connect(() => {
+			if(tv_backups_sort_column_index == 2){
+				tv_backups_sort_column_desc = !tv_backups_sort_column_desc;
+			}
+			else{
+				tv_backups_sort_column_index = 2;
+				tv_backups_sort_column_desc = false;
+			}
+			refresh_tv_backups();
+		}); */
 
-    private void display_context_buttons()
-    {
-    	if (tv_backups.get_selection().count_selected_rows() < 1)
-    	{
-    		context_buttons.hide();
-    	}
-    	else
-    	{
-    		context_buttons.show();
-    	}
+		// label column
+		col_desc = new TreeViewColumn();
+		col_desc.title = _("Label");
+		col_desc.resizable = true;
+		col_desc.clickable = true;
+		col_desc.min_width = 375;
+		CellRendererText cell_desc = new CellRendererText ();
+		cell_desc.ellipsize = Pango.EllipsizeMode.END;
+		col_desc.pack_start (cell_desc, false);
+		col_desc.set_cell_data_func (cell_desc, cell_desc_render);
+		tv_backups.append_column(col_desc);
+		cell_desc.editable = true;
+		cell_desc.edited.connect (cell_desc_edited);
+
+		// initialise the right click menu
+		right_click_menu = new Gtk.Menu();
+		right_click_menu.attach_to_widget (this, null);
+		
+		right_click_menu_item_restore = new Gtk.MenuItem.with_label(_("Restore Snapshot"));
+		right_click_menu_item_restore.activate.connect(restore);
+		right_click_menu.append(right_click_menu_item_restore);
+
+		right_click_menu.append(new Gtk.SeparatorMenuItem());
+
+		right_click_menu_item_browse = new Gtk.MenuItem.with_label(_("Browse Snapshot"));
+		right_click_menu_item_browse.activate.connect(browse_snapshot);
+		right_click_menu.append(right_click_menu_item_browse);
+
+		right_click_menu_item_log = new Gtk.MenuItem.with_label(_("View Snapshot Log"));
+		right_click_menu_item_log.activate.connect(view_snapshot_log);
+		right_click_menu.append(right_click_menu_item_log);
+
+		right_click_menu.append(new Gtk.SeparatorMenuItem());
+
+		right_click_menu_item_delete = new Gtk.MenuItem.with_label(_("Delete"));
+		right_click_menu_item_delete.activate.connect(delete_snapshot);
+		right_click_menu.append(right_click_menu_item_delete);
+
+		right_click_menu.show_all();
     }
 
     private void cell_date_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
@@ -356,152 +284,74 @@ private void test()
 		(cell as Gtk.CellRendererText).markup = info.description_formatted();
 	}
 
-    private void btn_delete_snapshot_clicked()
+	public void refresh_tv_backups()
     {
-		TreeIter iter;
-		TreeIter iter_delete;
-		TreeSelection sel;
-		bool is_success = true;
-		
-		//check if device is online
-		if (!check_backup_device_online()) { return; }
-		
-		//check selected count ----------------
-		
-		sel = tv_backups.get_selection ();
-		if (sel.count_selected_rows() == 0)
-		{ 
-			gtk_messagebox(_("No Snapshots Selected"),_("Please select the snapshots to delete"),null,false);
-			return; 
-		}
-		
-		//update UI ------------------
-		
-		//update_ui(false);
-		
-		//statusbar_message(_("Removing selected snapshots..."));
-		
-		//get list of snapshots to delete --------------------
-
-		var list_of_snapshots_to_delete = new Gee.ArrayList<TimeShiftBackup>();
-		Gtk.ListStore store = (Gtk.ListStore) tv_backups.model;
-		
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists && is_success) 
-		{ 
-			if (sel.iter_is_selected (iter))
-			{
-				TimeShiftBackup bak;
-				store.get (iter, 0, out bak);
-				list_of_snapshots_to_delete.add(bak);
-			}
-			iterExists = store.iter_next (ref iter);
-		}
-		
-		//clear selection ---------------
-		
-		tv_backups.get_selection().unselect_all();
-		
-		//delete snapshots --------------------------
-		
-		foreach(TimeShiftBackup bak in list_of_snapshots_to_delete)
-		{
-			
-			//find the iter being deleted
-			iterExists = store.get_iter_first (out iter_delete);
-			while (iterExists) { 
-				TimeShiftBackup bak_current;
-				store.get (iter_delete, 0, out bak_current);
-				if (bak_current.path == bak.path){
-					break;
-				}
-				iterExists = store.iter_next (ref iter_delete);
-			}
-			
-			//select the iter being deleted
-			tv_backups.get_selection().select_iter(iter_delete);
-			
-			//statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
-			
-			is_success = App.delete_snapshot(bak); 
-			
-			if (!is_success){
-				//statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
-				break;
-			}
-			
-			//remove iter from tv_backups
-			store.remove(iter_delete);
-		}
 		
 		App.update_snapshot_list();
-		if (App.snapshot_list.size == 0){
-			//statusbar_message(_("Deleting snapshot") + ": '.sync'...");
-			App.delete_all_snapshots();
-		}
 		
-		if (is_success){
-			//statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
-		}
+		Gtk.ListStore model = new Gtk.ListStore(1, typeof(TimeShiftBackup));
 		
-		//update UI -------------------
+		var list = App.snapshot_list;
 		
-		App.update_partition_list();
-		//sidebar.refresh_items();
-		refresh_tv_backups();
-		//update_statusbar();
-
-		//update_ui(true);
-	}
-
-    private void btn_browse_snapshot_clicked()
-    {
-		//check if device is online
-		if (!check_backup_device_online()) 
-		{ 
-			return; 
-		}
-		
-		TreeSelection sel = tv_backups.get_selection ();
-
-		if (sel.count_selected_rows() == 0)
-		{
-			var f = File.new_for_path(App.snapshot_dir);
-			if (f.query_exists()){
-				exo_open_folder(App.snapshot_dir);
+		if (tv_backups_sort_column_index == 0){
+			
+			if (tv_backups_sort_column_desc)
+			{
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return (t1.date.compare(t2.date));
+				});
 			}
 			else{
-				exo_open_folder(App.mount_point_backup);
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return -1 * (t1.date.compare(t2.date));
+				});
 			}
-			return;
 		}
-		
-		TreeIter iter;
-		Gtk.ListStore store = (Gtk.ListStore)tv_backups.model;
-		
-		bool iterExists = store.get_iter_first (out iter);
-		while (iterExists) 
-		{ 
-			if (sel.iter_is_selected (iter))
+		else{
+			if (tv_backups_sort_column_desc)
 			{
-				TimeShiftBackup bak;
-				store.get (iter, 0, out bak);
-
-				exo_open_folder(bak.path + "/localhost");
-				return;
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return strcmp(t1.taglist,t2.taglist);
+				});
 			}
-			iterExists = store.iter_next (ref iter);
+			else{
+				list.sort((a,b) => { 
+					TimeShiftBackup t1 = (TimeShiftBackup) a;
+					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					
+					return -1 * strcmp(t1.taglist,t2.taglist);
+				});
+			}
 		}
+
+		TreeIter iter;
+		foreach(TimeShiftBackup bak in list) {
+			model.append(out iter);
+			model.set (iter, 0, bak);
+		}
+			
+		tv_backups.set_model (model);
+		tv_backups.columns_autosize ();
 	}
 
-	private void btn_restore_clicked()
+	public void popup_media_menu()
 	{
-		App.mirror_system = false;
-		restore();
+		right_click_menu.popup (null, null, null, 3, Gtk.get_current_event_time());
 	}
 
 	private void restore()
 	{
+		App.mirror_system = false;
+
 		TreeIter iter;
 		TreeSelection sel;
 		
@@ -663,7 +513,47 @@ private void test()
 		//update_ui(true);
 	}
 
-	private void btn_view_snapshot_log_clicked()
+    private void browse_snapshot()
+    {
+		//check if device is online
+		if (!check_backup_device_online()) 
+		{ 
+			return; 
+		}
+		
+		TreeSelection sel = tv_backups.get_selection ();
+
+		if (sel.count_selected_rows() == 0)
+		{
+			var f = File.new_for_path(App.snapshot_dir);
+			if (f.query_exists()){
+				exo_open_folder(App.snapshot_dir);
+			}
+			else{
+				exo_open_folder(App.mount_point_backup);
+			}
+			return;
+		}
+		
+		TreeIter iter;
+		Gtk.ListStore store = (Gtk.ListStore)tv_backups.model;
+		
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists) 
+		{ 
+			if (sel.iter_is_selected (iter))
+			{
+				TimeShiftBackup bak;
+				store.get (iter, 0, out bak);
+
+				exo_open_folder(bak.path + "/localhost");
+				return;
+			}
+			iterExists = store.iter_next (ref iter);
+		}
+	}
+
+	private void view_snapshot_log()
 	{
         TreeSelection sel = tv_backups.get_selection();
         if (sel.count_selected_rows() == 0)
@@ -689,63 +579,102 @@ private void test()
         }
     }
 
-    public void refresh_tv_backups()
+    private void delete_snapshot()
     {
+		TreeIter iter;
+		TreeIter iter_delete;
+		TreeSelection sel;
+		bool is_success = true;
+		
+		//check if device is online
+		if (!check_backup_device_online()) { return; }
+		
+		//check selected count ----------------
+		
+		sel = tv_backups.get_selection ();
+		if (sel.count_selected_rows() == 0)
+		{ 
+			gtk_messagebox(_("No Snapshots Selected"),_("Please select the snapshots to delete"),null,false);
+			return; 
+		}
+		
+		//update UI ------------------
+		
+		//update_ui(false);
+		
+		//statusbar_message(_("Removing selected snapshots..."));
+		
+		//get list of snapshots to delete --------------------
+
+		var list_of_snapshots_to_delete = new Gee.ArrayList<TimeShiftBackup>();
+		Gtk.ListStore store = (Gtk.ListStore) tv_backups.model;
+		
+		bool iterExists = store.get_iter_first (out iter);
+		while (iterExists && is_success) 
+		{ 
+			if (sel.iter_is_selected (iter))
+			{
+				TimeShiftBackup bak;
+				store.get (iter, 0, out bak);
+				list_of_snapshots_to_delete.add(bak);
+			}
+			iterExists = store.iter_next (ref iter);
+		}
+		
+		//clear selection ---------------
+		
+		tv_backups.get_selection().unselect_all();
+		
+		//delete snapshots --------------------------
+		
+		foreach(TimeShiftBackup bak in list_of_snapshots_to_delete)
+		{
+			
+			//find the iter being deleted
+			iterExists = store.get_iter_first (out iter_delete);
+			while (iterExists) { 
+				TimeShiftBackup bak_current;
+				store.get (iter_delete, 0, out bak_current);
+				if (bak_current.path == bak.path){
+					break;
+				}
+				iterExists = store.iter_next (ref iter_delete);
+			}
+			
+			//select the iter being deleted
+			tv_backups.get_selection().select_iter(iter_delete);
+			
+			//statusbar_message(_("Deleting snapshot") + ": '%s'...".printf(bak.name));
+			
+			is_success = App.delete_snapshot(bak); 
+			
+			if (!is_success){
+				//statusbar_message_with_timeout(_("Error: Unable to delete snapshot") + ": '%s'".printf(bak.name), false);
+				break;
+			}
+			
+			//remove iter from tv_backups
+			store.remove(iter_delete);
+		}
 		
 		App.update_snapshot_list();
-		
-		Gtk.ListStore model = new Gtk.ListStore(1, typeof(TimeShiftBackup));
-		
-		var list = App.snapshot_list;
-		
-		if (tv_backups_sort_column_index == 0){
-			
-			if (tv_backups_sort_column_desc)
-			{
-				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
-					
-					return (t1.date.compare(t2.date));
-				});
-			}
-			else{
-				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
-					
-					return -1 * (t1.date.compare(t2.date));
-				});
-			}
+		if (App.snapshot_list.size == 0){
+			//statusbar_message(_("Deleting snapshot") + ": '.sync'...");
+			App.delete_all_snapshots();
 		}
-		else{
-			if (tv_backups_sort_column_desc)
-			{
-				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
-					
-					return strcmp(t1.taglist,t2.taglist);
-				});
-			}
-			else{
-				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
-					
-					return -1 * strcmp(t1.taglist,t2.taglist);
-				});
-			}
+		
+		if (is_success){
+			//statusbar_message_with_timeout(_("Snapshots deleted successfully"), true);
 		}
+		
+		//update UI -------------------
+		
+		App.update_partition_list();
+		//sidebar.refresh_items();
+		refresh_tv_backups();
+		//update_statusbar();
 
-		TreeIter iter;
-		foreach(TimeShiftBackup bak in list) {
-			model.append(out iter);
-			model.set (iter, 0, bak);
-		}
-			
-		tv_backups.set_model (model);
-		tv_backups.columns_autosize ();
+		//update_ui(true);
 	}
 
 	private Gtk.Window get_window_parent()

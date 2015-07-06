@@ -23,22 +23,15 @@
 
 using Gtk; 
 using Gee;
-
-
 using TeeJee.Logging;
-
 using TeeJee.Devices;
-
-
 using TeeJee.GtkHelper;
-
 using TeeJee.System;
-
-
 
 public class HeaderBar : Gtk.HeaderBar
 {
     private ToolButton btn_backup;
+    private Gtk.ToolButton btn_restore_backup;
     private Gtk.ToolButton btn_scheduled_backup;
     private Granite.Widgets.AppMenu appmenu;
 
@@ -55,6 +48,19 @@ public class HeaderBar : Gtk.HeaderBar
         btn_backup.icon_widget = get_shared_icon("document-new","document-new.svg",24);
         add(btn_backup);
         btn_backup.clicked.connect (btn_backup_clicked);
+
+        //btn_restore_backup
+        btn_restore_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");
+        btn_restore_backup.is_important = true;
+        btn_restore_backup.set_tooltip_text (_("Restore Snapshot"));
+        btn_restore_backup.icon_widget = get_shared_icon("document-revert","document-revert.svg",24);
+        add(btn_restore_backup);
+        btn_restore_backup.sensitive = false;
+        //btn_restore_backup.clicked.connect(btn_settings_clicked);
+
+        //separator
+        add(new Gtk.Separator(Gtk.Orientation.VERTICAL));
+        add(new Gtk.Separator(Gtk.Orientation.VERTICAL));
 
         //btn_scheduled_backup
         btn_scheduled_backup = new Gtk.ToolButton.from_stock ("gtk-missing-image");

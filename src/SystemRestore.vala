@@ -2013,7 +2013,7 @@ public class Main : Granite.Application
 		config.set_string_member("sys-distro", current_distro.full_name());
 		config.set_string_member("app-version", AppVersion);
 		config.set_string_member("tags", tag);
-		config.set_string_member("comments", "");
+		config.set_string_member("comments", tag + " snapshot");
 
 		var json = new Json.Generator();
 		json.pretty = true;

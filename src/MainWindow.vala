@@ -50,6 +50,8 @@ class MainWindow : Gtk.Window {
 	//other
 	private Device snapshot_device_original;
 
+	private StatusBar statusbar; 
+
 	public MainWindow () 
 	{
 		this.title = AppName;
@@ -92,6 +94,10 @@ class MainWindow : Gtk.Window {
 		
 		sidebar.refresh_items();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
+
+		//statusbar ----------------------------------------------------
+		statusbar = new StatusBar();
+		box_main.pack_start(statusbar, false);
     }
 
     private void sidebar_updated()

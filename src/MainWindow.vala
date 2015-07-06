@@ -292,7 +292,7 @@ class MainWindow : Gtk.Window {
 			timer_status_message = -1;
 		}
 
-		// the message coming in here is for the status bar set it on this line
+		statusbar.set_message(message);
 	}
 	
 	private void statusbar_message_with_timeout (string message, bool success){
@@ -301,7 +301,7 @@ class MainWindow : Gtk.Window {
 			timer_status_message = -1;
 		}
 
-		// the message coming in here is for the status bar set it on this line
+		statusbar.set_message(message);
 		
 		// trn on the loading icon here on this line
 		// turn on the progress bar here
@@ -315,14 +315,14 @@ class MainWindow : Gtk.Window {
 			Source.remove (timer_status_message);
 			timer_status_message = -1;
 		}
-		// clear the status message on this line
+		statusbar.set_message("");
 		show_statusbar_icons(true);
 		return true;
 	}
 	
 	private void update_ui(bool enable){
 		headerbar.sensitive = enable;
-		//sw_backups.sensitive = enable;
+		snapshots_list_widget.sensitive = enable;
 		show_statusbar_icons(enable);
 		gtk_set_busy(!enable, this);
 	}
@@ -337,7 +337,7 @@ class MainWindow : Gtk.Window {
 			timer_progress = 0;
 		}
 		
-		// set the message on this line on the status bar from App.progress_text;
+		statusbar.set_message(App.progress_text);
 		
 		timer_progress = Timeout.add_seconds(1, update_progress);
 		return true;
@@ -362,9 +362,6 @@ class MainWindow : Gtk.Window {
 	}
 
 	private void update_statusbar(){
-		string img_dot_red = App.share_folder + "/timeshift/images/item-red.png";
-		string img_dot_green = App.share_folder + "/timeshift/images/item-green.png";
-		
 		//check free space on backup device ---------------------------
 			
 		string message = "";

@@ -1,5 +1,5 @@
 # system-restore
-TODO: Write a project description
+A clean, simple system restore utility for Linux.
 
 ## Motivation
 TODO: Describe why this project exists

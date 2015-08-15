@@ -38,7 +38,7 @@ class MainWindow : Gtk.Window {
     private HeaderBar headerbar;
 	private Box box_main;
     private NotificationsContainer notification_container;
-	private Paned paned;
+	private Granite.Widgets.ThinPaned paned;
 	private SideBar sidebar;
 	private SnapshotsList snapshots_list_widget;
 	
@@ -50,14 +50,12 @@ class MainWindow : Gtk.Window {
 	//other
 	private Device snapshot_device_original;
 
-	private StatusBar statusbar; 
-
 	public MainWindow () 
 	{
 		this.title = AppName;
         this.window_position = WindowPosition.CENTER;
         this.modal = true;
-        this.set_default_size (800, 600);
+        this.set_default_size (800, 550);
 		this.delete_event.connect(on_delete_event);
 		this.icon = get_app_icon(16);
 		this.set_position(Gtk.WindowPosition.CENTER);
@@ -78,26 +76,31 @@ class MainWindow : Gtk.Window {
 
 		//sidebar ----------------------------------------------------
 		sidebar = new SideBar();
-		sidebar.item_selected.connect(sidebar_updated);
+		sidebar.drive_list.item_changed.connect(sidebar_updated);
 
 	    //snapshot list ----------------------------------------------------
 	    snapshots_list_widget = new SnapshotsList();
 
 		//Create a 2 section pane and add the sidebar and snapshot list above------------------------------
 		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
-		pane.add1 (sidebar);
+		pane.add1(sidebar);
+
+		Granite.Widgets.Welcome first = new Granite.Widgets.Welcome ("Backup Your System", "Take your first snapshot.");
+        first.append ("document-new", "Take Snapshot", "Take your first snapshot to backup the system");
+        
+
+
+        //pane.add2(first);
 		pane.add2(snapshots_list_widget);
+
+
 		pane.set_position(150);
-		box_main.pack_start(pane, false, true, 0);
+		box_main.pack_start(pane);
 
         snapshot_device_original = App.snapshot_device;
 		
 		sidebar.refresh_items();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
-
-		//statusbar ----------------------------------------------------
-		statusbar = new StatusBar();
-		box_main.pack_start(statusbar, false);
     }
 
     private void sidebar_updated()
@@ -116,18 +119,9 @@ class MainWindow : Gtk.Window {
 		
 		update_ui(false);
 		
-		if (App.live_system()){
-			statusbar.set_message("Checking backup device...");
-		}
-		else{
-			statusbar.set_message(_("Estimating system size..."));
-		}
-		
 		sidebar.refresh_items(); 
 
 		snapshots_list_widget.refresh_tv_backups();
-
-		update_statusbar();
 
 		update_ui(true);
 
@@ -268,62 +262,14 @@ class MainWindow : Gtk.Window {
 		return false;
 	}
 
-
-
 	private void backup_clicked()
 	{
 		headerbar.btn_backup_clicked();
-	}
-
-	private void show_statusbar_icons(bool visible){
-		//hide a loading icon on this line
-		// turn off the progress bar here on this line
-		// hide status message on this line
-		
-		//if (App.is_live_system()){
-			//visible = false;
-		//}
-		
-	}
-
-	private void statusbar_message (string message){
-		if (timer_status_message > 0){
-			Source.remove (timer_status_message);
-			timer_status_message = -1;
-		}
-
-		statusbar.set_message(message);
-	}
-	
-	private void statusbar_message_with_timeout (string message, bool success){
-		if (timer_status_message > 0){
-			Source.remove (timer_status_message);
-			timer_status_message = -1;
-		}
-
-		statusbar.set_message(message);
-		
-		// trn on the loading icon here on this line
-		// turn on the progress bar here
-		
-		
-		timer_status_message = Timeout.add_seconds (5, statusbar_clear);
-	}
-	
-    private bool statusbar_clear (){
-		if (timer_status_message > 0){
-			Source.remove (timer_status_message);
-			timer_status_message = -1;
-		}
-		statusbar.set_message("");
-		show_statusbar_icons(true);
-		return true;
 	}
 	
 	private void update_ui(bool enable){
 		headerbar.sensitive = enable;
 		snapshots_list_widget.sensitive = enable;
-		show_statusbar_icons(enable);
 		gtk_set_busy(!enable, this);
 	}
 	
@@ -337,8 +283,6 @@ class MainWindow : Gtk.Window {
 			timer_progress = 0;
 		}
 		
-		statusbar.set_message(App.progress_text);
-		
 		timer_progress = Timeout.add_seconds(1, update_progress);
 		return true;
 	}
@@ -349,112 +293,4 @@ class MainWindow : Gtk.Window {
 			timer_progress = 0;
 		}
 	}
-	
-	private bool check_backup_device_online(){
-		if (!App.backup_device_online()){
-			gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
-			update_statusbar();
-			return false;
-		}
-		else{
-			return true;
-		}
-	}
-
-	private void update_statusbar(){
-		//check free space on backup device ---------------------------
-			
-		string message = "";
-		int status_code = App.check_backup_device(out message);
-		string txt;
-
-		switch(status_code){
-			case -1:
-				if (App.snapshot_device == null){
-					txt = _("Please select the backup device");
-				}
-				else{
-					txt = _("Backup device is not mounted!");;
-				}
-				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				statusbar.set_message(txt);
-				//lbl_backup_device_warning.label = txt;
-				//lbl_backup_device_warning.visible = true;
-				break;
-				
-			case 1:
-				txt = _("Backup device does not have enough space!");
-				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				statusbar.set_message(txt);
-				//lbl_backup_device_warning.label = txt;
-				//lbl_backup_device_warning.visible = true;
-				break;
-				
-			case 2:
-				long required = App.calculate_size_of_first_snapshot();
-				txt = _("Backup device does not have enough space!") + " ";
-				txt += _("First snapshot needs") + " %.1f GB".printf(required/1024.0);
-				txt = "<span foreground=\"#8A0808\">" + txt + "</span>";
-				statusbar.set_message(txt);
-				//lbl_backup_device_warning.label = txt;
-				//lbl_backup_device_warning.visible = true;
-				break;
-			 
-			default:
-				statusbar.set_message("");
-				//lbl_backup_device_warning.label = "";
-				//lbl_backup_device_warning.visible = false;
-				break;
-		}
-
-		// statusbar icons ---------------------------------------------------------
-		
-		//status - scheduled snapshots -----------
-
-
-		if (App.live_system()){
-			notification_container.live_system_notification_on();
-		}
-		else
-		{
-			if (!App.is_scheduled)
-			{
-				notification_container.scheduled_snapshots_notification_on();
-			}
-			else 
-			{
-				notification_container.scheduled_snapshots_notification_off();
-			}
-		}
-
-		//status - last snapshot -----------
-		
-		if (status_code >= 0)
-		{
-			DateTime now = new DateTime.now_local();
-			TimeShiftBackup last_snapshot = App.get_latest_snapshot();
-			DateTime last_snapshot_date = (last_snapshot == null) ? null : last_snapshot.date;
-			
-			if (last_snapshot != null)
-			{
-				float days = ((float) now.difference(last_snapshot_date) / TimeSpan.DAY);
-				float hours = ((float) now.difference(last_snapshot_date) / TimeSpan.HOUR);
-				
-				if (days > 1){
-					// last snapshot older than a day so let the user know they should take a snapshot
-					notification_container.last_snapshot_notification_on(" %.0f ".printf(days));
-				}
-				else {
-					// last snapshot is less than a day old so why bug the user
-					notification_container.last_snapshot_notification_off();
-				}
-			}
-		}
-		else
-		{
-			// not sure why we''re here
-			notification_container.last_snapshot_notification_off();
-		}
-	}
-	
 }

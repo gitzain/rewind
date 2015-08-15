@@ -107,7 +107,7 @@ public class HeaderBar : Gtk.HeaderBar
         
         switch(status_code){
             case -1:
-                //check_backup_device_online();
+                check_backup_device_online();
                 return;
             case 1:
             case 2:
@@ -147,6 +147,16 @@ public class HeaderBar : Gtk.HeaderBar
         //update_statusbar();
         
         //update_ui(true);
+    }
+
+    private bool check_backup_device_online(){
+        if (!App.backup_device_online()){
+            gtk_messagebox(_("Device Offline"),_("Backup device is not available"), null, true);
+            return false;
+        }
+        else{
+            return true;
+        }
     }
     
     private void btn_view_app_logs_clicked(){

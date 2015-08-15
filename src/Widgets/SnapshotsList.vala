@@ -123,7 +123,6 @@ public class SnapshotsList : Gtk.Box
 
 		// sw_backups
 		sw_backups = new ScrolledWindow(null, null);
-		sw_backups.set_shadow_type (ShadowType.ETCHED_IN);
 		sw_backups.add(tv_backups);
 		sw_backups.expand = true;
 		box_snapshots.add(sw_backups);

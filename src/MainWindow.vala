@@ -49,6 +49,7 @@ class MainWindow : Gtk.Window {
 	
 	//other
 	private Device snapshot_device_original;
+	private Gtk.Paned pane;
 
 	public MainWindow () 
 	{
@@ -82,17 +83,9 @@ class MainWindow : Gtk.Window {
 	    snapshots_list_widget = new SnapshotsList();
 
 		//Create a 2 section pane and add the sidebar and snapshot list above------------------------------
-		Gtk.Paned pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
+		pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
 		pane.add1(sidebar);
-
-		Granite.Widgets.Welcome first = new Granite.Widgets.Welcome ("Backup Your System", "Take your first snapshot.");
-        first.append ("document-new", "Take Snapshot", "Take your first snapshot to backup the system");
-        
-
-
-        //pane.add2(first);
 		pane.add2(snapshots_list_widget);
-
 
 		pane.set_position(150);
 		box_main.pack_start(pane);
@@ -100,6 +93,7 @@ class MainWindow : Gtk.Window {
         snapshot_device_original = App.snapshot_device;
 		
 		sidebar.refresh_items();
+		sidebar.select_first_item();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
     }
 

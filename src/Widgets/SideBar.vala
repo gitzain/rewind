@@ -45,4 +45,9 @@ public class SideBar : Gtk.Box
     {
         drive_list.list_drives();
     }
+
+    public void select_first_item()
+    {
+        drive_list.select_first();
+    }
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2015-08-15 02:26+0100\n"
+"POT-Creation-Date: 2015-08-16 23:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,7 +113,7 @@ msgstr ""
 msgid "Backup Device"
 msgstr ""
 
-#: MainWindow.vala:224 MainWindow.vala:244
+#: MainWindow.vala:218 MainWindow.vala:238
 msgid "Backup Device Changed"
 msgstr ""
 
@@ -188,7 +188,7 @@ msgstr ""
 msgid "Clear the list"
 msgstr ""
 
-#: MainWindow.vala:221
+#: MainWindow.vala:215
 msgid "Click 'OK' to confirm"
 msgstr ""
 
@@ -308,7 +308,7 @@ msgstr ""
 msgid "Directory not found"
 msgstr ""
 
-#: MainWindow.vala:155 MainWindow.vala:177
+#: MainWindow.vala:149 MainWindow.vala:171
 msgid "Disable Scheduled Snapshots"
 msgstr ""
 
@@ -316,15 +316,15 @@ msgstr ""
 msgid "Distribution"
 msgstr ""
 
-#: MainWindow.vala:174
+#: MainWindow.vala:168
 msgid "Do you want to select another device now?"
 msgstr ""
 
-#: MainWindow.vala:241
+#: MainWindow.vala:235
 msgid "Do you want to select another device?"
 msgstr ""
 
-#: MainWindow.vala:196
+#: MainWindow.vala:190
 msgid "Do you want to take the first snapshot now?"
 msgstr ""
 
@@ -494,7 +494,7 @@ msgstr ""
 msgid "Files will be overwritten on the target device!"
 msgstr ""
 
-#: MainWindow.vala:199
+#: MainWindow.vala:193
 msgid "First Snapshot"
 msgstr ""
 
@@ -702,7 +702,7 @@ msgstr ""
 msgid "List snapshots"
 msgstr ""
 
-#: MainWindow.vala:136
+#: MainWindow.vala:130
 msgid "Main window closed by user"
 msgstr ""
 
@@ -929,7 +929,7 @@ msgstr ""
 msgid "Scheduled Snapshots"
 msgstr ""
 
-#: MainWindow.vala:194
+#: MainWindow.vala:188
 msgid "Scheduled jobs will be enabled only after the first snapshot is taken."
 msgstr ""
 
@@ -937,15 +937,15 @@ msgstr ""
 msgid "Scheduled snapshots are disabled"
 msgstr ""
 
-#: MainWindow.vala:173
+#: MainWindow.vala:167
 msgid "Scheduled snapshots will be disabled till another device is selected."
 msgstr ""
 
-#: MainWindow.vala:152 MainWindow.vala:240
+#: MainWindow.vala:146 MainWindow.vala:234
 msgid "Scheduled snapshots will be disabled."
 msgstr ""
 
-#: MainWindow.vala:220
+#: MainWindow.vala:214
 msgid "Scheduled snapshots will be saved to "
 msgstr ""
 
@@ -994,7 +994,7 @@ msgstr ""
 msgid "Select the applications for which current settings should be kept."
 msgstr ""
 
-#: MainWindow.vala:172
+#: MainWindow.vala:166
 msgid "Selected device does not have enough space."
 msgstr ""
 
@@ -1148,7 +1148,7 @@ msgstr ""
 msgid "Terminating rsync process"
 msgstr ""
 
-#: MainWindow.vala:239
+#: MainWindow.vala:233
 msgid "The backup device is not set or unavailable."
 msgstr ""
 
@@ -1283,7 +1283,7 @@ msgstr ""
 msgid "rsync returned an error"
 msgstr ""
 
-#: MainWindow.vala:218
+#: MainWindow.vala:212
 msgid "snapshot device changed"
 msgstr ""
 

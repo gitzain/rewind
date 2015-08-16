@@ -38,6 +38,7 @@ public class SnapshotsList : Gtk.Box
 {
 	
 	private Box box_snapshots;
+	private Granite.Widgets.Welcome first;
 
 	//snapshots
 	private TreeView tv_backups;
@@ -56,12 +57,15 @@ public class SnapshotsList : Gtk.Box
 	private Gtk.MenuItem right_click_menu_item_log;
 	private Gtk.MenuItem right_click_menu_item_delete;
 
-    public SnapshotsList () 
+    public SnapshotsList() 
     {
+		first = new Granite.Widgets.Welcome ("Backup Your System", "Take your first snapshot.");
+        first.append ("document-new", "Take Snapshot", "Take your first snapshot to backup the system");
+
     	// snapshot list
     	box_snapshots = new Box (Orientation.VERTICAL, 0);
         box_snapshots.margin = 0;
-        add(box_snapshots);
+        pack_start(box_snapshots);
 
         // treeview
         tv_backups = new TreeView();
@@ -283,6 +287,25 @@ public class SnapshotsList : Gtk.Box
 		(cell as Gtk.CellRendererText).markup = info.description_formatted();
 	}
 
+	private void set_view(bool empty)
+	{
+		if (empty)
+		{
+			remove(box_snapshots);
+			first.set_visible(true);
+			pack_start(first);
+			show_all();
+		}
+		else
+		{
+			remove(first);
+			box_snapshots.set_visible(true);
+			pack_start(box_snapshots);
+			show_all();
+		}
+
+	}
+
 	public void refresh_tv_backups()
     {
 		
@@ -332,14 +355,18 @@ public class SnapshotsList : Gtk.Box
 			}
 		}
 
+		var is_empty = true;
 		TreeIter iter;
 		foreach(TimeShiftBackup bak in list) {
 			model.append(out iter);
 			model.set (iter, 0, bak);
+			is_empty = false;
 		}
 			
 		tv_backups.set_model (model);
 		tv_backups.columns_autosize ();
+
+		set_view(is_empty);
 	}
 
 	public void popup_media_menu()

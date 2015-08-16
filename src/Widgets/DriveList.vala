@@ -140,10 +140,4 @@ public class DriveList : Gtk.ListBox {
         Gtk.Widget toplevel = get_toplevel();
         return (Gtk.Window*) toplevel;
     }
-
-    private Gtk.Window get_window_parent()
-    {
-        Gtk.Widget toplevel = get_toplevel();
-        return (Gtk.Window*) toplevel;
-    }
 }

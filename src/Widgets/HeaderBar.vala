@@ -84,6 +84,14 @@ public class HeaderBar : Gtk.HeaderBar
         Gtk.MenuItem menu_item_settings = new Gtk.MenuItem.with_label("Settings");
         menu_item_settings.activate.connect (btn_settings_clicked);
         menu.append(menu_item_settings);
+        // seperator
+        Gtk.SeparatorMenuItem seperator2 = new Gtk.SeparatorMenuItem();
+        menu.append(seperator2);
+        // about
+        Gtk.MenuItem menu_item_about = new Gtk.MenuItem.with_label("About");
+        menu_item_about.activate.connect (btn_about_clicked);
+        menu.append(menu_item_about);
+
         pack_end(appmenu);
 
         if (App.live_system()){
@@ -177,6 +185,25 @@ public class HeaderBar : Gtk.HeaderBar
         dialog.show_all();
         dialog.run();
         //update_statusbar();
+    }
+
+    private void btn_about_clicked()
+    {
+        Granite.Widgets.AboutDialog about = new  Granite.Widgets.AboutDialog();
+        
+        about.title = _("About System Restore");
+        about.program_name = _("System Restore");
+        about.comments = _("A simple back up utility.");
+        about.logo_icon_name = "/usr/share/pixmaps/timeshift.png";
+        about.version = "v1";
+
+        about.authors = {
+            "Zain Khan <emailzainkhan@gmail.com>",
+        };
+
+
+
+        about.show_all();
     }
 
     private Gtk.Window get_window_parent()

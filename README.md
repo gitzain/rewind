@@ -5,9 +5,8 @@ A clean, simple system restore utility for Linux.
 
 - [Motivation](#motivation)
     - [Composer](#composer)
-- [Installation](#installation)
+- [Installation & Usage](#installation & usage)
     - [Upload the page tree file](#upload-the-page-tree-file)
-- [Usage](#usage)
 - [Contributing](#contributing)
 - [History](#history)
 - [Credits](#credits)
@@ -16,10 +15,8 @@ A clean, simple system restore utility for Linux.
 ## Motivation
 TODO: Describe why this project exists
 
-## Installation
+## Installation & Usage
 TODO: Describe the installation process
-
-## Usage
 TODO: Write usage instructions
 
 ## Contributing

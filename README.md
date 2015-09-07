@@ -4,6 +4,7 @@ A clean, simple system restore utility for Linux.
 ## Table of content
 
 - [Motivation](#motivation)
+- [Screenshots](#screenshots)
 - [Installation & Usage](#installation--usage)
     - [Installation](#installation)
     - [Usage](#usage)
@@ -14,6 +15,9 @@ A clean, simple system restore utility for Linux.
 
 ## Motivation
 TODO: Describe why this project exists
+
+## Screenshots
+TODO: Screenshots of the app
 
 ## Installation & Usage
 

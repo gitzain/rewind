@@ -63,7 +63,17 @@ public class DriveList : Gtk.ListBox {
     {
         foreach(Device pi in App.partition_list) 
         {
-            var item = new DriveItem(pi.uuid, pi.label, "path","%s".printf((pi.size_mb > 0) ? "%s GB".printf(pi.size) : "?? GB"));
+            if (!pi.has_linux_filesystem()) { continue; }
+
+            var name = "";
+
+            if (pi.label == "")
+                name = pi.short_name_with_alias;
+            else
+                name = pi.label;
+
+
+            var item = new DriveItem(pi.uuid, name, "path", pi.free + " free");
 
             if (!drives.contains(pi.uuid))
             {
@@ -89,7 +99,7 @@ public class DriveList : Gtk.ListBox {
         this.select_row (null);
     }
 
-     private void sidebar_backup_device_changed(){
+    private void sidebar_backup_device_changed(){
         if (selected_row.get_name() == null) { return; }
         
         // string txt;

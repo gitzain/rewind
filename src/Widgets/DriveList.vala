@@ -37,7 +37,7 @@ public class DriveList : Gtk.ListBox {
     private ArrayList<string> drives;
 
     public DriveList () {
-        Gdk.RGBA color = new Gdk.RGBA();
+        Gdk.RGBA color = Gdk.RGBA();
         color.red = 0.8;
         color.green = 0.8;
         color.blue = 0.8;

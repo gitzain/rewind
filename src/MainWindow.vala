@@ -287,4 +287,8 @@ class MainWindow : Gtk.Window {
 			timer_progress = 0;
 		}
 	}
+
+	public void action_about () {
+            App.show_about (this);
+        }
 }

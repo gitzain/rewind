@@ -14,7 +14,15 @@ public class DriveItem : Gtk.ListBoxRow {
         row_grid.column_spacing = 6;
         this.add (row_grid);
 
-        row_image = new Gtk.Image.from_gicon (Icon.new_for_string ("drive-harddisk"), Gtk.IconSize.DND);
+        try
+        {
+
+            row_image = new Gtk.Image.from_gicon (Icon.new_for_string ("drive-harddisk"), Gtk.IconSize.DND);
+        }
+        catch (Error e)
+        {
+
+        }
         row_image.pixel_size = 32;
         row_grid.attach (row_image, 0, 0, 1, 2);
 

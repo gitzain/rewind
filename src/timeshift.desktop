@@ -10,3 +10,7 @@ Caption=System Restore Utility
 X-KDE-StartupNotify=false
 Categories=System;
 Name[en_IN]=Timeshift
+
+[Desktop Action AboutDialog]
+Exec=timeshift --about
+Name=About

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timeshift 1.6\n"
 "Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2015-09-21 01:26+0100\n"
+"POT-Creation-Date: 2015-09-24 23:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: SystemRestore.vala:2283
+#: SystemRestore.vala:2359
 #, c-format
 msgid "'%s' will be on '%s'"
 msgstr ""
 
-#: SystemRestore.vala:2280
+#: SystemRestore.vala:2356
 #, c-format
 msgid "'%s' will be on root device"
 msgstr ""
@@ -31,25 +31,25 @@ msgstr ""
 msgid "** Advanced Users **"
 msgstr ""
 
-#: SystemRestore.vala:3475
+#: SystemRestore.vala:3551
 #, c-format
 msgid "/ is mapped to device: %s, UUID=%s"
 msgstr ""
 
-#: SystemRestore.vala:3482
+#: SystemRestore.vala:3558
 #, c-format
 msgid "/home is mapped to device: %s, UUID=%s"
 msgstr ""
 
-#: SystemRestore.vala:213
+#: SystemRestore.vala:276
 msgid "A scheduled job is currently taking a system snapshot."
 msgstr ""
 
-#: SystemRestore.vala:981 SystemRestore.vala:1002
+#: SystemRestore.vala:1057 SystemRestore.vala:1078
 msgid "Aborted."
 msgstr ""
 
-#: SystemRestore.vala:151
+#: SystemRestore.vala:214
 msgid "Admin Access Required"
 msgstr ""
 
@@ -65,15 +65,15 @@ msgstr ""
 msgid "All snapshots older than"
 msgstr ""
 
-#: SystemRestore.vala:584
+#: SystemRestore.vala:655
 msgid "Another instance of timeshift is currently running"
 msgstr ""
 
-#: SystemRestore.vala:217
+#: SystemRestore.vala:280
 msgid "Another instance of timeshift is currently running!"
 msgstr ""
 
-#: SystemRestore.vala:655
+#: SystemRestore.vala:726
 msgid "Answer YES to all confirmation prompts"
 msgstr ""
 
@@ -81,11 +81,11 @@ msgstr ""
 msgid "Any exclude patterns in the current exclude list will also be excluded."
 msgstr ""
 
-#: SystemRestore.vala:3355
+#: SystemRestore.vala:3431
 msgid "App config loaded"
 msgstr ""
 
-#: SystemRestore.vala:3265
+#: SystemRestore.vala:3341
 msgid "App config saved"
 msgstr ""
 
@@ -93,11 +93,11 @@ msgstr ""
 msgid "Application"
 msgstr ""
 
-#: SystemRestore.vala:3703
+#: SystemRestore.vala:3779
 msgid "Application will exit"
 msgstr ""
 
-#: SystemRestore.vala:387
+#: SystemRestore.vala:458
 msgid "Application will exit."
 msgstr ""
 
@@ -105,11 +105,11 @@ msgstr ""
 msgid "Auto-Remove"
 msgstr ""
 
-#: SystemRestore.vala:637
+#: SystemRestore.vala:708
 msgid "Backup"
 msgstr ""
 
-#: SystemRestore.vala:2094
+#: SystemRestore.vala:2170
 msgid "Backup Device"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Backup Level"
 msgstr ""
 
-#: SystemRestore.vala:1289 SystemRestore.vala:3754
+#: SystemRestore.vala:1365 SystemRestore.vala:3830
 msgid "Backup device does not have enough space!"
 msgstr ""
 
@@ -129,27 +129,27 @@ msgstr ""
 msgid "Backup device is not available"
 msgstr ""
 
-#: SystemRestore.vala:3741 SystemRestore.vala:3748
+#: SystemRestore.vala:3817 SystemRestore.vala:3824
 msgid "Backup device not available"
 msgstr ""
 
-#: SystemRestore.vala:3522
+#: SystemRestore.vala:3598
 msgid "Backup device not found"
 msgstr ""
 
-#: SystemRestore.vala:3514
+#: SystemRestore.vala:3590
 msgid "Backup device not set!"
 msgstr ""
 
-#: SystemRestore.vala:3305
+#: SystemRestore.vala:3381
 msgid "Backup device not set! Defaulting to system device"
 msgstr ""
 
-#: SystemRestore.vala:2101
+#: SystemRestore.vala:2177
 msgid "Backup device not specified!"
 msgstr ""
 
-#: SystemRestore.vala:3536 SystemRestore.vala:3559
+#: SystemRestore.vala:3612 SystemRestore.vala:3635
 #, c-format
 msgid "Backup path changed to '%s/timeshift'"
 msgstr ""
@@ -162,11 +162,11 @@ msgstr ""
 msgid "Boot device not selected"
 msgstr ""
 
-#: SystemRestore.vala:1340
+#: SystemRestore.vala:1416
 msgid "Boot snapshot failed!"
 msgstr ""
 
-#: SystemRestore.vala:1321
+#: SystemRestore.vala:1397
 msgid "Boot snapshots are enabled"
 msgstr ""
 
@@ -180,7 +180,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: SystemRestore.vala:1514 SystemRestore.vala:2688
+#: SystemRestore.vala:1590 SystemRestore.vala:2764
 msgid "Cleaning up..."
 msgstr ""
 
@@ -196,15 +196,15 @@ msgstr ""
 msgid "Click OK to continue"
 msgstr ""
 
-#: SystemRestore.vala:643
+#: SystemRestore.vala:714
 msgid "Clone current system"
 msgstr ""
 
-#: SystemRestore.vala:2736
+#: SystemRestore.vala:2812
 msgid "Cloning system..."
 msgstr ""
 
-#: SystemRestore.vala:370
+#: SystemRestore.vala:441
 msgid "Commands listed below are not available on this system"
 msgstr ""
 
@@ -216,29 +216,29 @@ msgstr ""
 msgid "Continue with restore?"
 msgstr ""
 
-#: SystemRestore.vala:2393
+#: SystemRestore.vala:2469
 #, c-format
 msgid "Continue with restore? (y/n): "
 msgstr ""
 
-#: SystemRestore.vala:2054 SystemRestore.vala:2195 SystemRestore.vala:2342
-#: SystemRestore.vala:3297
+#: SystemRestore.vala:2130 SystemRestore.vala:2271 SystemRestore.vala:2418
+#: SystemRestore.vala:3373
 msgid "Could not find device"
 msgstr ""
 
-#: SystemRestore.vala:2126 SystemRestore.vala:3029
+#: SystemRestore.vala:2202 SystemRestore.vala:3105
 msgid "Could not find snapshot"
 msgstr ""
 
-#: SystemRestore.vala:3702
+#: SystemRestore.vala:3778
 msgid "Critical Error"
 msgstr ""
 
-#: SystemRestore.vala:4015
+#: SystemRestore.vala:4091
 msgid "Cron job added"
 msgstr ""
 
-#: SystemRestore.vala:4028
+#: SystemRestore.vala:4104
 msgid "Cron job removed"
 msgstr ""
 
@@ -246,7 +246,7 @@ msgstr ""
 msgid "Crontab is empty"
 msgstr ""
 
-#: RestoreWindow.vala:1410 SystemRestore.vala:2589
+#: RestoreWindow.vala:1410 SystemRestore.vala:2665
 msgid "DISCLAIMER"
 msgstr ""
 
@@ -254,32 +254,32 @@ msgstr ""
 msgid "Daily"
 msgstr ""
 
-#: SystemRestore.vala:1400
+#: SystemRestore.vala:1476
 msgid "Daily snapshot failed!"
 msgstr ""
 
-#: SystemRestore.vala:1381
+#: SystemRestore.vala:1457
 msgid "Daily snapshots are enabled"
 msgstr ""
 
-#: SystemRestore.vala:649
+#: SystemRestore.vala:720
 msgid "Delete"
 msgstr ""
 
-#: SystemRestore.vala:651
+#: SystemRestore.vala:722
 msgid "Delete all snapshots"
 msgstr ""
 
-#: SystemRestore.vala:650
+#: SystemRestore.vala:721
 msgid "Delete snapshot"
 msgstr ""
 
-#: SettingsWindow.vala:177 SystemRestore.vala:820 SystemRestore.vala:927
+#: SettingsWindow.vala:177 SystemRestore.vala:896 SystemRestore.vala:1003
 msgid "Description"
 msgstr ""
 
 #: RestoreWindow.vala:185 RestoreWindow.vala:855 RestoreWindow.vala:1423
-#: RestoreWindow.vala:1433 SystemRestore.vala:853 SystemRestore.vala:926
+#: RestoreWindow.vala:1433 SystemRestore.vala:929 SystemRestore.vala:1002
 #, c-format
 msgid "Device"
 msgstr ""
@@ -300,11 +300,11 @@ msgstr ""
 msgid "Device for Restoring Snapshot"
 msgstr ""
 
-#: SystemRestore.vala:339
+#: SystemRestore.vala:410
 msgid "Devices with Linux file systems"
 msgstr ""
 
-#: SystemRestore.vala:3113 SystemRestore.vala:3206
+#: SystemRestore.vala:3189 SystemRestore.vala:3282
 msgid "Directory not found"
 msgstr ""
 
@@ -312,7 +312,7 @@ msgstr ""
 msgid "Disable Scheduled Snapshots"
 msgstr ""
 
-#: SystemRestore.vala:188
+#: SystemRestore.vala:251
 msgid "Distribution"
 msgstr ""
 
@@ -338,11 +338,11 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-#: SystemRestore.vala:2527
+#: SystemRestore.vala:2603
 msgid "Encrypted Device"
 msgstr ""
 
-#: SystemRestore.vala:2503 SystemRestore.vala:2537
+#: SystemRestore.vala:2579 SystemRestore.vala:2613
 #, c-format
 msgid ""
 "Encrypted device '%s' is already unlocked and mapped to another device "
@@ -350,32 +350,32 @@ msgid ""
 "Select the unlocked device instead of encrypted device."
 msgstr ""
 
-#: SystemRestore.vala:2265
+#: SystemRestore.vala:2341
 #, c-format
 msgid "Enter device name or number"
 msgstr ""
 
-#: SystemRestore.vala:2070 SystemRestore.vala:2210 SystemRestore.vala:2366
+#: SystemRestore.vala:2146 SystemRestore.vala:2286 SystemRestore.vala:2442
 #, c-format
 msgid "Enter device name or number (a=Abort)"
 msgstr ""
 
-#: SystemRestore.vala:2527
+#: SystemRestore.vala:2603
 #, c-format
 msgid "Enter passphrase to unlock '%s'"
 msgstr ""
 
-#: SystemRestore.vala:2145 SystemRestore.vala:3048
+#: SystemRestore.vala:2221 SystemRestore.vala:3124
 #, c-format
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr ""
 
-#: RestoreWindow.vala:1385 SystemRestore.vala:221 SystemRestore.vala:2543
-#: SystemRestore.vala:2753 Utility.vala:125
+#: RestoreWindow.vala:1385 SystemRestore.vala:284 SystemRestore.vala:2619
+#: SystemRestore.vala:2829 Utility.vala:125
 msgid "Error"
 msgstr ""
 
-#: SystemRestore.vala:662
+#: SystemRestore.vala:733
 msgid "Examples"
 msgstr ""
 
@@ -404,27 +404,27 @@ msgstr ""
 msgid "Excluded Directories"
 msgstr ""
 
-#: SystemRestore.vala:4019
+#: SystemRestore.vala:4095
 msgid "Failed to add cron job"
 msgstr ""
 
-#: SystemRestore.vala:1670
+#: SystemRestore.vala:1746
 msgid "Failed to create new snapshot"
 msgstr ""
 
-#: SystemRestore.vala:1905
+#: SystemRestore.vala:1981
 msgid "Failed to create symlinks"
 msgstr ""
 
-#: SystemRestore.vala:1935
+#: SystemRestore.vala:2011
 msgid "Failed to delete symlinks"
 msgstr ""
 
-#: SystemRestore.vala:3876 SystemRestore.vala:3882
+#: SystemRestore.vala:3952 SystemRestore.vala:3958
 msgid "Failed to estimate system size"
 msgstr ""
 
-#: SystemRestore.vala:2746
+#: SystemRestore.vala:2822
 msgid "Failed to find a terminal emulator on this system!"
 msgstr ""
 
@@ -432,15 +432,15 @@ msgstr ""
 msgid "Failed to get partition list"
 msgstr ""
 
-#: SystemRestore.vala:3447
+#: SystemRestore.vala:3523
 msgid "Failed to get partition list."
 msgstr ""
 
-#: SystemRestore.vala:1619
+#: SystemRestore.vala:1695
 msgid "Failed to hard-link last snapshot"
 msgstr ""
 
-#: SystemRestore.vala:3629 SystemRestore.vala:3635
+#: SystemRestore.vala:3705 SystemRestore.vala:3711
 msgid "Failed to mount BTRFS subvolume"
 msgstr ""
 
@@ -448,15 +448,15 @@ msgstr ""
 msgid "Failed to mount device"
 msgstr ""
 
-#: SystemRestore.vala:3100 SystemRestore.vala:3193
+#: SystemRestore.vala:3176 SystemRestore.vala:3269
 msgid "Failed to remove"
 msgstr ""
 
-#: SystemRestore.vala:4032
+#: SystemRestore.vala:4108
 msgid "Failed to remove cron job"
 msgstr ""
 
-#: SystemRestore.vala:1692
+#: SystemRestore.vala:1768
 msgid "Failed to save snapshot"
 msgstr ""
 
@@ -464,8 +464,8 @@ msgstr ""
 msgid "Failed to set ownership"
 msgstr ""
 
-#: SystemRestore.vala:2500 SystemRestore.vala:2509 SystemRestore.vala:2534
-#: SystemRestore.vala:2543
+#: SystemRestore.vala:2576 SystemRestore.vala:2585 SystemRestore.vala:2610
+#: SystemRestore.vala:2619
 msgid "Failed to unlock device"
 msgstr ""
 
@@ -473,11 +473,11 @@ msgstr ""
 msgid "Failed to unmount"
 msgstr ""
 
-#: SystemRestore.vala:3703
+#: SystemRestore.vala:3779
 msgid "Failed to unmount device!"
 msgstr ""
 
-#: SystemRestore.vala:1646
+#: SystemRestore.vala:1722
 msgid "Failed to update modification date"
 msgstr ""
 
@@ -490,7 +490,7 @@ msgstr ""
 msgid "Files matching the following patterns will be excluded"
 msgstr ""
 
-#: SystemRestore.vala:2580
+#: SystemRestore.vala:2656
 msgid "Files will be overwritten on the target device!"
 msgstr ""
 
@@ -498,11 +498,11 @@ msgstr ""
 msgid "First Snapshot"
 msgstr ""
 
-#: SystemRestore.vala:3763
+#: SystemRestore.vala:3839
 msgid "First snapshot needs"
 msgstr ""
 
-#: SystemRestore.vala:1280
+#: SystemRestore.vala:1356
 msgid "First snapshot not taken"
 msgstr ""
 
@@ -515,23 +515,23 @@ msgid ""
 "For all other applications, settings will be restored from selected snapshot."
 msgstr ""
 
-#: SystemRestore.vala:1851
+#: SystemRestore.vala:1927
 msgid "Free space is less than"
 msgstr ""
 
-#: SystemRestore.vala:2376
+#: SystemRestore.vala:2452
 msgid "GRUB Device"
 msgstr ""
 
-#: SystemRestore.vala:2381
+#: SystemRestore.vala:2457
 msgid "GRUB will NOT be reinstalled"
 msgstr ""
 
-#: SystemRestore.vala:653
+#: SystemRestore.vala:724
 msgid "Global"
 msgstr ""
 
-#: SystemRestore.vala:1610
+#: SystemRestore.vala:1686
 msgid "Hard-linking files from previous snapshot..."
 msgstr ""
 
@@ -541,7 +541,7 @@ msgid ""
 "specific configuration files."
 msgstr ""
 
-#: SystemRestore.vala:658
+#: SystemRestore.vala:729
 msgid "Hide rsync output"
 msgstr ""
 
@@ -553,21 +553,21 @@ msgstr ""
 msgid "Hourly"
 msgstr ""
 
-#: SystemRestore.vala:1370
+#: SystemRestore.vala:1446
 msgid "Hourly snapshot failed!"
 msgstr ""
 
-#: SystemRestore.vala:1351
+#: SystemRestore.vala:1427
 msgid "Hourly snapshots are enabled"
 msgstr ""
 
-#: SystemRestore.vala:2581
+#: SystemRestore.vala:2657
 msgid ""
 "If restore fails and you are unable to boot the system, \n"
 "then boot from the Ubuntu Live CD, install Timeshift, and try again."
 msgstr ""
 
-#: SystemRestore.vala:2591
+#: SystemRestore.vala:2667
 msgid ""
 "If these terms are not acceptable to you, please do not proceed\n"
 "beyond this point!"
@@ -592,7 +592,7 @@ msgstr ""
 msgid "Include File(s)"
 msgstr ""
 
-#: SystemRestore.vala:782
+#: SystemRestore.vala:858
 msgid "Invalid command line arguments"
 msgstr ""
 
@@ -616,73 +616,73 @@ msgstr ""
 msgid "Keep one snapshot per week"
 msgstr ""
 
-#: RestoreWindow.vala:858 SystemRestore.vala:857
+#: RestoreWindow.vala:858 SystemRestore.vala:933
 #, c-format
 msgid "Label"
 msgstr ""
 
-#: SystemRestore.vala:1333
+#: SystemRestore.vala:1409
 #, c-format
 msgid "Last boot snapshot is %d hours old"
 msgstr ""
 
-#: SystemRestore.vala:1328
+#: SystemRestore.vala:1404
 msgid "Last boot snapshot is older than system start time"
 msgstr ""
 
-#: SystemRestore.vala:1324
+#: SystemRestore.vala:1400
 msgid "Last boot snapshot not found"
 msgstr ""
 
-#: SystemRestore.vala:1393
+#: SystemRestore.vala:1469
 #, c-format
 msgid "Last daily snapshot is %d hours old"
 msgstr ""
 
-#: SystemRestore.vala:1388
+#: SystemRestore.vala:1464
 msgid "Last daily snapshot is more than 1 day old"
 msgstr ""
 
-#: SystemRestore.vala:1384
+#: SystemRestore.vala:1460
 msgid "Last daily snapshot not found"
 msgstr ""
 
-#: SystemRestore.vala:1363
+#: SystemRestore.vala:1439
 #, c-format
 msgid "Last hourly snapshot is %d minutes old"
 msgstr ""
 
-#: SystemRestore.vala:1358
+#: SystemRestore.vala:1434
 msgid "Last hourly snapshot is more than 1 hour old"
 msgstr ""
 
-#: SystemRestore.vala:1354
+#: SystemRestore.vala:1430
 msgid "Last hourly snapshot not found"
 msgstr ""
 
-#: SystemRestore.vala:1453
+#: SystemRestore.vala:1529
 #, c-format
 msgid "Last monthly snapshot is %d days old"
 msgstr ""
 
-#: SystemRestore.vala:1448
+#: SystemRestore.vala:1524
 msgid "Last monthly snapshot is more than 1 month old"
 msgstr ""
 
-#: SystemRestore.vala:1444
+#: SystemRestore.vala:1520
 msgid "Last monthly snapshot not found"
 msgstr ""
 
-#: SystemRestore.vala:1423
+#: SystemRestore.vala:1499
 #, c-format
 msgid "Last weekly snapshot is %d days old"
 msgstr ""
 
-#: SystemRestore.vala:1418
+#: SystemRestore.vala:1494
 msgid "Last weekly snapshot is more than 1 week old"
 msgstr ""
 
-#: SystemRestore.vala:1414
+#: SystemRestore.vala:1490
 msgid "Last weekly snapshot not found"
 msgstr ""
 
@@ -690,15 +690,15 @@ msgstr ""
 msgid "Limit"
 msgstr ""
 
-#: SystemRestore.vala:633
+#: SystemRestore.vala:704
 msgid "List"
 msgstr ""
 
-#: SystemRestore.vala:635
+#: SystemRestore.vala:706
 msgid "List devices"
 msgstr ""
 
-#: SystemRestore.vala:634
+#: SystemRestore.vala:705
 msgid "List snapshots"
 msgstr ""
 
@@ -706,11 +706,11 @@ msgstr ""
 msgid "Main window closed by user"
 msgstr ""
 
-#: SystemRestore.vala:1770 SystemRestore.vala:1807
+#: SystemRestore.vala:1846 SystemRestore.vala:1883
 msgid "Maximum backups exceeded for backup level"
 msgstr ""
 
-#: SystemRestore.vala:196
+#: SystemRestore.vala:259
 msgid "Missing Dependencies"
 msgstr ""
 
@@ -722,11 +722,11 @@ msgstr ""
 msgid "Monthly"
 msgstr ""
 
-#: SystemRestore.vala:1441
+#: SystemRestore.vala:1517
 msgid "Monthly snapshot are enabled"
 msgstr ""
 
-#: SystemRestore.vala:1460
+#: SystemRestore.vala:1536
 msgid "Monthly snapshot failed!"
 msgstr ""
 
@@ -734,36 +734,36 @@ msgstr ""
 msgid "Mount"
 msgstr ""
 
-#: SystemRestore.vala:818
+#: SystemRestore.vala:894
 msgid "Name"
 msgstr ""
 
-#: SystemRestore.vala:2749
+#: SystemRestore.vala:2825
 msgid "No changes were made to system."
 msgstr ""
 
-#: SystemRestore.vala:980
+#: SystemRestore.vala:1056
 msgid "No response from user"
 msgstr ""
 
-#: SystemRestore.vala:333 SystemRestore.vala:2135 SystemRestore.vala:3038
-#: SystemRestore.vala:3149
+#: SystemRestore.vala:404 SystemRestore.vala:2211 SystemRestore.vala:3114
+#: SystemRestore.vala:3225
 msgid "No snapshots found on device"
 msgstr ""
 
-#: SystemRestore.vala:388
+#: SystemRestore.vala:459
 msgid "Not Supported"
 msgstr ""
 
-#: SystemRestore.vala:673
+#: SystemRestore.vala:744
 msgid "Notes"
 msgstr ""
 
-#: SystemRestore.vala:1470
+#: SystemRestore.vala:1546
 msgid "Nothing to do!"
 msgstr ""
 
-#: SystemRestore.vala:816 SystemRestore.vala:851 SystemRestore.vala:924
+#: SystemRestore.vala:892 SystemRestore.vala:927 SystemRestore.vala:1000
 msgid "Num"
 msgstr ""
 
@@ -771,20 +771,20 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: SystemRestore.vala:4070
+#: SystemRestore.vala:4146
 msgid "Older log files removed"
 msgstr ""
 
-#: RestoreWindow.vala:1375 SystemRestore.vala:386 SystemRestore.vala:3614
+#: RestoreWindow.vala:1375 SystemRestore.vala:457 SystemRestore.vala:3690
 msgid ""
 "Only ubuntu-type layouts with @ and @home subvolumes are currently supported."
 msgstr ""
 
-#: SystemRestore.vala:631
+#: SystemRestore.vala:702
 msgid "Options"
 msgstr ""
 
-#: SystemRestore.vala:218
+#: SystemRestore.vala:281
 msgid "Please check if you have multiple windows open."
 msgstr ""
 
@@ -794,27 +794,27 @@ msgid ""
 "good reason for doing so."
 msgstr ""
 
-#: SystemRestore.vala:2644
+#: SystemRestore.vala:2720
 msgid "Please do not interrupt the restore process!"
 msgstr ""
 
-#: SystemRestore.vala:2747
+#: SystemRestore.vala:2823
 msgid "Please install one of the following terminal emulators and try again"
 msgstr ""
 
-#: SystemRestore.vala:371
+#: SystemRestore.vala:442
 msgid "Please install required packages and try running TimeShift again"
 msgstr ""
 
-#: SystemRestore.vala:146
+#: SystemRestore.vala:209
 msgid "Please run the application as admin (using 'sudo' or 'su')"
 msgstr ""
 
-#: SystemRestore.vala:2584
+#: SystemRestore.vala:2660
 msgid "Please save your work and close all applications."
 msgstr ""
 
-#: SystemRestore.vala:3738
+#: SystemRestore.vala:3814
 msgid "Please select the backup device"
 msgstr ""
 
@@ -830,24 +830,24 @@ msgstr ""
 msgid "Please select the target device from the list"
 msgstr ""
 
-#: SystemRestore.vala:1281
+#: SystemRestore.vala:1357
 msgid "Please take the first snapshot by running 'sudo timeshift --backup-now'"
 msgstr ""
 
-#: SystemRestore.vala:214
+#: SystemRestore.vala:277
 msgid "Please wait for a few minutes and try again."
 msgstr ""
 
-#: SystemRestore.vala:2353
+#: SystemRestore.vala:2429
 #, c-format
 msgid "Re-install GRUB2 bootloader? (y/n)"
 msgstr ""
 
-#: SystemRestore.vala:2677
+#: SystemRestore.vala:2753
 msgid "Re-installing GRUB2 bootloader..."
 msgstr ""
 
-#: SystemRestore.vala:2698
+#: SystemRestore.vala:2774
 msgid "Rebooting system..."
 msgstr ""
 
@@ -859,28 +859,28 @@ msgstr ""
 msgid "Remove selected items"
 msgstr ""
 
-#: SystemRestore.vala:3106 SystemRestore.vala:3199
+#: SystemRestore.vala:3182 SystemRestore.vala:3275
 msgid "Removed"
 msgstr ""
 
-#: SystemRestore.vala:3675 SystemRestore.vala:3792
+#: SystemRestore.vala:3751 SystemRestore.vala:3868
 #, c-format
 msgid "Removed mount directory: '%s'"
 msgstr ""
 
-#: SystemRestore.vala:1826
+#: SystemRestore.vala:1902
 msgid "Removing backups older than"
 msgstr ""
 
-#: SystemRestore.vala:1852
+#: SystemRestore.vala:1928
 msgid "Removing older backups to free disk space"
 msgstr ""
 
-#: SystemRestore.vala:3088
+#: SystemRestore.vala:3164
 msgid "Removing snapshot"
 msgstr ""
 
-#: SystemRestore.vala:1870
+#: SystemRestore.vala:1946
 msgid "Removing un-tagged snapshots..."
 msgstr ""
 
@@ -893,23 +893,23 @@ msgid "Reset this list to default state"
 msgstr ""
 
 #: RestoreWindow.vala:100 RestoreWindow.vala:542 RestoreWindow.vala:543
-#: SystemRestore.vala:641
+#: SystemRestore.vala:712
 msgid "Restore"
 msgstr ""
 
-#: SystemRestore.vala:2792
+#: SystemRestore.vala:2868
 msgid "Restore completed without errors"
 msgstr ""
 
-#: SystemRestore.vala:2787
+#: SystemRestore.vala:2863
 msgid "Restore failed with exit code"
 msgstr ""
 
-#: SystemRestore.vala:642
+#: SystemRestore.vala:713
 msgid "Restore snapshot"
 msgstr ""
 
-#: SystemRestore.vala:2733
+#: SystemRestore.vala:2809
 msgid "Restoring snapshot..."
 msgstr ""
 
@@ -917,7 +917,7 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: SystemRestore.vala:1680
+#: SystemRestore.vala:1756
 msgid "Saving new snapshot..."
 msgstr ""
 
@@ -933,7 +933,7 @@ msgstr ""
 msgid "Scheduled jobs will be enabled only after the first snapshot is taken."
 msgstr ""
 
-#: SystemRestore.vala:1470
+#: SystemRestore.vala:1546
 msgid "Scheduled snapshots are disabled"
 msgstr ""
 
@@ -949,12 +949,12 @@ msgstr ""
 msgid "Scheduled snapshots will be saved to "
 msgstr ""
 
-#: SystemRestore.vala:2259
+#: SystemRestore.vala:2335
 #, c-format
 msgid "Select '%s' device (default = %s)"
 msgstr ""
 
-#: SystemRestore.vala:2361
+#: SystemRestore.vala:2437
 msgid "Select GRUB device"
 msgstr ""
 
@@ -966,7 +966,7 @@ msgstr ""
 msgid "Select Target Device"
 msgstr ""
 
-#: SystemRestore.vala:2064
+#: SystemRestore.vala:2140
 msgid "Select backup device"
 msgstr ""
 
@@ -978,15 +978,15 @@ msgstr ""
 msgid "Select file(s)"
 msgstr ""
 
-#: SystemRestore.vala:3043
+#: SystemRestore.vala:3119
 msgid "Select snapshot to delete"
 msgstr ""
 
-#: SystemRestore.vala:2140
+#: SystemRestore.vala:2216
 msgid "Select snapshot to restore"
 msgstr ""
 
-#: SystemRestore.vala:2205
+#: SystemRestore.vala:2281
 msgid "Select target device"
 msgstr ""
 
@@ -998,7 +998,7 @@ msgstr ""
 msgid "Selected device does not have enough space."
 msgstr ""
 
-#: SystemRestore.vala:177
+#: SystemRestore.vala:240
 msgid "Session log file"
 msgstr ""
 
@@ -1006,24 +1006,24 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: SystemRestore.vala:656
+#: SystemRestore.vala:727
 msgid "Show additional debug messages"
 msgstr ""
 
-#: SystemRestore.vala:659
+#: SystemRestore.vala:730
 msgid "Show all options"
 msgstr ""
 
-#: SystemRestore.vala:657
+#: SystemRestore.vala:728
 msgid "Show rsync output (default)"
 msgstr ""
 
-#: RestoreWindow.vala:249 RestoreWindow.vala:859 SystemRestore.vala:855
+#: RestoreWindow.vala:249 RestoreWindow.vala:859 SystemRestore.vala:931
 #, c-format
 msgid "Size"
 msgstr ""
 
-#: SystemRestore.vala:647
+#: SystemRestore.vala:718
 msgid "Skip GRUB2 reinstall"
 msgstr ""
 
@@ -1041,20 +1041,20 @@ msgid ""
 "Otherwise the system may fail to boot."
 msgstr ""
 
-#: SystemRestore.vala:1557 SystemRestore.vala:1704 SystemRestore.vala:1773
-#: SystemRestore.vala:1811 SystemRestore.vala:1830 SystemRestore.vala:2156
+#: SystemRestore.vala:1633 SystemRestore.vala:1780 SystemRestore.vala:1849
+#: SystemRestore.vala:1887 SystemRestore.vala:1906 SystemRestore.vala:2232
 msgid "Snapshot"
 msgstr ""
 
-#: SystemRestore.vala:1700
+#: SystemRestore.vala:1776
 msgid "Snapshot saved successfully"
 msgstr ""
 
-#: SystemRestore.vala:3058
+#: SystemRestore.vala:3134
 msgid "Snapshot to delete not specified!"
 msgstr ""
 
-#: SystemRestore.vala:2161
+#: SystemRestore.vala:2237
 msgid "Snapshot to restore not specified!"
 msgstr ""
 
@@ -1062,7 +1062,7 @@ msgstr ""
 msgid "Snapshots matching following rules will be removed automatically"
 msgstr ""
 
-#: SystemRestore.vala:328
+#: SystemRestore.vala:399
 #, c-format
 msgid "Snapshots on device %s"
 msgstr ""
@@ -1071,19 +1071,19 @@ msgstr ""
 msgid "Some locations are excluded by default"
 msgstr ""
 
-#: SystemRestore.vala:654
+#: SystemRestore.vala:725
 msgid "Specify backup device"
 msgstr ""
 
-#: SystemRestore.vala:646
+#: SystemRestore.vala:717
 msgid "Specify device for installing GRUB2 bootloader"
 msgstr ""
 
-#: SystemRestore.vala:644
+#: SystemRestore.vala:715
 msgid "Specify snapshot to restore"
 msgstr ""
 
-#: SystemRestore.vala:645
+#: SystemRestore.vala:716
 msgid "Specify target device"
 msgstr ""
 
@@ -1091,15 +1091,15 @@ msgstr ""
 msgid "Stopped"
 msgstr ""
 
-#: SystemRestore.vala:1911
+#: SystemRestore.vala:1987
 msgid "Symlinks updated"
 msgstr ""
 
-#: SystemRestore.vala:2684
+#: SystemRestore.vala:2760
 msgid "Synching file systems..."
 msgstr ""
 
-#: SystemRestore.vala:1652
+#: SystemRestore.vala:1728
 msgid "Synching files..."
 msgstr ""
 
@@ -1108,23 +1108,23 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: SystemRestore.vala:2645
+#: SystemRestore.vala:2721
 msgid "System will reboot after files are restored"
 msgstr ""
 
-#: SystemRestore.vala:2585
+#: SystemRestore.vala:2661
 msgid "System will reboot to complete the restore process."
 msgstr ""
 
-#: SystemRestore.vala:819
+#: SystemRestore.vala:895
 msgid "Tags"
 msgstr ""
 
-#: SystemRestore.vala:639
+#: SystemRestore.vala:710
 msgid "Take on-demand backup"
 msgstr ""
 
-#: SystemRestore.vala:638
+#: SystemRestore.vala:709
 msgid "Take scheduled backup"
 msgstr ""
 
@@ -1132,19 +1132,19 @@ msgstr ""
 msgid "Target"
 msgstr ""
 
-#: SystemRestore.vala:2228
+#: SystemRestore.vala:2304
 msgid "Target Device"
 msgstr ""
 
-#: SystemRestore.vala:2628
+#: SystemRestore.vala:2704
 msgid "Target device is not mounted"
 msgstr ""
 
-#: SystemRestore.vala:2233 SystemRestore.vala:2306 SystemRestore.vala:3595
+#: SystemRestore.vala:2309 SystemRestore.vala:2382 SystemRestore.vala:3671
 msgid "Target device not specified!"
 msgstr ""
 
-#: SystemRestore.vala:4115
+#: SystemRestore.vala:4191
 msgid "Terminating rsync process"
 msgstr ""
 
@@ -1152,21 +1152,21 @@ msgstr ""
 msgid "The backup device is not set or unavailable."
 msgstr ""
 
-#: SystemRestore.vala:385
+#: SystemRestore.vala:456
 msgid "The system partition has an unsupported subvolume layout."
 msgstr ""
 
-#: RestoreWindow.vala:1374 SystemRestore.vala:3613
+#: RestoreWindow.vala:1374 SystemRestore.vala:3689
 msgid "The target partition has an unsupported subvolume layout."
 msgstr ""
 
-#: SystemRestore.vala:2590
+#: SystemRestore.vala:2666
 msgid ""
 "This software comes without absolutely NO warranty and the author takes\n"
 "no responsibility for any damage arising from the use of this program."
 msgstr ""
 
-#: SystemRestore.vala:145
+#: SystemRestore.vala:208
 msgid "TimeShift needs admin access to backup and restore system files."
 msgstr ""
 
@@ -1176,7 +1176,7 @@ msgid ""
 "the main window."
 msgstr ""
 
-#: RestoreWindow.vala:200 RestoreWindow.vala:857 SystemRestore.vala:856
+#: RestoreWindow.vala:200 RestoreWindow.vala:857 SystemRestore.vala:932
 #, c-format
 msgid "Type"
 msgstr ""
@@ -1186,24 +1186,24 @@ msgstr ""
 msgid "UUID"
 msgstr ""
 
-#: SystemRestore.vala:1542
+#: SystemRestore.vala:1618
 msgid "Unknown snapshot type"
 msgstr ""
 
-#: SystemRestore.vala:2537
+#: SystemRestore.vala:2613
 msgid "Unlocked Device"
 msgstr ""
 
-#: SystemRestore.vala:2540
+#: SystemRestore.vala:2616
 msgid "Unlocked Successfully"
 msgstr ""
 
-#: SystemRestore.vala:2484 SystemRestore.vala:2506
+#: SystemRestore.vala:2560 SystemRestore.vala:2582
 #, c-format
 msgid "Unlocked device is mapped to '%s'"
 msgstr ""
 
-#: SystemRestore.vala:2540
+#: SystemRestore.vala:2616
 #, c-format
 msgid "Unlocked device is mapped to '%s'."
 msgstr ""
@@ -1212,11 +1212,11 @@ msgstr ""
 msgid "Unmounting from"
 msgstr ""
 
-#: RestoreWindow.vala:1373 SystemRestore.vala:3617
+#: RestoreWindow.vala:1373 SystemRestore.vala:3693
 msgid "Unsupported Subvolume Layout"
 msgstr ""
 
-#: SystemRestore.vala:2880
+#: SystemRestore.vala:2956
 msgid "Updated /etc/fstab on target device"
 msgstr ""
 
@@ -1225,15 +1225,15 @@ msgstr ""
 msgid "Used"
 msgstr ""
 
-#: SystemRestore.vala:2973
+#: SystemRestore.vala:3049
 msgid "Using the default exclude-list"
 msgstr ""
 
-#: SystemRestore.vala:2976
+#: SystemRestore.vala:3052
 msgid "Using user-specified exclude-list"
 msgstr ""
 
-#: SystemRestore.vala:2579
+#: SystemRestore.vala:2655
 msgid "WARNING"
 msgstr ""
 
@@ -1242,7 +1242,7 @@ msgstr ""
 msgid "Warning"
 msgstr ""
 
-#: SystemRestore.vala:589
+#: SystemRestore.vala:660
 msgid "Warning: Deleted invalid lock"
 msgstr ""
 
@@ -1250,11 +1250,11 @@ msgstr ""
 msgid "Weekly"
 msgstr ""
 
-#: SystemRestore.vala:1430
+#: SystemRestore.vala:1506
 msgid "Weekly snapshot failed!"
 msgstr ""
 
-#: SystemRestore.vala:1411
+#: SystemRestore.vala:1487
 msgid "Weekly snapshots are enabled"
 msgstr ""
 
@@ -1262,24 +1262,24 @@ msgstr ""
 msgid "When free space less than"
 msgstr ""
 
-#: SystemRestore.vala:2500 SystemRestore.vala:2534
+#: SystemRestore.vala:2576 SystemRestore.vala:2610
 msgid "Wrong Passphrase"
 msgstr ""
 
-#: SystemRestore.vala:2264
+#: SystemRestore.vala:2340
 #, c-format
 msgid "[a = Abort, d = Default (%s), r = Root device]"
 msgstr ""
 
-#: SystemRestore.vala:1826
+#: SystemRestore.vala:1902
 msgid "days..."
 msgstr ""
 
-#: SystemRestore.vala:3727
+#: SystemRestore.vala:3803
 msgid "free"
 msgstr ""
 
-#: SystemRestore.vala:1669
+#: SystemRestore.vala:1745
 msgid "rsync returned an error"
 msgstr ""
 
@@ -1296,10 +1296,10 @@ msgstr ""
 msgid "sys"
 msgstr ""
 
-#: SystemRestore.vala:1557 SystemRestore.vala:1704
+#: SystemRestore.vala:1633 SystemRestore.vala:1780
 msgid "tagged"
 msgstr ""
 
-#: SystemRestore.vala:1773 SystemRestore.vala:1811 SystemRestore.vala:1830
+#: SystemRestore.vala:1849 SystemRestore.vala:1887 SystemRestore.vala:1906
 msgid "un-tagged"
 msgstr ""

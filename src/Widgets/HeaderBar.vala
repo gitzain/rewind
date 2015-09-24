@@ -189,21 +189,23 @@ public class HeaderBar : Gtk.HeaderBar
 
     private void btn_about_clicked()
     {
-        Granite.Widgets.AboutDialog about = new  Granite.Widgets.AboutDialog();
+        // Granite.Widgets.AboutDialog about = new  Granite.Widgets.AboutDialog();
         
-        about.title = _("About System Restore");
-        about.program_name = _("System Restore");
-        about.comments = _("A simple back up utility.");
-        about.logo_icon_name = "/usr/share/pixmaps/timeshift.png";
-        about.version = "v1";
+        // about.title = _("About System Restore");
+        // about.program_name = _("System Restore");
+        // about.comments = _("A simple back up utility.");
+        // about.logo_icon_name = "/usr/share/pixmaps/timeshift.png";
+        // about.version = "v1";
 
-        about.authors = {
-            "Zain Khan <emailzainkhan@gmail.com>",
-        };
+        // about.authors = {
+        //     "Zain Khan <emailzainkhan@gmail.com>",
+        // };
 
 
 
-        about.show_all();
+        // about.show_all();
+
+        App.show_about(get_window_parent());
     }
 
     private Gtk.Window get_window_parent()

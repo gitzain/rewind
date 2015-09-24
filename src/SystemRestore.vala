@@ -129,9 +129,72 @@ public class Main : Granite.Application
 	public string progress_text = "";
 	public int snapshot_list_start_index = 0;
 
+    /**
+     * Translatable launcher (.desktop) strings to be added to template (.pot) file.
+     * These strings should reflect any changes in these launcher keys in .desktop file
+     */
+    public const string PROGRAM_NAME = "SystemRestore";
+    public const string COMMENT = N_("A simply backup and restore utility");
+    public const string GENERIC = N_("Backup Utility");
+    public const string KEYWORDS = N_("System,Restore,Utility");
+    public const string ABOUT_SYSTEMRESTORE = N_("About SystemRestore");
 
+	construct 
+	{
+        // App info
+
+
+        program_name = PROGRAM_NAME;
+        exec_name = "SystemRestore";
+
+        app_copyright = "2015";
+        application_id = "com.iamzain.systemrestore";
+        //app_icon = "multimedia-audio-player";
+        app_launcher = "noise.desktop";
+        app_years = "2015";
+
+        main_url = "";
+        bug_url = "";
+        help_url = "";
+        translate_url = "";
+
+        about_authors = {"Zain Khan <emailzainkhan@gmail.com>", null};
+    }
 	
-	public Main(string[] args){
+
+    /**
+     * We use this identifier to init everything inside the application.
+     * For instance: libnotify, etc.
+     */
+    public string get_id () {
+        return application_id;
+    }
+
+    /**
+     * @return the application's brand name. Should be used for anything that requires
+     * branding. For instance: Ubuntu's sound menu, dialog titles, etc.
+     */
+    public string get_name () {
+        return program_name;
+    }
+
+    /**
+     * @return the application's desktop file name.
+     */
+    public string get_desktop_file_name () {
+        return app_launcher;
+    }
+
+
+
+
+
+
+
+
+
+	public Main(string[] args)
+	{
 		string msg = "";
 
 		//parse arguments (initial) ------------
@@ -282,6 +345,14 @@ public class Main : Granite.Application
 		
 		load_app_config();
 		update_snapshot_list();		
+
+
+
+
+
+
+
+		start_application(args);
 	}
 
 	public bool start_application(string[] args){
@@ -339,15 +410,15 @@ public class Main : Granite.Application
 				log_msg(_("Devices with Linux file systems") + ":\n");
 				list_devices();
 				return true;
-				
+
 			default:
 				//Initialize main window
-				var window = new MainWindow ();
-				window.destroy.connect(Gtk.main_quit);
-				window.show_all();
+				//var window = new MainWindow ();
+				//window.destroy.connect(Gtk.main_quit);
+				//window.show_all();
 				
 				//start event loop
-				Gtk.main();
+				//Gtk.main();
 
 				return true;
 		}
@@ -681,7 +752,8 @@ public class Main : Granite.Application
 		return msg;
 	}
 
-	private void parse_arguments(string[] args){
+	private void parse_arguments(string[] args)
+	{
 		for (int k = 1; k < args.length; k++) // Oth arg is app path 
 		{
 			switch (args[k].down()){
@@ -775,6 +847,10 @@ public class Main : Granite.Application
 					app_mode = "list-devices";
 					LOG_TIMESTAMP = false;
 					LOG_DEBUG = false;
+					break;
+
+				case "--about":
+					app_mode ="about";
 					break;
 					
 				default:
@@ -4117,6 +4193,22 @@ public class Main : Granite.Application
 		}
 	}
 
+
+
+	public override void activate () {
+		//var window = new MainWindow();
+		//this.add_window (window);
+
+				//Initialize main window
+				var window = new MainWindow ();
+				window.destroy.connect(Gtk.main_quit);
+				window.show_all();
+				
+				//start event loop
+				Gtk.main();
+	}
+
+
 }
 
 public class TimeShiftBackup : GLib.Object{
@@ -4324,6 +4416,65 @@ public class AppExcludeEntry : GLib.Object{
 		str += (is_file) ? "" : "/**";
 		return str.strip();	
 	}
-	
 }
+
+
+ 	//initialization
+
+	public static int main (string[] args) {
+		set_locale();
+
+		//show help and exit
+		if (args.length > 1) {
+			switch (args[1].down()) {
+				case "--help":
+				case "-h":
+					stdout.printf (Main.help_message ());
+					return 0;
+			}
+		}
+		
+		//init TMP
+		LOG_ENABLE = false;
+		init_tmp();
+		LOG_ENABLE = true;
+		
+		/*
+		 * Note:
+		 * init_tmp() will fail if timeshift is run as normal user
+		 * logging will be disabled temporarily so that the error is not displayed to user
+		 */
+		
+		/*
+		var map = Device.get_mounted_filesystems_using_mtab();
+		foreach(Device pi in map.values){start_application
+			log_msg(pi.description_full());
+		}
+		exit(0);
+		*/
+		
+		LOG_TIMESTAMP = true;
+				
+		App = new Main(args);
+		return App.run (args);
+
+
+		//bool success = App.start_application(args);
+
+		//App.exit_app();
+		
+		//return (success) ? 0 : 1;
+
+
+
+
+	}
+	
+	private static void set_locale(){
+		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "timeshift");
+		Intl.textdomain(GETTEXT_PACKAGE);
+		Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
+		Intl.bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
+	}
+
 

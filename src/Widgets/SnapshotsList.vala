@@ -41,7 +41,7 @@ public class SnapshotsList : Gtk.Box
 	private Granite.Widgets.Welcome first;
 
 	//snapshots
-	private TreeView tv_backups;
+	public TreeView tv_backups;
 	private ScrolledWindow sw_backups;
     private TreeViewColumn col_date;
     private TreeViewColumn col_tags;
@@ -91,6 +91,7 @@ public class SnapshotsList : Gtk.Box
 
 			return false;
 		});
+		tv_backups.activate_on_single_click = true;
 
 		//tooltips
 		tv_backups.query_tooltip.connect((x, y, keyboard_tooltip, tooltip) => 
@@ -374,7 +375,7 @@ public class SnapshotsList : Gtk.Box
 		right_click_menu.popup (null, null, null, 3, Gtk.get_current_event_time());
 	}
 
-	private void restore()
+	public void restore()
 	{
 		App.mirror_system = false;
 
@@ -719,4 +720,6 @@ public class SnapshotsList : Gtk.Box
 			return true;
 		}
 	}
+
+
 }

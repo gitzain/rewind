@@ -31,7 +31,7 @@ using TeeJee.System;
 public class HeaderBar : Gtk.HeaderBar
 {
     private ToolButton btn_backup;
-    private Gtk.ToolButton btn_restore_backup;
+    public Gtk.ToolButton btn_restore_backup;
     private Gtk.ToolButton btn_scheduled_backup;
     private Granite.Widgets.AppMenu appmenu;
 

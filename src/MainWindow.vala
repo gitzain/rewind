@@ -72,8 +72,8 @@ class MainWindow : Gtk.Window {
         this.add(box_main);
 
 		//infobar ----------------------------------------------------
-		notification_container = new NotificationsContainer();
-		box_main.pack_start(notification_container, false, false, 0);
+		//notification_container = new NotificationsContainer();
+		//box_main.pack_start(notification_container, false, false, 0);
 
 		//sidebar ----------------------------------------------------
 		sidebar = new SideBar();
@@ -81,6 +81,12 @@ class MainWindow : Gtk.Window {
 
 	    //snapshot list ----------------------------------------------------
 	    snapshots_list_widget = new SnapshotsList();
+
+	    snapshots_list_widget.tv_backups.row_activated.connect((path, column) => {
+			headerbar.btn_restore_backup.sensitive = true;
+			headerbar.btn_restore_backup.clicked.connect(snapshots_list_widget.restore);
+		});
+
 
 		//Create a 2 section pane and add the sidebar and snapshot list above------------------------------
 		pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
@@ -95,6 +101,7 @@ class MainWindow : Gtk.Window {
 		sidebar.refresh_items();
 		sidebar.select_first_item();
 		timer_backup_device_init = Timeout.add(100, init_backup_device);
+
     }
 
     private void sidebar_updated()

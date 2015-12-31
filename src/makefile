@@ -6,12 +6,12 @@ launcherdir=$(sharedir)/applications
 mandir=$(sharedir)/man
 man1dir=$(mandir)/man1
 CFLAGS=--std=c99
-app_name=timeshift
-app_fullname=Timeshift
+app_name=rewind
+app_fullname=Rewind
 
 all:
 	#build binaries
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs --thread "Utility.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" "SystemRestore.vala" "Widgets/SideBar.vala" "Widgets/SideBarExpandableItem.vala" "Widgets/HeaderBar.vala" "Widgets/NotificationsContainer.vala" "Widgets/SnapshotsList.vala" "Widgets/StatusBar.vala" "Widgets/DriveList.vala" "Widgets/DriveItem.vala" -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 --pkg gudev-1.0 --pkg granite
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs --thread "Utility.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" "Rewind.vala" "Widgets/SideBar.vala" "Widgets/SideBarExpandableItem.vala" "Widgets/HeaderBar.vala" "Widgets/NotificationsContainer.vala" "Widgets/SnapshotsList.vala" "Widgets/StatusBar.vala" "Widgets/DriveList.vala" "Widgets/DriveItem.vala" -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 --pkg gudev-1.0 --pkg granite
 	
 	#update translation template
 	xgettext --language=C --keyword=_ --copyright-holder='Tony George (teejee2008@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='teejee2008@gmail.com' --escape --sort-output -o ../${app_name}.pot *.vala

@@ -37,9 +37,9 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public Main App;
-public const string AppName = "System Restore";
-public const string AppShortName = "system-restore";
-public const string AppVersion = "0.1.7.2";
+public const string AppName = "Rewind";
+public const string AppShortName = "rewind";
+public const string AppVersion = "0.1";
 public const string AppAuthor = "Zain Khan";
 public const string AppAuthorEmail = "emailzainkhan@gmail.com";
 

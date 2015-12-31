@@ -1,4 +1,4 @@
-# System Restore
+# Rewind
 A clean, simple system restore utility for Linux.
 
 ## Table of content

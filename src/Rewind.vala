@@ -75,7 +75,7 @@ public class Main : Granite.Application
 	
 	public string mount_point_backup = "";
 	public string mount_point_restore = "";
-	public string mount_point_app = "/mnt/timeshift";
+	public string mount_point_app = "/mnt/rewind";
 	
 	public DistInfo current_distro;
 	public bool mirror_system = false;
@@ -205,7 +205,7 @@ public class Main : Granite.Application
 		//since writing to log directory requires admin access
 		
 		if (!user_is_admin()){
-			msg = _("TimeShift needs admin access to backup and restore system files.") + "\n";
+			msg = _("Rewind needs admin access to backup and restore system files.") + "\n";
 			msg += _("Please run the application as admin (using 'sudo' or 'su')");
 
 			log_error(msg);
@@ -222,7 +222,7 @@ public class Main : Granite.Application
 		
 		try {
 			DateTime now = new DateTime.now_local();
-			log_dir = "/var/log/timeshift";
+			log_dir = "/var/log/rewind";
 			log_file = log_dir + "/" + now.format("%Y-%m-%d_%H-%M-%S") + ".log";
 			
 			var file = File.new_for_path (log_dir);
@@ -264,7 +264,7 @@ public class Main : Granite.Application
 
 		//check and create lock ------------------
 		
-		lock_dir = "/var/run/lock/timeshift";
+		lock_dir = "/var/run/lock/rewind";
 		lock_file = lock_dir + "/lock";
 		if (!create_lock()){
 			if (app_mode == ""){
@@ -277,7 +277,7 @@ public class Main : Granite.Application
 					msg += _("Please wait for a few minutes and try again.");
 				}
 				else{
-					msg = _("Another instance of timeshift is currently running!") + "\n";
+					msg = _("Another instance of rewind is currently running!") + "\n";
 					msg += _("Please check if you have multiple windows open.") + "\n";
 				}
 				
@@ -294,13 +294,13 @@ public class Main : Granite.Application
 		
 		this.app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		this.share_folder = "/usr/share";
-		this.app_conf_path = "/etc/timeshift.json";
+		this.app_conf_path = "/etc/rewind.json";
 		//root_device and home_device will be initalized by update_partition_list()
 		
 		//check if running locally -------------
 		
 		string local_exec = args[0];
-		string local_conf = app_path + "/timeshift.json";
+		string local_conf = app_path + "/rewind.json";
 		string local_share = app_path + "/share";
 
 		var f_local_exec = File.new_for_path(local_exec);
@@ -317,8 +317,8 @@ public class Main : Granite.Application
 			}
 		}
 		else{
-			//timeshift is running from system directory - update app_path
-			this.app_path = get_cmd_path("timeshift");
+			//rewind is running from system directory - update app_path
+			this.app_path = get_cmd_path("rewind");
 		}
 
 		//initialize lists -------------------------
@@ -439,7 +439,7 @@ public class Main : Granite.Application
 		
 		if (msg.length > 0){
 			msg = _("Commands listed below are not available on this system") + ":\n\n" + msg + "\n";
-			msg += _("Please install required packages and try running TimeShift again");
+			msg += _("Please install required packages and try running Rewind again");
 			log_error(msg);
 			return false;
 		}
@@ -488,7 +488,7 @@ public class Main : Granite.Application
 		exclude_list_default.add("/var/run/*");
 		exclude_list_default.add("/var/lock/*");
 		exclude_list_default.add("/lost+found");
-		exclude_list_default.add("/timeshift/*");
+		exclude_list_default.add("/rewind/*");
 		exclude_list_default.add("/data/*");
 		exclude_list_default.add("/cdrom/*");
 		
@@ -652,7 +652,7 @@ public class Main : Granite.Application
 				long pid = long.parse(process_id);
 				
 				if (process_is_running(pid)){
-					log_msg(_("Another instance of timeshift is currently running") + " (PID=%ld)".printf(pid));
+					log_msg(_("Another instance of rewind is currently running") + " (PID=%ld)".printf(pid));
 					return false;
 				}
 				else{
@@ -694,10 +694,10 @@ public class Main : Granite.Application
 		msg += "\n";
 		msg += "Syntax:\n";
 		msg += "\n";
-		msg += "  timeshift --list-{snapshots|devices} [OPTIONS]\n";
-		msg += "  timeshift --backup[-now] [OPTIONS]\n";
-		msg += "  timeshift --restore [OPTIONS]\n";
-		msg += "  timeshift --delete-[all] [OPTIONS]\n";
+		msg += "  rewind --list-{snapshots|devices} [OPTIONS]\n";
+		msg += "  rewind --backup[-now] [OPTIONS]\n";
+		msg += "  rewind --restore [OPTIONS]\n";
+		msg += "  rewind --delete-[all] [OPTIONS]\n";
 		msg += "\n";
 		msg += _("Options") + ":\n";
 		msg += "\n";
@@ -732,13 +732,13 @@ public class Main : Granite.Application
 		
 		msg += _("Examples") + ":\n";
 		msg += "\n";
-		msg += "timeshift --list\n";
-		msg += "timeshift --list --backup-device /dev/sda1\n";
-		msg += "timeshift --backup-now \n";
-		msg += "timeshift --restore \n";
-		msg += "timeshift --restore --snapshot '2014-10-12_16-29-08' --target /dev/sda1 --skip-grub\n";
-		msg += "timeshift --delete  --snapshot '2014-10-12_16-29-08'\n";
-		msg += "timeshift --delete-all \n";
+		msg += "rewind --list\n";
+		msg += "rewind --list --backup-device /dev/sda1\n";
+		msg += "rewind --backup-now \n";
+		msg += "rewind --restore \n";
+		msg += "rewind --restore --snapshot '2014-10-12_16-29-08' --target /dev/sda1 --skip-grub\n";
+		msg += "rewind --delete  --snapshot '2014-10-12_16-29-08'\n";
+		msg += "rewind --delete-all \n";
 		msg += "\n";
 		
 		msg += _("Notes") + ":\n";
@@ -1302,10 +1302,10 @@ public class Main : Granite.Application
 	public string snapshot_dir {
 		owned get{
 			if (mount_point_backup == "/"){
-				return "/timeshift/snapshots";
+				return "/rewind/snapshots";
 			}
 			else if (mount_point_backup.length > 0){
-				return "%s/timeshift/snapshots".printf(mount_point_backup);
+				return "%s/rewind/snapshots".printf(mount_point_backup);
 			}
 			else{
 				return "";
@@ -1354,7 +1354,7 @@ public class Main : Granite.Application
 				//check if first snapshot was taken
 				if (status_code == 2){
 					log_error(_("First snapshot not taken"));
-					log_error(_("Please take the first snapshot by running 'sudo timeshift --backup-now'"));
+					log_error(_("Please take the first snapshot by running 'sudo rewind --backup-now'"));
 					return false;
 				}
 			}
@@ -1775,7 +1775,7 @@ public class Main : Granite.Application
 				long seconds = (long)(elapsed * 1.0 / TimeSpan.SECOND);
 				msg = _("Snapshot saved successfully") + " (%lds)".printf(seconds);
 				log_msg(msg);
-				notify_send("TimeShift",msg,10000,"low");
+				notify_send("Rewind",msg,10000,"low");
 				
 				log_msg(_("Snapshot") + " '%s' ".printf(new_name) + _("tagged") + " '%s'".printf(tag));
 				
@@ -1970,7 +1970,7 @@ public class Main : Granite.Application
 			
 			foreach(TimeShiftBackup bak in snapshot_list){
 				foreach(string tag in bak.tags){
-					path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
+					path = mount_point_backup + "/rewind/snapshots-%s".printf(tag);
 					cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);	
 					
 					if (LOG_COMMANDS) { log_debug(cmd); }
@@ -1998,7 +1998,7 @@ public class Main : Granite.Application
 		int ret_val;
 		
 		try{
-			string path = mount_point_backup + "/timeshift/snapshots-%s".printf(tag);
+			string path = mount_point_backup + "/rewind/snapshots-%s".printf(tag);
 			var f = File.new_for_path(path);
 			if (f.query_exists()){
 				cmd = "rm -rf \"%s\"".printf(path + "/");	
@@ -2054,7 +2054,7 @@ public class Main : Granite.Application
 				}
 			}
 			
-			string timeshift_path = "/timeshift/*";
+			string timeshift_path = "/rewind/*";
 			if (!combined_list.contains(timeshift_path)){
 				combined_list.add(timeshift_path);
 			}
@@ -2654,7 +2654,7 @@ public class Main : Granite.Application
 		string msg = "";
 		msg += "<b>" + _("WARNING") + ":</b>\n\n";
 		msg += _("Files will be overwritten on the target device!") + "\n";
-		msg += _("If restore fails and you are unable to boot the system, \nthen boot from the Ubuntu Live CD, install Timeshift, and try again.") + "\n";
+		msg += _("If restore fails and you are unable to boot the system, \nthen boot from the Ubuntu Live CD, install Rewind, and try again.") + "\n";
 		
 		if ((root_device != null) && (restore_target.device == root_device.device)){
 			msg += "\n<b>" + _("Please save your work and close all applications.") + "\n";
@@ -2681,7 +2681,7 @@ public class Main : Granite.Application
 				source_path = snapshot_to_restore.path;
 			}
 			else{
-				source_path = "/tmp/timeshift";
+				source_path = "/tmp/rewind";
 				if (!dir_exists(source_path)){
 					create_dir(source_path);
 				}
@@ -3041,7 +3041,7 @@ public class Main : Granite.Application
 					}
 				}
 				
-				string timeshift_path = "/timeshift/*";
+				string timeshift_path = "/rewind/*";
 				if (!exclude_list_restore.contains(timeshift_path)){
 					exclude_list_restore.add(timeshift_path);
 				}
@@ -3052,7 +3052,7 @@ public class Main : Granite.Application
 				log_msg(_("Using user-specified exclude-list"));
 			}
 
-			string timeshift_path = "/timeshift/*";
+			string timeshift_path = "/rewind/*";
 			if (!exclude_list_restore.contains(timeshift_path)){
 				exclude_list_restore.add(timeshift_path);
 			}
@@ -3200,8 +3200,8 @@ public class Main : Granite.Application
 	}
 
 	public bool delete_all_snapshots(){
-		string timeshift_dir = mount_point_backup + "/timeshift";
-		string sync_dir = mount_point_backup + "/timeshift/snapshots/.sync";
+		string timeshift_dir = mount_point_backup + "/rewind";
+		string sync_dir = mount_point_backup + "/rewind/snapshots/.sync";
 		
 		if (dir_exists(timeshift_dir)){ 
 			//delete snapshots
@@ -3218,7 +3218,7 @@ public class Main : Granite.Application
 				}
 			}
 			
-			//delete /timeshift
+			//delete /rewind
 			return delete_directory(timeshift_dir);
 		}
 		else{
@@ -3438,7 +3438,7 @@ public class Main : Granite.Application
 		
 		snapshot_list.clear();
 
-		string path = mount_point_backup + "/timeshift/snapshots";
+		string path = mount_point_backup + "/rewind/snapshots";
 
 		if (!dir_exists(path)){
 			return false;
@@ -3581,7 +3581,7 @@ public class Main : Granite.Application
 
 	public bool mount_backup_device(Gtk.Window? parent_win){
 		/* Note:
-		 * If backup device is BTRFS then it will be explicitly mounted to /mnt/timeshift/backup
+		 * If backup device is BTRFS then it will be explicitly mounted to /mnt/rewind/backup
 		 * Otherwise existing mount point will be used.
 		 * This is required since we need to mount the root subvolume of the BTRFS filesystem
 		 * */
@@ -3609,7 +3609,7 @@ public class Main : Granite.Application
 
 				if (mount(snapshot_device.uuid, mount_point_backup, "")){
 					if ((app_mode == "")||(LOG_DEBUG)){
-						log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
+						log_msg(_("Backup path changed to '%s/rewind'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
 					}
 					return true;
 				}
@@ -3632,7 +3632,7 @@ public class Main : Granite.Application
 					mount_point_backup = automount(snapshot_device.uuid,"", mount_point_app);
 					if (mount_point_backup.length > 0){
 						if ((app_mode == "")||(LOG_DEBUG)){
-							log_msg(_("Backup path changed to '%s/timeshift'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
+							log_msg(_("Backup path changed to '%s/rewind'").printf((mount_point_backup == "/") ? "" : mount_point_backup));
 						}
 					}
 					else{
@@ -3647,7 +3647,7 @@ public class Main : Granite.Application
 	
 	public bool mount_target_device(Gtk.Window? parent_win){
 		/* Note:
-		 * Target device will be mounted explicitly to /mnt/timeshift/restore
+		 * Target device will be mounted explicitly to /mnt/rewind/restore
 		 * Existing mount points are not used since we need to mount other devices in sub-directories
 		 * */
 				 
@@ -3992,9 +3992,9 @@ public class Main : Granite.Application
 		new_entry = get_crontab_entry_scheduled();
 		new_entry_exists = false;
 		
-		//check and remove crontab entries created by previous versions of timeshift
+		//check and remove crontab entries created by previous versions of rewind
 		
-		search_string = "*/30 * * * * timeshift --backup";
+		search_string = "*/30 * * * * rewind --backup";
 		current_entry = crontab_read_entry(search_string);
 		if (current_entry.length > 0) {
 			//remove entry
@@ -4004,7 +4004,7 @@ public class Main : Granite.Application
 		//check for regular entries
 		foreach(string interval in new string[] {"@monthly","@weekly","@daily","@hourly"}){
 			
-			search_string = "%s timeshift --backup".printf(interval);
+			search_string = "%s rewind --backup".printf(interval);
 			
 			//read
 			current_entry = crontab_read_entry(search_string);
@@ -4029,7 +4029,7 @@ public class Main : Granite.Application
 		
 		//boot job ----------------------------------
 		
-		search_string = """@reboot sleep [0-9]*m && timeshift --backup""";
+		search_string = """@reboot sleep [0-9]*m && rewind --backup""";
 		
 		new_entry = get_crontab_entry_boot();
 		new_entry_exists = false;
@@ -4058,16 +4058,16 @@ public class Main : Granite.Application
 	private string get_crontab_entry_scheduled(){
 		if (is_scheduled && (snapshot_list.size > 0)){
 			if (schedule_hourly){
-				return "@hourly timeshift --backup"; 
+				return "@hourly rewind --backup"; 
 			}
 			else if (schedule_daily){
-				return "@daily timeshift --backup";
+				return "@daily rewind --backup";
 			}
 			else if (schedule_weekly){
-				return "@weekly timeshift --backup";
+				return "@weekly rewind --backup";
 			}
 			else if (schedule_monthly){
-				return "@monthly timeshift --backup";
+				return "@monthly rewind --backup";
 			}
 		}
 		
@@ -4077,7 +4077,7 @@ public class Main : Granite.Application
 	private string get_crontab_entry_boot(){
 		if (is_scheduled && (snapshot_list.size > 0)){
 			if (schedule_boot || schedule_hourly || schedule_daily || schedule_weekly || schedule_monthly){
-				return "@reboot sleep %dm && timeshift --backup".printf(startup_delay_interval_mins);
+				return "@reboot sleep %dm && rewind --backup".printf(startup_delay_interval_mins);
 			}
 		}
 		
@@ -4441,7 +4441,7 @@ public class AppExcludeEntry : GLib.Object{
 		
 		/*
 		 * Note:
-		 * init_tmp() will fail if timeshift is run as normal user
+		 * init_tmp() will fail if rewind is run as normal user
 		 * logging will be disabled temporarily so that the error is not displayed to user
 		 */
 		
@@ -4471,7 +4471,7 @@ public class AppExcludeEntry : GLib.Object{
 	}
 	
 	private static void set_locale(){
-		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "timeshift");
+		Intl.setlocale(GLib.LocaleCategory.MESSAGES, "rewind");
 		Intl.textdomain(GETTEXT_PACKAGE);
 		Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
 		Intl.bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);

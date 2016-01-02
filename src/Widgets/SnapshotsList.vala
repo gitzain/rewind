@@ -242,35 +242,35 @@ public class SnapshotsList : Gtk.Box
 
     private void cell_date_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
     {
-		TimeShiftBackup bak;
+		RewindBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.date.format ("%Y-%m-%d %I:%M %p");
 	}
 	
 	private void cell_tags_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
 	{
-		TimeShiftBackup bak;
+		RewindBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.taglist_short;
 	}
 
 	private void cell_system_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
 	{
-		TimeShiftBackup bak;
+		RewindBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.sys_distro;
 	}
 	
 	private void cell_desc_render (CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
 	{
-		TimeShiftBackup bak;
+		RewindBackup bak;
 		model.get (iter, 0, out bak, -1);
 		(cell as Gtk.CellRendererText).text = bak.description;
 	}
 	
 	private void cell_desc_edited (string path, string new_text) 
 	{
-		TimeShiftBackup bak;
+		RewindBackup bak;
 
 		TreeIter iter;
 		Gtk.ListStore model = (Gtk.ListStore) tv_backups.model;
@@ -312,7 +312,7 @@ public class SnapshotsList : Gtk.Box
 		
 		App.update_snapshot_list();
 		
-		Gtk.ListStore model = new Gtk.ListStore(1, typeof(TimeShiftBackup));
+		Gtk.ListStore model = new Gtk.ListStore(1, typeof(RewindBackup));
 		
 		var list = App.snapshot_list;
 		
@@ -321,16 +321,16 @@ public class SnapshotsList : Gtk.Box
 			if (tv_backups_sort_column_desc)
 			{
 				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					RewindBackup t1 = (RewindBackup) a;
+					RewindBackup t2 = (RewindBackup) b;
 					
 					return (t1.date.compare(t2.date));
 				});
 			}
 			else{
 				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					RewindBackup t1 = (RewindBackup) a;
+					RewindBackup t2 = (RewindBackup) b;
 					
 					return -1 * (t1.date.compare(t2.date));
 				});
@@ -340,16 +340,16 @@ public class SnapshotsList : Gtk.Box
 			if (tv_backups_sort_column_desc)
 			{
 				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					RewindBackup t1 = (RewindBackup) a;
+					RewindBackup t2 = (RewindBackup) b;
 					
 					return strcmp(t1.taglist,t2.taglist);
 				});
 			}
 			else{
 				list.sort((a,b) => { 
-					TimeShiftBackup t1 = (TimeShiftBackup) a;
-					TimeShiftBackup t2 = (TimeShiftBackup) b;
+					RewindBackup t1 = (RewindBackup) a;
+					RewindBackup t2 = (RewindBackup) b;
 					
 					return -1 * strcmp(t1.taglist,t2.taglist);
 				});
@@ -358,7 +358,7 @@ public class SnapshotsList : Gtk.Box
 
 		var is_empty = true;
 		TreeIter iter;
-		foreach(TimeShiftBackup bak in list) {
+		foreach(RewindBackup bak in list) {
 			model.append(out iter);
 			model.set (iter, 0, bak);
 			is_empty = false;
@@ -403,7 +403,7 @@ public class SnapshotsList : Gtk.Box
 			
 			//get selected snapshot ------------------
 			
-			TimeShiftBackup snapshot_to_restore = null;
+			RewindBackup snapshot_to_restore = null;
 			
 			Gtk.ListStore store = (Gtk.ListStore) tv_backups.model;
 			sel = tv_backups.get_selection();
@@ -570,7 +570,7 @@ public class SnapshotsList : Gtk.Box
 		{ 
 			if (sel.iter_is_selected (iter))
 			{
-				TimeShiftBackup bak;
+				RewindBackup bak;
 				store.get (iter, 0, out bak);
 
 				exo_open_folder(bak.path + "/localhost");
@@ -597,7 +597,7 @@ public class SnapshotsList : Gtk.Box
         { 
             if (sel.iter_is_selected (iter))
             {
-                TimeShiftBackup bak;
+                RewindBackup bak;
                 store.get (iter, 0, out bak);
                 exo_open_textfile(bak.path + "/rsync-log");
                 return;
@@ -633,7 +633,7 @@ public class SnapshotsList : Gtk.Box
 		
 		//get list of snapshots to delete --------------------
 
-		var list_of_snapshots_to_delete = new Gee.ArrayList<TimeShiftBackup>();
+		var list_of_snapshots_to_delete = new Gee.ArrayList<RewindBackup>();
 		Gtk.ListStore store = (Gtk.ListStore) tv_backups.model;
 		
 		bool iterExists = store.get_iter_first (out iter);
@@ -641,7 +641,7 @@ public class SnapshotsList : Gtk.Box
 		{ 
 			if (sel.iter_is_selected (iter))
 			{
-				TimeShiftBackup bak;
+				RewindBackup bak;
 				store.get (iter, 0, out bak);
 				list_of_snapshots_to_delete.add(bak);
 			}
@@ -654,13 +654,13 @@ public class SnapshotsList : Gtk.Box
 		
 		//delete snapshots --------------------------
 		
-		foreach(TimeShiftBackup bak in list_of_snapshots_to_delete)
+		foreach(RewindBackup bak in list_of_snapshots_to_delete)
 		{
 			
 			//find the iter being deleted
 			iterExists = store.get_iter_first (out iter_delete);
 			while (iterExists) { 
-				TimeShiftBackup bak_current;
+				RewindBackup bak_current;
 				store.get (iter_delete, 0, out bak_current);
 				if (bak_current.path == bak.path){
 					break;

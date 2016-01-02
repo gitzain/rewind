@@ -55,7 +55,7 @@ public class Main : Granite.Application
 	public string rsnapshot_conf_path = "";
 	public string app_conf_path = "";
 
-	public Gee.ArrayList<TimeShiftBackup?> snapshot_list;
+	public Gee.ArrayList<RewindBackup?> snapshot_list;
 	public Gee.HashMap<string,Device> partition_map;
 
 	public Gee.ArrayList<string> exclude_list_user;
@@ -112,8 +112,8 @@ public class Main : Granite.Application
 	public string lock_dir = "";
 	public string lock_file = "";
 	
-	public TimeShiftBackup snapshot_to_delete;
-	public TimeShiftBackup snapshot_to_restore;
+	public RewindBackup snapshot_to_delete;
+	public RewindBackup snapshot_to_restore;
 	public Device restore_target;
 	public bool reinstall_grub2 = false;
 	public string grub_device = "";
@@ -323,7 +323,7 @@ public class Main : Granite.Application
 
 		//initialize lists -------------------------
 		
-		snapshot_list = new Gee.ArrayList<TimeShiftBackup>();
+		snapshot_list = new Gee.ArrayList<RewindBackup>();
 		exclude_list_user = new Gee.ArrayList<string>();
 		exclude_list_default = new Gee.ArrayList<string>();
 		exclude_list_default_extra = new Gee.ArrayList<string>();
@@ -897,7 +897,7 @@ public class Main : Granite.Application
 		row++;
 
 		for(int index = 0; index < snapshot_list.size; index++){
-			TimeShiftBackup bak = snapshot_list[index];
+			RewindBackup bak = snapshot_list[index];
 			if (!paginate || ((index >= snapshot_list_start_index) && (index < snapshot_list_start_index + 10))){
 				col = -1;
 				grid[row, ++col] = "%d".printf(index);
@@ -1173,14 +1173,14 @@ public class Main : Granite.Application
 		return null;
 	}
 	
-	public TimeShiftBackup read_stdin_snapshot(){
+	public RewindBackup read_stdin_snapshot(){
 		start_timeout_counter();
 		string? line = stdin.read_line();
 		stop_timeout_counter();
 		
 		line = (line != null) ? line.strip() : line;
 		
-		TimeShiftBackup selected_snapshot = null;
+		RewindBackup selected_snapshot = null;
 	
 		if (line.down() == "a"){
 			log_msg("Aborted.");
@@ -1383,11 +1383,11 @@ public class Main : Granite.Application
 				}
 			}
 			else if (is_scheduled){
-				TimeShiftBackup last_snapshot_boot = get_latest_snapshot("boot");
-				TimeShiftBackup last_snapshot_hourly = get_latest_snapshot("hourly");
-				TimeShiftBackup last_snapshot_daily = get_latest_snapshot("daily");
-				TimeShiftBackup last_snapshot_weekly = get_latest_snapshot("weekly");
-				TimeShiftBackup last_snapshot_monthly = get_latest_snapshot("monthly");
+				RewindBackup last_snapshot_boot = get_latest_snapshot("boot");
+				RewindBackup last_snapshot_hourly = get_latest_snapshot("hourly");
+				RewindBackup last_snapshot_daily = get_latest_snapshot("daily");
+				RewindBackup last_snapshot_weekly = get_latest_snapshot("weekly");
+				RewindBackup last_snapshot_monthly = get_latest_snapshot("monthly");
 				
 				DateTime dt_sys_boot = now.add_seconds((-1) * get_system_uptime_seconds());
 				bool take_new = false;
@@ -1600,7 +1600,7 @@ public class Main : Granite.Application
 			
 			//check if we can rotate an existing backup -------------
 			
-			TimeShiftBackup last_snapshot = get_latest_snapshot();
+			RewindBackup last_snapshot = get_latest_snapshot();
 			DateTime dt_filter = null;
 			
 			if ((tag != "ondemand") && (last_snapshot != null)){
@@ -1619,8 +1619,8 @@ public class Main : Granite.Application
 						return false;
 				}
 				
-				TimeShiftBackup backup_to_rotate = null;
-				foreach(TimeShiftBackup bak in snapshot_list){
+				RewindBackup backup_to_rotate = null;
+				foreach(RewindBackup bak in snapshot_list){
 					if (bak.date.compare(dt_filter) > 0){
 						backup_to_rotate = bak;
 						break;
@@ -1652,7 +1652,7 @@ public class Main : Granite.Application
 					f = File.new_for_path(sync_path + "/localhost");
 					f.make_directory_with_parents();
 
-					TimeShiftBackup bak_restore = null;
+					RewindBackup bak_restore = null;
 					
 					//check if a control file was written after restore -------
 					
@@ -1662,7 +1662,7 @@ public class Main : Granite.Application
 					if(f.query_exists()){
 						string snapshot_path = read_file(ctl_path);
 						
-						foreach(TimeShiftBackup bak in snapshot_list){
+						foreach(RewindBackup bak in snapshot_list){
 							if (bak.path == snapshot_path){
 								bak_restore = bak;
 								break;
@@ -1675,7 +1675,7 @@ public class Main : Granite.Application
 					if (bak_restore == null){
 						//select latest snapshot for hard-linking
 						for(int k = snapshot_list.size -1; k >= 0; k--){
-							TimeShiftBackup bak = snapshot_list[k];
+							RewindBackup bak = snapshot_list[k];
 							bak_restore = bak; //TODO: check dist type
 							break;
 						}
@@ -1894,7 +1894,7 @@ public class Main : Granite.Application
 		
 		show_msg = true;
 		count = 0;
-		foreach(TimeShiftBackup bak in snapshot_list){
+		foreach(RewindBackup bak in snapshot_list){
 			if (bak.date.compare(now.add_days(-1 * retain_snapshots_max_days)) < 0){
 				if (!bak.has_tag("ondemand")){
 					
@@ -1939,7 +1939,7 @@ public class Main : Granite.Application
 	public void delete_untagged_snapshots(){
 		bool show_msg = true;
 
-		foreach(TimeShiftBackup bak in snapshot_list){
+		foreach(RewindBackup bak in snapshot_list){
 			if (bak.tags.size == 0){
 				
 				if (show_msg){
@@ -1968,7 +1968,7 @@ public class Main : Granite.Application
 			
 			string path;
 			
-			foreach(TimeShiftBackup bak in snapshot_list){
+			foreach(RewindBackup bak in snapshot_list){
 				foreach(string tag in bak.tags){
 					path = mount_point_backup + "/rewind/snapshots-%s".printf(tag);
 					cmd = "ln --symbolic \"../snapshots/%s\" -t \"%s\"".printf(bak.name, path);	
@@ -2054,9 +2054,9 @@ public class Main : Granite.Application
 				}
 			}
 			
-			string timeshift_path = "/rewind/*";
-			if (!combined_list.contains(timeshift_path)){
-				combined_list.add(timeshift_path);
+			string rewind_path = "/rewind/*";
+			if (!combined_list.contains(rewind_path)){
+				combined_list.add(rewind_path);
 			}
 			
 			//write file -----------
@@ -2080,7 +2080,7 @@ public class Main : Granite.Application
 	    }
 	}
 
-	public TimeShiftBackup write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
+	public RewindBackup write_snapshot_control_file(string snapshot_path, DateTime dt_created, string tag){
 		var ctl_path = snapshot_path + "/info.json";
 		var config = new Json.Object();
 
@@ -2109,7 +2109,7 @@ public class Main : Granite.Application
 	        log_error (e.message);
 	    }
 
-	    return (new TimeShiftBackup(snapshot_path));
+	    return (new RewindBackup(snapshot_path));
 	}
 
 	//restore
@@ -2189,7 +2189,7 @@ public class Main : Granite.Application
 					
 					//check command line arguments
 					found = false;
-					foreach(TimeShiftBackup bak in snapshot_list) {
+					foreach(RewindBackup bak in snapshot_list) {
 						if (bak.name == cmd_snapshot){
 							snapshot_to_restore = bak;
 							found = true;
@@ -3041,9 +3041,9 @@ public class Main : Granite.Application
 					}
 				}
 				
-				string timeshift_path = "/rewind/*";
-				if (!exclude_list_restore.contains(timeshift_path)){
-					exclude_list_restore.add(timeshift_path);
+				string rewind_path = "/rewind/*";
+				if (!exclude_list_restore.contains(rewind_path)){
+					exclude_list_restore.add(rewind_path);
 				}
 			
 				log_msg(_("Using the default exclude-list"));
@@ -3052,9 +3052,9 @@ public class Main : Granite.Application
 				log_msg(_("Using user-specified exclude-list"));
 			}
 
-			string timeshift_path = "/rewind/*";
-			if (!exclude_list_restore.contains(timeshift_path)){
-				exclude_list_restore.add(timeshift_path);
+			string rewind_path = "/rewind/*";
+			if (!exclude_list_restore.contains(rewind_path)){
+				exclude_list_restore.add(rewind_path);
 			}
 			
 			//write file -----------
@@ -3080,7 +3080,7 @@ public class Main : Granite.Application
 
 	//delete
 	
-	public bool delete_snapshot(TimeShiftBackup? snapshot = null){
+	public bool delete_snapshot(RewindBackup? snapshot = null){
 		bool found = false;
 		snapshot_to_delete = snapshot;
 		
@@ -3092,7 +3092,7 @@ public class Main : Granite.Application
 				
 				//check command line arguments
 				found = false;
-				foreach(TimeShiftBackup bak in snapshot_list) {
+				foreach(RewindBackup bak in snapshot_list) {
 					if (bak.name == cmd_snapshot){
 						snapshot_to_delete = bak;
 						found = true;
@@ -3200,12 +3200,12 @@ public class Main : Granite.Application
 	}
 
 	public bool delete_all_snapshots(){
-		string timeshift_dir = mount_point_backup + "/rewind";
+		string rewind_dir = mount_point_backup + "/rewind";
 		string sync_dir = mount_point_backup + "/rewind/snapshots/.sync";
 		
-		if (dir_exists(timeshift_dir)){ 
+		if (dir_exists(rewind_dir)){ 
 			//delete snapshots
-			foreach(TimeShiftBackup bak in snapshot_list){
+			foreach(RewindBackup bak in snapshot_list){
 				if (!delete_snapshot(bak)){ 
 					return false; 
 				}
@@ -3219,7 +3219,7 @@ public class Main : Granite.Application
 			}
 			
 			//delete /rewind
-			return delete_directory(timeshift_dir);
+			return delete_directory(rewind_dir);
 		}
 		else{
 			log_msg(_("No snapshots found on device") + " '%s'".printf(snapshot_device.device));
@@ -3452,7 +3452,7 @@ public class Main : Granite.Application
 			while (info != null) {
 				if (info.get_file_type() == FileType.DIRECTORY) {
 					if (info.get_name() != ".sync") {
-						TimeShiftBackup bak = new TimeShiftBackup(path + "/" + info.get_name());
+						RewindBackup bak = new RewindBackup(path + "/" + info.get_name());
 						if (bak.is_valid){
 							snapshot_list.add(bak);
 						}
@@ -3467,8 +3467,8 @@ public class Main : Granite.Application
 		}
 
 		snapshot_list.sort((a,b) => { 
-			TimeShiftBackup t1 = (TimeShiftBackup) a;
-			TimeShiftBackup t2 = (TimeShiftBackup) b;
+			RewindBackup t1 = (RewindBackup) a;
+			RewindBackup t2 = (RewindBackup) b;
 			return t1.date.compare(t2.date);
 		});
 
@@ -3526,17 +3526,17 @@ public class Main : Granite.Application
 		//log_debug(_("Partition list updated"));
 	}
 
-	public Gee.ArrayList<TimeShiftBackup?> get_snapshot_list(string tag = ""){
-		var list = new Gee.ArrayList<TimeShiftBackup?>();
+	public Gee.ArrayList<RewindBackup?> get_snapshot_list(string tag = ""){
+		var list = new Gee.ArrayList<RewindBackup?>();
 
-		foreach(TimeShiftBackup bak in snapshot_list){
+		foreach(RewindBackup bak in snapshot_list){
 			if (tag == "" || bak.has_tag(tag)){
 				list.add(bak);
 			}
 		}
 		list.sort((a,b) => { 
-			TimeShiftBackup t1 = (TimeShiftBackup) a;
-			TimeShiftBackup t2 = (TimeShiftBackup) b;
+			RewindBackup t1 = (RewindBackup) a;
+			RewindBackup t2 = (RewindBackup) b;
 			return (t1.date.compare(t2.date)); 
 		});
 
@@ -3561,7 +3561,7 @@ public class Main : Granite.Application
 		}
 	}
 	
-	public TimeShiftBackup? get_latest_snapshot(string tag = ""){
+	public RewindBackup? get_latest_snapshot(string tag = ""){
 		var list = get_snapshot_list(tag);
 
 		if (list.size > 0)
@@ -3570,7 +3570,7 @@ public class Main : Granite.Application
 			return null;
 	}
 	
-	public TimeShiftBackup? get_oldest_snapshot(string tag = ""){
+	public RewindBackup? get_oldest_snapshot(string tag = ""){
 		var list = get_snapshot_list(tag);
 		
 		if (list.size > 0)
@@ -4211,7 +4211,7 @@ public class Main : Granite.Application
 
 }
 
-public class TimeShiftBackup : GLib.Object{
+public class RewindBackup : GLib.Object{
 	public string path = "";
 	public string name = "";
 	public DateTime date;
@@ -4224,7 +4224,7 @@ public class TimeShiftBackup : GLib.Object{
 	public Gee.ArrayList<FsTabEntry> fstab_list;
 	public bool is_valid = true;
 	
-	public TimeShiftBackup(string dir_path){
+	public RewindBackup(string dir_path){
 		
 		try{
 			var f = File.new_for_path(dir_path);

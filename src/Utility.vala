@@ -774,7 +774,7 @@ namespace TeeJee.Devices{
 			udev           devtmpfs     3903M      1M     3903M   1% /dev
 			tmpfs          tmpfs         789M      1M      788M   1% /run
 			none           tmpfs           5M      0M        5M   0% /run/lock
-			/dev/sda3      ext4        25070M  19508M     4282M  83% /mnt/timeshift
+			/dev/sda3      ext4        25070M  19508M     4282M  83% /mnt/rewind
 			*/
 			
 			string[] lines = std_out.split("\n");

@@ -82,11 +82,20 @@ class MainWindow : Gtk.Window {
 	    //snapshot list ----------------------------------------------------
 	    snapshots_list_widget = new SnapshotsList();
 
-	    snapshots_list_widget.tv_backups.row_activated.connect((path, column) => {
-			headerbar.btn_restore_backup.sensitive = true;
-			headerbar.btn_restore_backup.clicked.connect(snapshots_list_widget.restore);
-		});
+		headerbar.btn_restore_backup.clicked.connect(snapshots_list_widget.restore);
 
+		snapshots_list_widget.tv_backups.cursor_changed.connect(() => {
+			TreeSelection selection = snapshots_list_widget.tv_backups.get_selection();
+
+			if (selection.count_selected_rows() == 1)
+			{
+				headerbar.btn_restore_backup.sensitive = true;
+			}
+			else 
+			{
+				headerbar.btn_restore_backup.sensitive = false;	
+			}
+		});
 
 		//Create a 2 section pane and add the sidebar and snapshot list above------------------------------
 		pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);

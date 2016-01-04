@@ -1,0 +1,17 @@
+[Desktop Entry]
+Version=1.0
+Name=Rewind
+Comment=A clean and simple system restore utility for Linux.
+
+Exec=rewind-launcher
+Icon=rewind
+
+Terminal=false
+Type=Application
+Categories=System;
+
+
+
+[Desktop Action AboutDialog]
+Exec=rewind --about
+Name=About

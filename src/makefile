@@ -11,13 +11,13 @@ app_fullname=Rewind
 
 all:
 	#build binaries
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs --thread "Utility.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" "Rewind.vala" "Widgets/SideBar.vala" "Widgets/SideBarExpandableItem.vala" "Widgets/HeaderBar.vala" "Widgets/NotificationsContainer.vala" "Widgets/SnapshotsList.vala" "Widgets/StatusBar.vala" "Widgets/DriveList.vala" "Widgets/DriveItem.vala" -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 --pkg gudev-1.0 --pkg granite
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs --thread "Utility.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" "Rewind.vala" "SideBar.vala" "SideBarExpandableItem.vala" "HeaderBar.vala" "NotificationsContainer.vala" "SnapshotsList.vala" "StatusBar.vala" "DriveList.vala" "DriveItem.vala" -o ../bin/${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 --pkg gudev-1.0 --pkg granite
 	
 	#update translation template
-	xgettext --language=C --keyword=_ --copyright-holder='Tony George (teejee2008@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='teejee2008@gmail.com' --escape --sort-output -o ../${app_name}.pot *.vala
+	xgettext --language=C --keyword=_ --copyright-holder='Zain Khan (emailzainkhan@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='emailzainkhan@gmail.com' --escape --sort-output -o ../${app_name}.pot *.vala
 
 clean:
-	rm -rf *.o ${app_name}
+	rm -rf *.o ../bin/${app_name}
 
 install:
 	mkdir -p "$(DESTDIR)$(bindir)"
@@ -32,7 +32,7 @@ install:
 	mkdir -p "$(DESTDIR)$(localedir)/fr_FR/LC_MESSAGES"
 	
 	#binary
-	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
+	install -m 0755 ../bin/${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-uninstall "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-launcher "$(DESTDIR)$(bindir)"
 	
@@ -41,15 +41,13 @@ install:
 	chmod --recursive 0755 $(DESTDIR)$(sharedir)/${app_name}/*
 	
 	#launcher
-	install -m 0755 ${app_name}.desktop "$(DESTDIR)$(launcherdir)"
+	install -m 0755 ../data/${app_name}.desktop "$(DESTDIR)$(launcherdir)"
 	
 	#app icon
 	install -m 0755 ./share/pixmaps/${app_name}.png "$(DESTDIR)$(sharedir)/pixmaps/"
 	
 	#translations
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/it_IT/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-it.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/ko_KR/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-ko.po
-	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/fr_FR/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-fr.po
+	#msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/fr_FR/LC_MESSAGES/${app_name}.mo" ../po/${app_name}-fr.po
 	
 uninstall:
 

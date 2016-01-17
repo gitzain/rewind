@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rewind 1.6\n"
 "Report-Msgid-Bugs-To: emailzainkhan@gmail.com\n"
-"POT-Creation-Date: 2016-01-10 02:06+0000\n"
+"POT-Creation-Date: 2016-01-16 12:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -212,7 +212,7 @@ msgid ""
 "snapshot will be included/excluded."
 msgstr ""
 
-#: RestoreWindow.vala:552 RestoreWindow.vala:553 Utility.vala:2213
+#: GtkHelper.vala:117 RestoreWindow.vala:552 RestoreWindow.vala:553
 msgid "Cancel"
 msgstr ""
 
@@ -281,7 +281,7 @@ msgstr ""
 msgid "Cron job removed"
 msgstr ""
 
-#: Utility.vala:2784 Utility.vala:2813
+#: System.vala:384 System.vala:413
 msgid "Crontab is empty"
 msgstr ""
 
@@ -419,8 +419,8 @@ msgstr ""
 msgid "Enter snapshot number (a=Abort, p=Previous, n=Next)"
 msgstr ""
 
-#: RestoreWindow.vala:1385 Rewind.vala:284 Rewind.vala:2619 Rewind.vala:2829
-#: SnapshotsList.vala:531 Utility.vala:125
+#: Logging.vala:101 RestoreWindow.vala:1385 Rewind.vala:284 Rewind.vala:2619
+#: Rewind.vala:2829 SnapshotsList.vala:531
 msgid "Error"
 msgstr ""
 
@@ -477,7 +477,7 @@ msgstr ""
 msgid "Failed to find a terminal emulator on this system!"
 msgstr ""
 
-#: Utility.vala:680
+#: Devices.vala:282
 msgid "Failed to get partition list"
 msgstr ""
 
@@ -509,7 +509,7 @@ msgstr ""
 msgid "Failed to save snapshot"
 msgstr ""
 
-#: Utility.vala:2711
+#: System.vala:311
 msgid "Failed to set ownership"
 msgstr ""
 
@@ -517,7 +517,7 @@ msgstr ""
 msgid "Failed to unlock device"
 msgstr ""
 
-#: Utility.vala:1378
+#: Devices.vala:980
 msgid "Failed to unmount"
 msgstr ""
 
@@ -770,7 +770,7 @@ msgstr ""
 msgid "Missing Dependencies"
 msgstr ""
 
-#: Utility.vala:2324
+#: GtkHelper.vala:228
 msgid "Missing Icon"
 msgstr ""
 
@@ -830,7 +830,7 @@ msgstr ""
 msgid "Num"
 msgstr ""
 
-#: Utility.vala:2212
+#: GtkHelper.vala:116
 msgid "OK"
 msgstr ""
 
@@ -1190,7 +1190,7 @@ msgstr ""
 msgid "Specify target device"
 msgstr ""
 
-#: Utility.vala:1993
+#: ProcessManagement.vala:488
 msgid "Stopped"
 msgstr ""
 
@@ -1319,7 +1319,7 @@ msgstr ""
 msgid "Unlocked device is mapped to '%s'."
 msgstr ""
 
-#: Utility.vala:1367
+#: Devices.vala:969
 msgid "Unmounting from"
 msgstr ""
 
@@ -1352,8 +1352,8 @@ msgstr ""
 msgid "WARNING"
 msgstr ""
 
-#: RestoreWindow.vala:416 RestoreWindow.vala:417 SettingsWindow.vala:295
-#: SettingsWindow.vala:296 Utility.vala:125
+#: Logging.vala:101 RestoreWindow.vala:416 RestoreWindow.vala:417
+#: SettingsWindow.vala:295 SettingsWindow.vala:296
 msgid "Warning"
 msgstr ""
 

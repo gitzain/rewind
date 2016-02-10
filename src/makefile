@@ -11,7 +11,7 @@ app_fullname=Rewind
 
 all:
 	#build binaries
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs --thread "Misc.vala" "Logging.vala" "Devices.vala" "ProcessManagement.vala" "FileSystem.vala" "GtkHelper.vala" "Multimedia.vala" "JSON.vala" "System.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" "Rewind.vala" "SideBar.vala" "SideBarExpandableItem.vala" "HeaderBar.vala" "NotificationsContainer.vala" "SnapshotsList.vala" "StatusBar.vala" "DriveList.vala" "DriveItem.vala"   -o ../bin/${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 --pkg gudev-1.0 --pkg granite
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs --thread "Misc.vala" "Logging.vala" "Devices.vala" "ProcessManagement.vala" "FileSystem.vala" "GtkHelper.vala" "Multimedia.vala" "JSON.vala" "System.vala" "MainWindow.vala" "SettingsWindow.vala" "RestoreWindow.vala" "ExcludeMessageWindow.vala" "Rewind.vala" "SideBar.vala" "SideBarExpandableItem.vala" "HeaderBar.vala" "SnapshotsList.vala" "StatusBar.vala" "DriveList.vala" "DriveItem.vala"   -o ../bin/${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 --pkg gudev-1.0 --pkg granite
 	
 	#update translation template
 	xgettext --language=C --keyword=_ --copyright-holder='Zain Khan (emailzainkhan@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='emailzainkhan@gmail.com' --escape --sort-output -o ../${app_name}.pot *.vala

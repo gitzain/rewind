@@ -38,7 +38,7 @@ TODO: Write usage instructions
 TODO: Write history
 
 ## Credits
-TODO: Write credits
+- This software is based on <a href="https://launchpad.net/timeshift">TimeShift</a> by <a href="http://www.teejeetech.in/">Tony George</a>. 
 
 ## License
-TODO: Write license
+See the LICENSE file in this project's directory.

@@ -37,7 +37,7 @@ class MainWindow : Gtk.Window {
 
     private HeaderBar headerbar;
 	private Box box_main;
-	private Granite.Widgets.ThinPaned paned;
+	private Gtk.Paned paned;
 	private SideBar sidebar;
 	private SnapshotsList snapshots_list_widget;
 	

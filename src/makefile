@@ -14,9 +14,7 @@ all:
 	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs --thread "util/Misc.vala" "util/Logging.vala" "util/Devices.vala" "util/ProcessManagement.vala" "util/FileSystem.vala" "presentation/GtkHelper.vala" "util/Multimedia.vala" "util/JSON.vala" "util/System.vala" "presentation/MainWindow.vala" "presentation/SettingsWindow.vala" "presentation/RestoreWindow.vala" "presentation/ExcludeMessageWindow.vala" "logic/Rewind.vala" "presentation/SideBar.vala" "presentation/SideBarExpandableItem.vala" "presentation/HeaderBar.vala" "presentation/SnapshotsList.vala" "presentation/DriveList.vala" "presentation/DriveItem.vala"   -o ../bin/${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 --pkg gudev-1.0 --pkg granite
 	
 	#update translation template
-	xgettext --language=C --keyword=_ --copyright-holder='Zain Khan (emailzainkhan@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='emailzainkhan@gmail.com' --escape --sort-output -o ../${app_name}.pot *.vala
-
-clean:
+	#xgettext --language=C --keyword=_ --copyright-holder='Zain Khan (emailzainkhan@gmail.com)' --package-name="${app_name}" --package-version='1.6' --msgid-bugs-address='emailzainkhan@gmail.com' --escape --sort-output -o ../${app_name}.pot *.vala
 	rm -rf *.o ../bin/${app_name}
 
 install:

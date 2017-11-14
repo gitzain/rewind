@@ -681,7 +681,7 @@ public class SnapshotsList : Gtk.Box
 			}
 			
 			//remove iter from tv_backups
-			store.remove(iter_delete);
+			//store.remove(iter_delete);
 		}
 		
 		App.update_snapshot_list();

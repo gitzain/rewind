@@ -29,6 +29,7 @@ TODO: Write usage instructions
 
 ## Contributing
 1. Fork it!
+2. Make sure you have the following packages installed libgee-0.8-2, libgee-0.8-dev, libgranite-dev, libjson-glib-dev and libgudev-1.0-dev
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
@@ -41,4 +42,4 @@ TODO: Write history
 - This software is based on <a href="https://launchpad.net/timeshift">TimeShift</a> by <a href="http://www.teejeetech.in/">Tony George</a>. 
 
 ## License
-See the LICENSE file in this project's directory.
+See the COPYING file in this project's directory.

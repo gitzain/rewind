@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017 Zain Khan <emailzainkhan@gmail.com> -->
+<component type="desktop">
+  <id>rewind.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <name>Rewind</name>
+  <summary>A system restore utility.</summary>
+  <description>
+    <p>A clean and simple system restore utility for Linux.</p>
+  </description>
+
+  <custom>
+     <value key="x-appcenter-suggested-price">5</value>
+  </custom>
+</component>

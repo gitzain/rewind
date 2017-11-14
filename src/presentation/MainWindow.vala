@@ -37,8 +37,7 @@ class MainWindow : Gtk.Window {
 
     private HeaderBar headerbar;
 	private Box box_main;
-    private NotificationsContainer notification_container;
-	private Granite.Widgets.ThinPaned paned;
+	private Gtk.Paned paned;
 	private SideBar sidebar;
 	private SnapshotsList snapshots_list_widget;
 	
@@ -70,10 +69,6 @@ class MainWindow : Gtk.Window {
         box_main = new Box (Orientation.VERTICAL, 0);
         box_main.margin = 0;
         this.add(box_main);
-
-		//infobar ----------------------------------------------------
-		//notification_container = new NotificationsContainer();
-		//box_main.pack_start(notification_container, false, false, 0);
 
 		//sidebar ----------------------------------------------------
 		sidebar = new SideBar();

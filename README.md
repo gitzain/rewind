@@ -38,7 +38,9 @@ TODO: Write usage instructions
 TODO: Write history
 
 ## Credits
+- Created by <a href="https://iamzain.com">Zain Khan</a>. 
 - This software is based on <a href="https://launchpad.net/timeshift">TimeShift</a> by <a href="http://www.teejeetech.in/">Tony George</a>. 
+- Template for this README is <a href="https://github.com/gitzain/template-README">Template-README</a> created by <a href="https://iamzain.com">Zain Khan</a>
 
 ## License
 See the LICENSE file in this project's directory.
